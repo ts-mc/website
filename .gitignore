@@ -35,5 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 # file list
-farms_builds.jsonl
 missing_report.jsonl
+farms.md
