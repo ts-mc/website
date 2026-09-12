@@ -56,6 +56,73 @@ body {
   }
 }
 
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(100deg, #151b27 25%, #273247 45%, #151b27 65%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+.schematic-timeline {
+  appearance: none;
+  height: 18px;
+  cursor: pointer;
+  border-radius: 999px;
+  background: #263244;
+}
+
+.schematic-timeline::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: #263244;
+}
+
+.schematic-timeline::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border: 3px solid #071019;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.35), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.schematic-timeline::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: #263244;
+}
+
+.schematic-timeline::-moz-range-progress {
+  height: 5px;
+  border-radius: 999px;
+  background: #fbbf24;
+}
+
+.schematic-timeline::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #071019;
+  border-radius: 50%;
+  background: #fbbf24;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+    background: #1b2433;
+  }
+}
+
 .animate-glow {
   animation: glow-pulse 4s ease-in-out infinite;
 }

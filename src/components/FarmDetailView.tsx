@@ -16,6 +16,9 @@ import {
   ExternalLink,
   Info,
   Eye,
+  Gamepad2,
+  Globe2,
+  Fingerprint,
   AlertCircle,
   MessageSquarePlus,
   Check,
@@ -28,7 +31,7 @@ import { SchematicPreviewModal } from "@/components/SchematicPreviewModal";
 import { RealViewsCount } from "@/components/RealViewsCount";
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
 import { JavaBrandIcon } from "@/components/JavaBrandIcon";
-import type { FarmWithMetadata } from "@/types/farm";
+import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
 
 interface FarmDetailViewProps {
   farm: FarmWithMetadata;
@@ -38,10 +41,12 @@ interface FarmDetailViewProps {
 export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [extractedMaterials, setExtractedMaterials] = useState<FarmMaterialItem[]>(farm.materials);
 
   const isJava = farm.category === "java";
   const isBuild = farm.category === "build";
   const ytId = farm.youtubeId;
+  const displayFarm = extractedMaterials.length > 0 ? { ...farm, materials: extractedMaterials, hasMaterials: true } : farm;
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -184,7 +189,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
           </div>
 
           {/* Interactive Material List & Checklist (Track items in-game) */}
-          {farm.materials && farm.materials.length > 0 ? (
+          {displayFarm.materials && displayFarm.materials.length > 0 ? (
             <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -194,14 +199,14 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
                   <span>Material List & In-Game Checklist</span>
                 </h3>
                 <span className="text-xs text-slate-400 font-mono">
-                  {farm.materials.length} components
+                  {displayFarm.materials.length} components
                 </span>
               </div>
               <p className="text-xs text-slate-400">
                 Check off items as you gather them in Minecraft survival. Your progress is saved automatically on this device.
               </p>
               <MaterialListChecklist
-                materials={farm.materials}
+                materials={displayFarm.materials}
                 farmId={farm.dn}
                 farmTitle={farm.title}
                 youtubeUrl={farm.youtubeUrl}
@@ -423,6 +428,26 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
                 </span>
               </div>
 
+              <div className="flex items-center justify-between gap-4 py-1.5 border-b border-slate-800/60">
+                <span className="flex items-center gap-1.5 text-slate-400"><Gamepad2 className="w-3.5 h-3.5" /> Game Mode</span>
+                <span className="font-semibold text-slate-200">{farm.gameMode || "Not recorded"}</span>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 py-1.5 border-b border-slate-800/60">
+                <span className="flex items-center gap-1.5 text-slate-400"><Globe2 className="w-3.5 h-3.5" /> World Version</span>
+                <span className="font-mono font-semibold text-slate-200">{farm.worldVersion || "Not recorded"}</span>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 py-1.5 border-b border-slate-800/60">
+                <span className="flex items-center gap-1.5 text-slate-400"><Fingerprint className="w-3.5 h-3.5" /> Seed</span>
+                <span className="max-w-[12rem] truncate font-mono font-semibold text-slate-200" title={farm.seed || undefined}>{farm.seed || "Not recorded"}</span>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 py-1.5 border-b border-slate-800/60">
+                <span className="text-slate-400">Dimension</span>
+                <span className="font-semibold text-slate-200">{farm.dimension || "Overworld / not recorded"}</span>
+              </div>
+
               <div className="flex items-center justify-between py-1.5 border-b border-slate-800/60">
                 <span className="text-slate-400">Total Views</span>
                 <span className="font-mono font-semibold text-cyan-400">
@@ -479,9 +504,10 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
       {/* Schematic Preview Modal */}
       {(isJava || isBuild) && (
         <SchematicPreviewModal
-          farm={farm}
+          farm={displayFarm}
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
+          onMaterialsExtracted={setExtractedMaterials}
         />
       )}
     </div>

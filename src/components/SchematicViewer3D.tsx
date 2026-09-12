@@ -1,684 +1,431 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  RotateCw,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Expand,
+  Filter,
+  Layers,
+  LoaderCircle,
+  Pause,
+  Play,
+  RotateCcw,
+  Search,
+  Shrink,
+  Sparkles,
+  TriangleAlert,
+  X,
   ZoomIn,
   ZoomOut,
-  Layers,
-  Maximize2,
-  Minimize2,
-  Play,
-  Pause,
-  RotateCcw,
-  Box,
-  Eye,
-  Sliders,
-  Sparkles,
-  Info
 } from "lucide-react";
-import type { FarmWithMetadata } from "@/types/farm";
+import type { SchematicRenderer } from "schematic-renderer";
+import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
+import {
+  blockLabel,
+  normalizeSchematic,
+  topCornerCamera,
+  type BlockCategory,
+  type SchematicBlock,
+  type SchematicBounds,
+} from "@/lib/schematic-viewer";
 
 export interface SchematicViewer3DProps {
   farm: FarmWithMetadata;
   selectedFormat?: string;
+  onMaterialsExtracted?: (materials: FarmMaterialItem[]) => void;
 }
 
-export interface VoxelBlock {
-  x: number;
-  y: number;
-  z: number;
-  type: string;
-  color: string;
-  alpha?: number;
-  name: string;
+type LayerMode = "all" | "range" | "single";
+type ViewMode = "preview" | "layers";
+type FluidMode = "all" | "sources";
+type Visibility = Record<string, boolean>;
+type TextureMap = Map<string, HTMLImageElement>;
+
+const CONTEXT_KEY = "theysix-schematic-renderer";
+const CATEGORY_LABELS: Record<BlockCategory, string> = {
+  building: "Building blocks",
+  redstone: "Redstone",
+  fluid: "Fluids",
+  rail: "Rails",
+  utility: "Utility",
+  transparent: "Transparent / decorative",
+};
+
+function extractMaterials(schematic: unknown): FarmMaterialItem[] {
+  const counts = new Map<string, number>();
+  normalizeSchematic(schematic).blocks.forEach((block) => {
+    counts.set(block.id, (counts.get(block.id) || 0) + 1);
+  });
+  return Array.from(counts, ([name, count]) => ({
+    name: name.replace(/_/g, " "),
+    count,
+    stacks:
+      count >= 64
+        ? `${Math.floor(count / 64)} stack${count >= 128 ? "s" : ""}${count % 64 ? ` + ${count % 64}` : ""}`
+        : `${count} items`,
+  })).sort((a, b) => b.count - a.count);
 }
 
-export interface BlockMaterialCount {
-  name: string;
-  type: string;
-  color: string;
-  count: number;
-  stacks: string;
+function textureCandidates(block: SchematicBlock): string[] {
+  const id = block.id.replace(/^minecraft:/, "");
+  if (id === "water") return [block.isWaterSource ? "water_still" : "water_flow", "water_still"];
+  if (id === "lava") return [block.isLavaSource ? "lava_still" : "lava_flow", "lava_still"];
+  if (id === "redstone_dust") return ["redstone_dust_dot", "redstone_block"];
+  if (id === "sticky_piston") return ["piston_top_sticky", "piston_side"];
+  if (id === "piston") return ["piston_top", "piston_side"];
+  if (id === "repeater") return ["repeater", "repeater_on"];
+  if (id === "comparator") return ["comparator", "comparator_on"];
+  if (id === "observer") return ["observer_front", "observer_side"];
+  if (id === "hopper") return ["hopper_top", "hopper_outside"];
+  if (id.endsWith("_door")) return [id, `${id}_bottom`];
+  if (id.endsWith("_trapdoor")) return [id];
+  if (id.endsWith("_slab")) return [id.replace(/_slab$/, "")];
+  if (id.endsWith("_stairs")) return [id.replace(/_stairs$/, "")];
+  return [id, id.replace(/_block$/, ""), "stone"];
 }
-/**
- * Generate procedural farm blueprint blocks based on farm category and type
- */
-function generateFarmVoxels(farmType: string, dn: string): { voxels: VoxelBlock[]; dimensions: { x: number; y: number; z: number } } {
-  const voxels: VoxelBlock[] = [];
-  const typeLower = farmType.toLowerCase();
 
-  const width = 15;
-  const height = 18;
-  const depth = 15;
+async function loadTextureMap(context: any, blocks: SchematicBlock[]): Promise<TextureMap> {
+  const manager = context?.cubane ?? context?.resourcePackManager;
+  const pack = manager?.getEnabledPacks?.().at(-1);
+  const textures: TextureMap = new Map();
+  const previewTexture = manager?.previewPackTexture ?? manager?.previewTexture;
+  if (!pack || !previewTexture) return textures;
 
-  const halfW = Math.floor(width / 2);
-  const halfD = Math.floor(depth / 2);
+  const uniqueBlocks = Array.from(new Map(blocks.map((block) => [block.id, block])).values());
+  await Promise.all(
+    uniqueBlocks.map(async (block) => {
+      for (const candidate of textureCandidates(block)) {
+        const url = await previewTexture.call(manager, pack.id, `block/${candidate}`);
+        if (!url) continue;
+        const image = new Image();
+        image.decoding = "async";
+        image.src = url;
+        try {
+          await image.decode();
+          textures.set(block.id, image);
+          return;
+        } catch {
+          URL.revokeObjectURL(url);
+        }
+      }
+    }),
+  );
+  return textures;
+}
 
-  // Helper to add block
-  const addBlock = (x: number, y: number, z: number, type: string, name: string, color: string, alpha = 1) => {
-    voxels.push({ x: x - halfW, y, z: z - halfD, type, name, color, alpha });
+function visibleBlock(block: SchematicBlock, layer: number, visibility: Visibility, fluidMode: FluidMode) {
+  return (
+    block.y === layer &&
+    visibility[block.id] !== false &&
+    (block.category !== "fluid" || fluidMode === "all" || block.isWaterSource || block.isLavaSource)
+  );
+}
+
+function drawLayer(
+  canvas: HTMLCanvasElement,
+  blocks: SchematicBlock[],
+  bounds: SchematicBounds,
+  layer: number,
+  visibility: Visibility,
+  fluidMode: FluidMode,
+  enhancedRedstone: boolean,
+  textures: TextureMap,
+  zoom: number,
+  pan: { x: number; y: number },
+) {
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  const ratio = window.devicePixelRatio || 1;
+  const width = canvas.clientWidth || 640;
+  const height = canvas.clientHeight || 420;
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  context.fillStyle = "#071019";
+  context.fillRect(0, 0, width, height);
+
+  const layerBlocks = blocks.filter((block) => visibleBlock(block, layer, visibility, fluidMode));
+  const minX = layerBlocks.length ? Math.min(...layerBlocks.map((block) => block.x)) : bounds.minX;
+  const maxX = layerBlocks.length ? Math.max(...layerBlocks.map((block) => block.x)) : bounds.maxX;
+  const minZ = layerBlocks.length ? Math.min(...layerBlocks.map((block) => block.z)) : bounds.minZ;
+  const maxZ = layerBlocks.length ? Math.max(...layerBlocks.map((block) => block.z)) : bounds.maxZ;
+  const span = Math.max(maxX - minX + 1, maxZ - minZ + 1, 1);
+  const baseCell = Math.max(7, Math.min((width - 96) / (span * 1.55), (height - 106) / (span * 0.82)));
+  const cell = Math.max(7, baseCell * zoom);
+  const originX = width / 2 + pan.x - ((maxX - minX) - (maxZ - minZ)) * cell * 0.38;
+  const originY = height / 2 + pan.y - ((maxX - minX) + (maxZ - minZ)) * cell * 0.18;
+
+  const drawFace = (points: [number, number][], image: HTMLImageElement | undefined, alpha = 1) => {
+    context.save();
+    context.globalAlpha = alpha;
+    context.beginPath();
+    points.forEach(([x, y], index) => (index ? context.lineTo(x, y) : context.moveTo(x, y)));
+    context.closePath();
+    context.clip();
+    if (image) {
+      const boundsX = Math.min(...points.map(([x]) => x));
+      const boundsY = Math.min(...points.map(([, y]) => y));
+      const boundsWidth = Math.max(...points.map(([x]) => x)) - boundsX;
+      const boundsHeight = Math.max(...points.map(([, y]) => y)) - boundsY;
+      context.imageSmoothingEnabled = false;
+      context.drawImage(image, boundsX, boundsY, boundsWidth, boundsHeight);
+    } else {
+      context.fillStyle = "#64748b";
+      context.fillRect(0, 0, width, height);
+    }
+    context.restore();
   };
 
-  // Base Layer 0: Storage & Hopper Collector
-  for (let x = 4; x <= 10; x++) {
-    for (let z = 4; z <= 10; z++) {
-      if ((x === 4 || x === 10) && (z === 5 || z === 9)) {
-        addBlock(x, 0, z, "chest", "Double Chest", "#9d6834");
-      } else if (x >= 5 && x <= 9 && z >= 5 && z <= 9) {
-        addBlock(x, 0, z, "hopper", "Hopper", "#3b3c40");
-      } else {
-        addBlock(x, 0, z, "smooth_stone", "Smooth Stone", "#888888");
-      }
-    }
-  }
+  [...layerBlocks].sort((a, b) => a.x + a.z - (b.x + b.z)).forEach((block) => {
+    const x = originX + (block.x - minX - (block.z - minZ)) * cell * 0.76;
+    const y = originY + ((block.x - minX) + (block.z - minZ)) * cell * 0.38;
+    const top = [[x, y], [x + cell * 0.76, y + cell * 0.38], [x, y + cell * 0.76], [x - cell * 0.76, y + cell * 0.38]] as [number, number][];
+    const sideDepth = Math.max(3, cell * 0.2);
+    const left = [top[3], top[2], [top[2][0], top[2][1] + sideDepth], [top[3][0], top[3][1] + sideDepth]] as [number, number][];
+    const right = [top[1], top[2], [top[2][0], top[2][1] + sideDepth], [top[1][0], top[1][1] + sideDepth]] as [number, number][];
+    const image = textures.get(block.id);
+    const alpha = block.category === "fluid" || block.category === "transparent" ? 0.76 : 1;
+    drawFace(left, image, alpha * 0.58);
+    drawFace(right, image, alpha * 0.72);
+    drawFace(top, image, alpha);
+    context.strokeStyle = enhancedRedstone && block.category === "redstone" ? "#fca5a5" : "rgba(2, 6, 23, 0.6)";
+    context.lineWidth = enhancedRedstone && block.category === "redstone" ? 1.5 : 0.7;
+    context.beginPath();
+    top.forEach(([pointX, pointY], index) => (index ? context.lineTo(pointX, pointY) : context.moveTo(pointX, pointY)));
+    context.closePath();
+    context.stroke();
+  });
 
-  // Layer 1: Kill Chamber / Campfires or Redstone Sorter
-  for (let x = 5; x <= 9; x++) {
-    for (let z = 5; z <= 9; z++) {
-      if (typeLower.includes("creeper") || typeLower.includes("mob") || typeLower.includes("raid")) {
-        addBlock(x, 1, z, "campfire", "Soul Campfire", "#2dc2c9");
-      } else if (typeLower.includes("iron")) {
-        addBlock(x, 1, z, "lava", "Lava Blade", "#e85d04", 0.85);
-      } else {
-        addBlock(x, 1, z, "redstone", "Redstone Repeater / Wire", "#d90429");
-      }
-    }
-  }
-
-  // Perimeter Glass / Structure Columns
-  for (let y = 1; y < height; y++) {
-    // 4 Corner Pillars
-    addBlock(3, y, 3, "deepslate", "Polished Deepslate Pillar", "#333538");
-    addBlock(11, y, 3, "deepslate", "Polished Deepslate Pillar", "#333538");
-    addBlock(3, y, 11, "deepslate", "Polished Deepslate Pillar", "#333538");
-    addBlock(11, y, 11, "deepslate", "Polished Deepslate Pillar", "#333538");
-
-    // Glass walls on sides
-    if (y >= 2 && y <= height - 3) {
-      if (y % 2 === 0) {
-        addBlock(3, y, 7, "tinted_glass", "Tinted Glass", "#2b3a4a", 0.65);
-        addBlock(11, y, 7, "tinted_glass", "Tinted Glass", "#2b3a4a", 0.65);
-        addBlock(7, y, 3, "tinted_glass", "Tinted Glass", "#2b3a4a", 0.65);
-        addBlock(7, y, 11, "tinted_glass", "Tinted Glass", "#2b3a4a", 0.65);
-      }
-    }
-  }
-
-  // Spawning Platforms / Technical Modules (Layers 4, 8, 12, 15)
-  const platformLayers = [4, 8, 12, 15];
-  for (const py of platformLayers) {
-    if (py >= height) continue;
-
-    for (let x = 4; x <= 10; x++) {
-      for (let z = 4; z <= 10; z++) {
-        const isCenter = x >= 6 && x <= 8 && z >= 6 && z <= 8;
-        const isPerimeter = x === 4 || x === 10 || z === 4 || z === 10;
-
-        if (typeLower.includes("creeper") || typeLower.includes("mob")) {
-          // Creeper platform with drop chute in middle
-          if (!isCenter) {
-            addBlock(x, py, z, "stone_bricks", "Stone Bricks", "#6e7075");
-            if ((x + z) % 2 === 0) {
-              addBlock(x, py + 1, z, "trapdoor", "Oak Trapdoor (Pathfinding)", "#8b5a2b");
-            }
-          } else {
-            // Drop chute hole
-            if (py === 4 && (x === 7 && z === 7)) {
-              addBlock(x, py + 1, z, "cat_carpet", "Cat Perch / Carpet", "#f4a261");
-            }
-          }
-        } else if (typeLower.includes("iron")) {
-          // Iron golem water streaming platform
-          if (isPerimeter) {
-            addBlock(x, py, z, "smooth_stone", "Smooth Stone Barrier", "#7f8489");
-          } else {
-            addBlock(x, py, z, "water", "Flowing Water", "#1d6fa5", 0.6);
-          }
-        } else if (typeLower.includes("shulker")) {
-          // Shulker teleportation chambers & snow golems
-          if (x % 2 === 0 && z % 2 === 0) {
-            addBlock(x, py, z, "piston", "Piston", "#907353");
-            addBlock(x, py + 1, z, "observer", "Observer", "#42474d");
-          } else {
-            addBlock(x, py, z, "scaffolding", "Scaffolding", "#b58750");
-          }
-        } else if (typeLower.includes("stone") || typeLower.includes("cobble")) {
-          // Stone generator water/lava cells
-          if (x % 2 === 0) {
-            addBlock(x, py, z, "lava", "Lava", "#d9480f", 0.85);
-          } else {
-            addBlock(x, py, z, "water", "Water Source", "#1d6fa5", 0.6);
-          }
-          addBlock(x, py + 1, z, "piston", "Piston Pusher", "#907353");
-        } else if (typeLower.includes("raid")) {
-          // Stacking raid kill chamber
-          if (!isCenter) {
-            addBlock(x, py, z, "obsidian", "Obsidian Blast Shell", "#1e102d");
-          } else {
-            addBlock(x, py, z, "sticky_piston", "Sticky Piston", "#6c804f");
-          }
-        } else {
-          // General redstone technical farm
-          if ((x + z) % 3 === 0) {
-            addBlock(x, py, z, "observer", "Observer", "#42474d");
-            addBlock(x, py + 1, z, "redstone_dust", "Redstone Dust", "#e63946");
-          } else {
-            addBlock(x, py, z, "polished_andesite", "Polished Andesite", "#85878c");
-          }
-        }
-      }
-    }
-  }
-
-  // Top Roof / Slab Layer
-  const roofY = height - 1;
-  for (let x = 3; x <= 11; x++) {
-    for (let z = 3; z <= 11; z++) {
-      addBlock(x, roofY, z, "stone_slab", "Stone Slab Roof", "#95999e");
-    }
-  }
-
-  return { voxels, dimensions: { x: width, y: height, z: depth } };
+  context.fillStyle = "#cbd5e1";
+  context.font = "11px ui-monospace, SFMono-Regular, monospace";
+  context.fillText(`X ${minX}..${maxX}`, 18, 25);
+  context.fillText(`Z ${minZ}..${maxZ}`, 18, 42);
+  context.fillStyle = "#fbbf24";
+  context.font = "700 13px ui-monospace, SFMono-Regular, monospace";
+  context.fillText(`Y = ${layer}`, width - 76, 25);
+  context.fillStyle = "#64748b";
+  context.font = "11px ui-monospace, SFMono-Regular, monospace";
+  context.fillText(`${layerBlocks.length} visible blocks`, 18, height - 18);
 }
-export function SchematicViewer3D({ farm, selectedFormat = "litematic" }: SchematicViewer3DProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewer3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const layerCanvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<SchematicRenderer | null>(null);
+  const contextRef = useRef<any>(null);
+  const blocksRef = useRef<SchematicBlock[]>([]);
+  const shouldExtractMaterialsRef = useRef(farm.materials.length === 0);
+  const layerDragRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [error, setError] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [cameraMode, setCameraMode] = useState<"isometric" | "perspective" | "perspective_fpv">("isometric");
+  const [viewMode, setViewMode] = useState<ViewMode>("preview");
+  const [layerMode, setLayerMode] = useState<LayerMode>("all");
+  const [currentLayer, setCurrentLayer] = useState(0);
+  const [bounds, setBounds] = useState<SchematicBounds | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [fluidMode, setFluidMode] = useState<FluidMode>("all");
+  const [enhancedRedstone, setEnhancedRedstone] = useState(true);
+  const [visibility, setVisibility] = useState<Visibility>({});
+  const [textures, setTextures] = useState<TextureMap>(new Map());
+  const [layerZoom, setLayerZoom] = useState(1);
+  const [layerPan, setLayerPan] = useState({ x: 0, y: 0 });
 
-  // 3D Camera Controls State
-  const [yaw, setYaw] = useState<number>(Math.PI / 4 + 0.2); // ~55 deg
-  const [pitch, setPitch] = useState<number>(0.55); // ~32 deg elevation
-  const [zoom, setZoom] = useState<number>(20);
-  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 30 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [autoRotate, setAutoRotate] = useState<boolean>(true);
-  const [showGrid, setShowGrid] = useState<boolean>(true);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-
-  // Layer Slicing State
-  const [layerMode, setLayerMode] = useState<"all" | "range" | "single">("range");
-  const [currentLayer, setCurrentLayer] = useState<number>(18);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
-  // Hovered Block
-  const [hoveredBlock, setHoveredBlock] = useState<VoxelBlock | null>(null);
-
-  // Generate Farm Voxels
-  const { voxels, dimensions } = useMemo(() => {
-    return generateFarmVoxels(farm.farmType, farm.dn);
-  }, [farm.farmType, farm.dn]);
-
-  const maxLayer = dimensions.y;
-
-  // Filter voxels according to layer slicing
-  const visibleVoxels = useMemo(() => {
-    return voxels.filter((v) => {
-      if (layerMode === "all") return true;
-      if (layerMode === "single") return v.y === currentLayer;
-      if (layerMode === "range") return v.y <= currentLayer;
-      return true;
-    });
-  }, [voxels, layerMode, currentLayer]);
-
-  // Compute Bill of Materials (Block Breakdown)
-  const materialsList = useMemo<BlockMaterialCount[]>(() => {
-    const counts: Record<string, { name: string; type: string; color: string; count: number }> = {};
-    for (const v of voxels) {
-      if (!counts[v.type]) {
-        counts[v.type] = { name: v.name, type: v.type, color: v.color, count: 0 };
-      }
-      counts[v.type].count += 1;
-    }
-    return Object.values(counts)
-      .map((item) => {
-        const stacksCount = Math.floor(item.count / 64);
-        const remainder = item.count % 64;
-        let stacksStr = "";
-        if (stacksCount > 0 && remainder > 0) {
-          stacksStr = `${stacksCount} stack${stacksCount > 1 ? "s" : ""} + ${remainder}`;
-        } else if (stacksCount > 0) {
-          stacksStr = `${stacksCount} stack${stacksCount > 1 ? "s" : ""}`;
-        } else {
-          stacksStr = `${item.count} items`;
-        }
-        return { ...item, stacks: stacksStr };
-      })
-      .sort((a, b) => b.count - a.count);
-  }, [voxels]);
-
-  // Animation Loop for Auto-Rotate and Layer Stepping
-  useEffect(() => {
-    let animationFrameId: number;
-
-    const animate = () => {
-      if (autoRotate && !isDragging) {
-        setYaw((prev) => (prev + 0.005) % (Math.PI * 2));
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [autoRotate, isDragging]);
-
-  // Layer Playback Animation
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setCurrentLayer((prev) => {
-        if (prev >= maxLayer) {
-          return 0;
-        }
-        return prev + 1;
+  const persistMaterials = useCallback(async (materials: FarmMaterialItem[]) => {
+    onMaterialsExtracted?.(materials);
+    try {
+      await fetch("/api/farm-materials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dn: farm.dn, materials }),
       });
-    }, 450);
-    return () => clearInterval(interval);
-  }, [isPlaying, maxLayer]);
+    } catch {
+      return;
+    }
+  }, [farm.dn, onMaterialsExtracted]);
 
-  // Reset Camera Function
-  const handleResetCamera = useCallback(() => {
-    setYaw(Math.PI / 4 + 0.2);
-    setPitch(0.55);
-    setZoom(20);
-    setPan({ x: 0, y: 30 });
+  useEffect(() => {
+    let cancelled = false;
+    let renderer: SchematicRenderer | null = null;
+    let releaseContext: (() => void) | undefined;
+    async function load() {
+      const canvas = canvasRef.current;
+      const schematicUrl = farm.schematicUrl ? `/api/schematic-proxy?url=${encodeURIComponent(farm.schematicUrl)}` : undefined;
+      if (!canvas || !schematicUrl) {
+        setError("This farm does not have a schematic available for preview.");
+        setStatus("error");
+        return;
+      }
+      if (!canvas.parentElement || canvas.parentElement.clientWidth === 0 || canvas.parentElement.clientHeight === 0) {
+        window.requestAnimationFrame(() => void load());
+        return;
+      }
+      try {
+        const { SchematicRenderer, SchematicRendererContext } = await import("schematic-renderer");
+        const context = await SchematicRendererContext.acquire(CONTEXT_KEY, () => SchematicRendererContext.create({
+          vanilla: () => fetch("/minecraft-pack.zip", { cache: "force-cache" }).then((response) => response.blob()),
+        }, { sharedRenderer: false }));
+        contextRef.current = context;
+        releaseContext = () => SchematicRendererContext.release(CONTEXT_KEY);
+        renderer = new SchematicRenderer(canvas, {}, {}, {
+          context,
+          backgroundColor: 0x080d16,
+          showGrid: false,
+          showAxes: false,
+          showRenderingBoundsHelper: false,
+          enableDragAndDrop: false,
+          enableGizmos: false,
+          enableProgressBar: false,
+          enableAdaptiveFPS: true,
+          targetFPS: 60,
+          idleFPS: 8,
+          maxPixelRatio: 2,
+          meshBuildingMode: "batched",
+          wasmMeshBuilderOptions: { enabled: true, maxWorkers: 0 },
+          postProcessingOptions: { enabled: true, enableSSAO: false, enableSMAA: true, enableGamma: true },
+          cameraOptions: { defaultCameraPreset: "isometric", useTightBounds: true, enableZoomInOnLoad: false },
+          sidebarOptions: { enabled: false },
+          callbacks: { onLoadingProgress: (_file, value) => { if (!cancelled) setProgress(Math.round(value * 100)); } },
+        });
+        rendererRef.current = renderer;
+        const response = await fetch(schematicUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Schematic download failed (${response.status})`);
+        await renderer.schematicManager?.loadSchematic(farm.dn, await response.arrayBuffer(), undefined, {
+          onProgress: ({ progress: value }) => { if (!cancelled) setProgress(Math.round(value * 100)); },
+        });
+        if (cancelled) return;
+        const loaded = renderer.schematicManager?.getSchematic(farm.dn)?.schematicWrapper;
+        const normalized = normalizeSchematic(loaded);
+        blocksRef.current = normalized.blocks;
+        if (shouldExtractMaterialsRef.current) {
+          const materials = extractMaterials(loaded);
+          if (materials.length) void persistMaterials(materials);
+        }
+        if (normalized.bounds) {
+          setBounds(normalized.bounds);
+          setCurrentLayer(normalized.bounds.maxY);
+          const camera = topCornerCamera(normalized.bounds);
+          renderer.cameraManager.activeCamera.setPositionLookAt(camera.position, camera.target);
+        }
+        renderer.resume();
+        setStatus("ready");
+        setTextures(await loadTextureMap(context, normalized.blocks));
+      } catch (caught) {
+        if (!cancelled) {
+          setError(caught instanceof Error ? caught.message : "The schematic could not be rendered.");
+          setStatus("error");
+        }
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+      renderer?.suspend();
+      renderer?.dispose();
+      rendererRef.current = null;
+      contextRef.current = null;
+      releaseContext?.();
+    };
+  }, [farm.dn, farm.schematicUrl, persistMaterials]);
+
+  useEffect(() => {
+    if (!bounds || !layerCanvasRef.current || viewMode !== "layers") return;
+    const render = () => drawLayer(layerCanvasRef.current!, blocksRef.current, bounds, currentLayer, visibility, fluidMode, enhancedRedstone, textures, layerZoom, layerPan);
+    render();
+    const observer = new ResizeObserver(render);
+    observer.observe(layerCanvasRef.current);
+    return () => observer.disconnect();
+  }, [bounds, currentLayer, enhancedRedstone, fluidMode, layerPan, layerZoom, textures, viewMode, visibility]);
+
+  useEffect(() => {
+    const onFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onFullscreen);
+    return () => document.removeEventListener("fullscreenchange", onFullscreen);
   }, []);
 
-  // Fullscreen Toggle
-  const toggleFullscreen = () => {
-    if (!containerRef.current) return;
-    if (!isFullscreen) {
-      if (containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen();
-      }
-      setIsFullscreen(true);
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-      setIsFullscreen(false);
-    }
-  };
-  // Helper color shade functions for lighting
-  const shadeColor = (hexColor: string, percent: number) => {
-    let color = hexColor.replace("#", "");
-    if (color.length === 3) {
-      color = color.split("").map((c) => c + c).join("");
-    }
-    const num = parseInt(color, 16);
-    let r = (num >> 16) + Math.round(255 * (percent / 100));
-    let g = ((num >> 8) & 0x00ff) + Math.round(255 * (percent / 100));
-    let b = (num & 0x0000ff) + Math.round(255 * (percent / 100));
-    r = Math.min(255, Math.max(0, r));
-    g = Math.min(255, Math.max(0, g));
-    b = Math.min(255, Math.max(0, b));
-    return `rgb(${r}, ${g}, ${b})`;
-  };
+  const blockIds = useMemo(() => status === "ready" ? Array.from(new Set(blocksRef.current.map((block) => block.id))).sort() : [], [status]);
+  const filteredIds = blockIds.filter((id) => id.includes(search.toLowerCase()));
+  const grouped = (Object.keys(CATEGORY_LABELS) as BlockCategory[]).map((category) => ({
+    category,
+    ids: filteredIds.filter((id) => blocksRef.current.find((block) => block.id === id)?.category === category),
+  })).filter((group) => group.ids.length);
 
-  // Canvas Drawing Effect
+  const updateLayers = useCallback((mode: LayerMode, layer: number) => {
+    if (!rendererRef.current || !bounds) return;
+    const next = Math.max(bounds.minY, Math.min(bounds.maxY, Math.round(layer)));
+    setLayerMode(mode);
+    setCurrentLayer(next);
+    if (mode === "all") rendererRef.current.resetRenderingBounds(farm.dn, true);
+    else rendererRef.current.setRenderingBoundsAxis(farm.dn, "y", mode === "single" ? next : bounds.minY, next);
+    rendererRef.current.invalidate();
+  }, [bounds, farm.dn]);
+
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!isPlaying || !bounds) return;
+    const timer = window.setInterval(() => updateLayers("single", currentLayer >= bounds.maxY ? bounds.minY : currentLayer + 1), 350);
+    return () => window.clearInterval(timer);
+  }, [bounds, currentLayer, isPlaying, updateLayers]);
 
-    // Handle high-DPI displays
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const width = rect.width;
-    const height = rect.height;
-
-    // Clear Canvas with sleek gradient void
-    const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-    bgGradient.addColorStop(0, "#090d16");
-    bgGradient.addColorStop(1, "#030712");
-    ctx.fillStyle = bgGradient;
-    ctx.fillRect(0, 0, width, height);
-
-    const originX = width / 2 + pan.x;
-    const originY = height / 2 + pan.y;
-
-    // Precalculate Trig
-    const cosY = Math.cos(yaw);
-    const sinY = Math.sin(yaw);
-    const cosP = Math.cos(pitch);
-    const sinP = Math.sin(pitch);
-
-    // Coordinate transformation
-    const project = (x: number, y: number, z: number) => {
-      // Y is up in Minecraft, in canvas inverted
-      const rotX = x * cosY - z * sinY;
-      const rotZ = x * sinY + z * cosY;
-      const rotY = -y * cosP + rotZ * sinP;
-      const depthVal = rotZ * cosP + y * sinP;
-
-      const screenX = originX + rotX * zoom;
-      const screenY = originY + rotY * zoom;
-
-      return { screenX, screenY, depthVal };
-    };
-
-    // Draw Bottom Reference Grid
-    if (showGrid) {
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.15)";
-      ctx.lineWidth = 1;
-      const gridRadius = 9;
-      for (let gx = -gridRadius; gx <= gridRadius; gx += 2) {
-        const p1 = project(gx, 0, -gridRadius);
-        const p2 = project(gx, 0, gridRadius);
-        ctx.beginPath();
-        ctx.moveTo(p1.screenX, p1.screenY);
-        ctx.lineTo(p2.screenX, p2.screenY);
-        ctx.stroke();
-      }
-      for (let gz = -gridRadius; gz <= gridRadius; gz += 2) {
-        const p1 = project(-gridRadius, 0, gz);
-        const p2 = project(gridRadius, 0, gz);
-        ctx.beginPath();
-        ctx.moveTo(p1.screenX, p1.screenY);
-        ctx.lineTo(p2.screenX, p2.screenY);
-        ctx.stroke();
-      }
-    }
-
-    // Project and sort visible voxels from back to front
-    interface ProjectedVoxel {
-      voxel: VoxelBlock;
-      screenX: number;
-      screenY: number;
-      depth: number;
-    }
-
-    const projectedList: ProjectedVoxel[] = visibleVoxels.map((v) => {
-      const p = project(v.x, v.y, v.z);
-      return {
-        voxel: v,
-        screenX: p.screenX,
-        screenY: p.screenY,
-        depth: p.depthVal,
-      };
-    });
-
-    // Painter's algorithm sort
-    projectedList.sort((a, b) => b.depth - a.depth);
-
-    // Draw Voxels as isometric 3D cubes with realistic shading
-    const s = zoom * 0.52; // half-width of block
-
-    for (const item of projectedList) {
-      const { voxel, screenX, screenY } = item;
-      const baseColor = voxel.color;
-      const alpha = voxel.alpha !== undefined ? voxel.alpha : 1;
-
-      // Calculate 8 corners of isometric cube
-      const topP = project(voxel.x, voxel.y + 0.5, voxel.z);
-      const bottomP = project(voxel.x, voxel.y - 0.5, voxel.z);
-      const pLeft = project(voxel.x - 0.5, voxel.y, voxel.z);
-      const pRight = project(voxel.x + 0.5, voxel.y, voxel.z);
-      const pFront = project(voxel.x, voxel.y, voxel.z + 0.5);
-      const pBack = project(voxel.x, voxel.y, voxel.z - 0.5);
-
-      // Top Face
-      const p00 = project(voxel.x - 0.5, voxel.y + 0.5, voxel.z - 0.5);
-      const p10 = project(voxel.x + 0.5, voxel.y + 0.5, voxel.z - 0.5);
-      const p11 = project(voxel.x + 0.5, voxel.y + 0.5, voxel.z + 0.5);
-      const p01 = project(voxel.x - 0.5, voxel.y + 0.5, voxel.z + 0.5);
-
-      // Draw Top Face (lightest)
-      ctx.beginPath();
-      ctx.moveTo(p00.screenX, p00.screenY);
-      ctx.lineTo(p10.screenX, p10.screenY);
-      ctx.lineTo(p11.screenX, p11.screenY);
-      ctx.lineTo(p01.screenX, p01.screenY);
-      ctx.closePath();
-      ctx.fillStyle = shadeColor(baseColor, 18);
-      ctx.globalAlpha = alpha;
-      ctx.fill();
-      ctx.strokeStyle = "rgba(0,0,0,0.25)";
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
-
-      // Bottom corners for sides
-      const b10 = project(voxel.x + 0.5, voxel.y - 0.5, voxel.z - 0.5);
-      const b11 = project(voxel.x + 0.5, voxel.y - 0.5, voxel.z + 0.5);
-      const b01 = project(voxel.x - 0.5, voxel.y - 0.5, voxel.z + 0.5);
-
-      // Left/Front Face
-      ctx.beginPath();
-      ctx.moveTo(p01.screenX, p01.screenY);
-      ctx.lineTo(p11.screenX, p11.screenY);
-      ctx.lineTo(b11.screenX, b11.screenY);
-      ctx.lineTo(b01.screenX, b01.screenY);
-      ctx.closePath();
-      ctx.fillStyle = shadeColor(baseColor, -8);
-      ctx.fill();
-      ctx.stroke();
-
-      // Right/Side Face (darkest shadow)
-      ctx.beginPath();
-      ctx.moveTo(p11.screenX, p11.screenY);
-      ctx.lineTo(p10.screenX, p10.screenY);
-      ctx.lineTo(b10.screenX, b10.screenY);
-      ctx.lineTo(b11.screenX, b11.screenY);
-      ctx.closePath();
-      ctx.fillStyle = shadeColor(baseColor, -24);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.globalAlpha = 1;
-    }
-  }, [yaw, pitch, zoom, pan, visibleVoxels, showGrid]);
-  // Mouse / Touch Drag Handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setIsDragging(true);
-    setDragStart({ x: e.clientX, y: e.clientY });
+  const resetCamera = () => {
+    if (!rendererRef.current || !bounds) return;
+    const camera = topCornerCamera(bounds);
+    rendererRef.current.setCameraMode("isometric");
+    rendererRef.current.cameraManager.activeCamera.setPositionLookAt(camera.position, camera.target);
+    setCameraMode("isometric");
   };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - dragStart.x;
-    const deltaY = e.clientY - dragStart.y;
-
-    if (e.buttons === 1) {
-      // Left Click: Orbit Rotation
-      setYaw((prev) => prev + deltaX * 0.008);
-      setPitch((prev) => Math.max(0.05, Math.min(Math.PI / 2 - 0.05, prev - deltaY * 0.008)));
-    } else if (e.buttons === 2 || e.shiftKey) {
-      // Right Click or Shift+Drag: Pan
-      setPan((prev) => ({
-        x: prev.x + deltaX * 0.8,
-        y: prev.y + deltaY * 0.8,
-      }));
-    }
-
-    setDragStart({ x: e.clientX, y: e.clientY });
+  const switchCamera = (mode: "isometric" | "perspective" | "perspective_fpv") => {
+    if (!rendererRef.current) return;
+    rendererRef.current.setCameraMode(mode);
+    void rendererRef.current.cameraManager.focusOnSchematics({ padding: 1.12, useTightBounds: true });
+    setCameraMode(mode);
   };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
+  const takeScreenshot = async () => {
+    const blob = await rendererRef.current?.takeScreenshot({ format: "image/png" });
+    if (!blob) return;
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${farm.dn}-schematic.png`;
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
-
-  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.12 : 0.89;
-    setZoom((prev) => Math.max(8, Math.min(60, prev * zoomFactor)));
+  const toggleFullscreen = async () => {
+    if (!containerRef.current) return;
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await containerRef.current.requestFullscreen();
   };
+  const fitLayer = () => { setLayerZoom(1); setLayerPan({ x: 0, y: 0 }); };
+  const setBlockVisibility = (id: string, visible: boolean) => setVisibility((current) => ({ ...current, [id]: visible }));
+  const showAll = () => setVisibility(Object.fromEntries(blockIds.map((id) => [id, true])));
+  const hideAll = () => setVisibility(Object.fromEntries(blockIds.map((id) => [id, false])));
 
   return (
-    <div ref={containerRef} className="relative w-full flex flex-col bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 select-none shadow-2xl">
-      {/* 3D Canvas Viewport */}
-      <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] min-h-[320px] max-h-[500px]">
+    <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#071019] shadow-2xl ${isFullscreen ? "h-screen rounded-none" : ""}`}>
+      <div className={`${isFullscreen ? "min-h-0 flex-1" : "aspect-[4/3] min-h-[320px] sm:aspect-[16/10] sm:min-h-[380px]"} relative`}>
+        <canvas ref={canvasRef} className={`${viewMode === "preview" ? "block" : "hidden"} h-full w-full touch-none`} aria-label={`Interactive 3D schematic for ${farm.title}`} />
         <canvas
-          ref={canvasRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
-          onContextMenu={(e) => e.preventDefault()}
-          className="w-full h-full cursor-grab active:cursor-grabbing block"
+          ref={layerCanvasRef}
+          className={`${viewMode === "layers" ? "block" : "hidden"} h-full w-full touch-none cursor-grab active:cursor-grabbing`}
+          aria-label={`Textured schematic layer ${currentLayer}`}
+          onWheel={(event) => { event.preventDefault(); setLayerZoom((value) => Math.max(0.55, Math.min(3, value * (event.deltaY > 0 ? 0.9 : 1.1)))); }}
+          onPointerDown={(event) => { event.currentTarget.setPointerCapture(event.pointerId); layerDragRef.current = { x: event.clientX, y: event.clientY, panX: layerPan.x, panY: layerPan.y }; }}
+          onPointerMove={(event) => { const start = layerDragRef.current; if (start) setLayerPan({ x: start.panX + event.clientX - start.x, y: start.panY + event.clientY - start.y }); }}
+          onPointerUp={() => { layerDragRef.current = null; }}
+          onPointerCancel={() => { layerDragRef.current = null; }}
         />
-
-        {/* Top Floating HUD: Controls & Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-          <div className="flex items-center gap-2 pointer-events-auto">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/90 text-cyan-400 border border-slate-700 backdrop-blur-md text-xs font-mono font-bold shadow-lg">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>schemat.io 3D Engine</span>
-            </span>
-
-            <span className="px-2.5 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-slate-800 backdrop-blur-md text-xs font-mono">
-              {dimensions.x}x{dimensions.y}x{dimensions.z} blocks
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 pointer-events-auto">
-            <button
-              onClick={() => setAutoRotate(!autoRotate)}
-              className={`p-2 rounded-xl backdrop-blur-md text-xs transition-colors border shadow-md ${
-                autoRotate
-                  ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
-                  : "bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white"
-              }`}
-              title="Toggle Auto-Rotate"
-            >
-              <RotateCw className={`w-4 h-4 ${autoRotate ? "animate-spin" : ""}`} />
-            </button>
-
-            <button
-              onClick={() => setShowGrid(!showGrid)}
-              className={`p-2 rounded-xl backdrop-blur-md text-xs transition-colors border shadow-md ${
-                showGrid
-                  ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                  : "bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white"
-              }`}
-              title="Toggle Floor Grid"
-            >
-              <Box className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={handleResetCamera}
-              className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 backdrop-blur-md transition-colors"
-              title="Reset 3D View"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={toggleFullscreen}
-              className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 backdrop-blur-md transition-colors"
-              title="Toggle Fullscreen"
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Zoom Overlay Controls */}
-        <div className="absolute bottom-4 right-4 flex flex-col gap-1.5 pointer-events-auto z-10">
-          <button
-            onClick={() => setZoom((prev) => Math.min(60, prev * 1.2))}
-            className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 shadow-md backdrop-blur-md transition-colors"
-            title="Zoom In"
-          >
-            <ZoomIn className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setZoom((prev) => Math.max(8, prev * 0.82))}
-            className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 shadow-md backdrop-blur-md transition-colors"
-            title="Zoom Out"
-          >
-            <ZoomOut className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Orbit Helper Tip */}
-        <div className="absolute bottom-3 left-3 text-[10px] text-slate-400 font-mono bg-slate-950/70 px-2.5 py-1 rounded-lg border border-slate-800 pointer-events-none backdrop-blur-sm">
-          Left Click: Rotate • Scroll: Zoom • Right Click: Pan
-        </div>
+        {status === "loading" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-xs space-y-3"><LoaderCircle className="mx-auto h-8 w-8 animate-spin text-cyan-400" /><p className="text-sm font-semibold text-white">Preparing farm preview</p><div className="h-1.5 overflow-hidden rounded-full bg-slate-800"><div className="h-full bg-cyan-400 transition-all" style={{ width: `${progress}%` }} /></div><p className="font-mono text-[11px] text-slate-500">{progress ? `${progress}%` : "Loading Minecraft textures"}</p></div></div>}
+        {status === "error" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-md space-y-3"><TriangleAlert className="mx-auto h-8 w-8 text-amber-400" /><p className="text-sm font-semibold text-white">Schematic preview unavailable</p><p className="text-xs leading-relaxed text-slate-400">{error}</p></div></div>}
+        {status === "ready" && <div className="pointer-events-none absolute left-3 right-3 top-3 z-10 flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-2"><span className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-400/30 bg-slate-950/85 px-3 py-1.5 text-[11px] font-bold text-cyan-300 backdrop-blur"><Sparkles className="h-3.5 w-3.5" /> {viewMode === "preview" ? "360° Preview" : "Build layers"}</span>{bounds && <span className="rounded-xl border border-slate-700 bg-slate-950/85 px-2.5 py-1.5 font-mono text-[11px] text-slate-300 backdrop-blur">Y {currentLayer}</span>}</div><div className="pointer-events-auto flex items-center gap-1.5"><button onClick={() => setSidebarOpen((open) => !open)} className="rounded-lg border border-slate-700 bg-slate-950/85 p-2 text-slate-300" title="Block filters" aria-label="Block filters"><Filter className="h-4 w-4" /></button>{viewMode === "preview" && (["isometric", "perspective", "perspective_fpv"] as const).map((mode) => <button key={mode} onClick={() => switchCamera(mode)} aria-label={`Use ${mode} camera`} title={`Use ${mode} camera`} className={`rounded-lg border p-2 ${cameraMode === mode ? "border-cyan-400/50 bg-cyan-400/20 text-cyan-300" : "border-slate-700 bg-slate-950/85 text-slate-400"}`}><Camera className="h-4 w-4" /></button>)}{viewMode === "preview" && <><button onClick={resetCamera} aria-label="Reset camera" title="Reset camera" className="rounded-lg border border-slate-700 bg-slate-950/85 p-2 text-slate-400"><RotateCcw className="h-4 w-4" /></button><button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="rounded-lg border border-slate-700 bg-slate-950/85 p-2 text-slate-400"><Download className="h-4 w-4" /></button></>}<button onClick={toggleFullscreen} aria-label="Toggle fullscreen" title="Toggle fullscreen" className="rounded-lg border border-slate-700 bg-slate-950/85 p-2 text-slate-400">{isFullscreen ? <Shrink className="h-4 w-4" /> : <Expand className="h-4 w-4" />}</button></div></div>}
+        {isFullscreen && sidebarOpen && <aside className="absolute inset-y-0 left-0 z-20 w-72 overflow-y-auto border-r border-slate-700 bg-slate-950/95 p-4 backdrop-blur"><div className="mb-4 flex items-center justify-between"><h3 className="font-mono text-xs font-bold uppercase tracking-wider text-cyan-300">Block visibility</h3><button onClick={() => setSidebarOpen(false)} aria-label="Close filters" className="text-slate-400"><X className="h-4 w-4" /></button></div><div className="mb-3 flex gap-3"><button onClick={showAll} className="text-[11px] text-cyan-300">Show all</button><button onClick={hideAll} className="text-[11px] text-amber-300">Hide all</button><button onClick={() => setVisibility({})} className="text-[11px] text-slate-400">Reset</button></div><label className="mb-4 flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-2 py-2"><Search className="h-4 w-4 text-slate-500" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search blocks" className="min-w-0 flex-1 bg-transparent text-xs text-white outline-none" /></label>{grouped.map(({ category, ids }) => <section key={category} className="mb-4"><h4 className="mb-2 text-[10px] font-bold uppercase text-slate-500">{CATEGORY_LABELS[category]}</h4>{ids.map((id) => <label key={id} className="flex items-center gap-2 py-1 text-xs text-slate-300"><input type="checkbox" checked={visibility[id] !== false} onChange={(event) => setBlockVisibility(id, event.target.checked)} className="accent-cyan-400" />{blockLabel(id)}</label>)}</section>)}<hr className="my-4 border-slate-800" /><h4 className="mb-2 text-[10px] font-bold uppercase text-slate-500">Fluids</h4><div className="space-y-2 text-xs text-slate-300"><label className="flex gap-2"><input type="radio" checked={fluidMode === "all"} onChange={() => setFluidMode("all")} />Sources + flow</label><label className="flex gap-2"><input type="radio" checked={fluidMode === "sources"} onChange={() => setFluidMode("sources")} />Sources only</label></div><label className="mt-4 flex items-center gap-2 text-xs text-slate-300"><input type="checkbox" checked={enhancedRedstone} onChange={(event) => setEnhancedRedstone(event.target.checked)} className="accent-red-400" />Enhanced redstone</label></aside>}
       </div>
-
-      {/* Layer Slicing & Litematica Inspection Toolbar */}
-      <div className="p-4 bg-slate-900/90 border-t border-slate-800 space-y-3 text-xs">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* Mode Selector */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400 font-semibold flex items-center gap-1 font-mono uppercase text-[11px]">
-              <Layers className="w-3.5 h-3.5 text-amber-400" /> Slicing:
-            </span>
-            <div className="inline-flex rounded-xl bg-slate-950 p-0.5 border border-slate-800 text-[11px]">
-              <button
-                onClick={() => setLayerMode("range")}
-                className={`px-2.5 py-1 rounded-lg transition-colors font-medium ${
-                  layerMode === "range"
-                    ? "bg-amber-500 text-slate-950 font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                Layers 1..{currentLayer}
-              </button>
-              <button
-                onClick={() => setLayerMode("single")}
-                className={`px-2.5 py-1 rounded-lg transition-colors font-medium ${
-                  layerMode === "single"
-                    ? "bg-amber-500 text-slate-950 font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                Layer {currentLayer} Only
-              </button>
-              <button
-                onClick={() => setLayerMode("all")}
-                className={`px-2.5 py-1 rounded-lg transition-colors font-medium ${
-                  layerMode === "all"
-                    ? "bg-amber-500 text-slate-950 font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                All Layers
-              </button>
-            </div>
-          </div>
-
-          {/* Layer Step & Play Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors"
-              title="Play layer construction animation"
-            >
-              {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              <span className="text-[11px] font-semibold">{isPlaying ? "Pause" : "Build Anim"}</span>
-            </button>
-
-            <span className="px-2.5 py-1 rounded-xl bg-slate-950 text-amber-300 font-mono font-bold border border-slate-800">
-              Y = {currentLayer} / {maxLayer}
-            </span>
-          </div>
-        </div>
-
-        {/* Layer Slider */}
-        <div className="flex items-center gap-3 pt-1">
-          <span className="text-[10px] font-mono text-slate-500">Y:0</span>
-          <input
-            type="range"
-            min={0}
-            max={maxLayer}
-            value={currentLayer}
-            onChange={(e) => {
-              setCurrentLayer(parseInt(e.target.value, 10));
-              if (layerMode === "all") setLayerMode("range");
-            }}
-            className="flex-1 accent-amber-400 h-1.5 bg-slate-950 rounded-lg cursor-pointer"
-          />
-          <span className="text-[10px] font-mono text-slate-500">Y:{maxLayer}</span>
-        </div>
-      </div>
+      {status === "ready" && bounds && <div className="relative z-30 flex-none border-t border-slate-800 bg-slate-950/95 px-3 py-3 backdrop-blur sm:px-5"><div className="flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-1 rounded-xl bg-slate-900 p-1"><button onClick={() => { setViewMode("preview"); updateLayers("all", currentLayer); }} className={`rounded-lg px-3 py-2 text-xs font-semibold ${viewMode === "preview" ? "bg-cyan-400 text-slate-950" : "text-slate-400"}`}>Preview</button><button onClick={() => { setViewMode("layers"); updateLayers("single", currentLayer); }} className={`rounded-lg px-3 py-2 text-xs font-semibold ${viewMode === "layers" ? "bg-amber-400 text-slate-950" : "text-slate-400"}`}><Layers className="mr-1 inline h-3.5 w-3.5" />Layers</button></div>{viewMode === "layers" ? <div className="flex items-center gap-1"><button disabled={currentLayer <= bounds.minY} onClick={() => updateLayers("single", currentLayer - 1)} title="Previous layer" aria-label="Previous layer" className="rounded-lg border border-slate-700 p-2 text-slate-300 disabled:opacity-30"><ChevronLeft className="h-4 w-4" /></button><span className="min-w-[104px] text-center font-mono text-xs font-bold text-amber-300">Layer {currentLayer} / {bounds.maxY}</span><button disabled={currentLayer >= bounds.maxY} onClick={() => updateLayers("single", currentLayer + 1)} title="Next layer" aria-label="Next layer" className="rounded-lg border border-slate-700 p-2 text-slate-300 disabled:opacity-30"><ChevronRight className="h-4 w-4" /></button></div> : <span className="hidden text-xs text-slate-500 sm:block">Drag to orbit · scroll to zoom · shift-drag to pan</span>}{viewMode === "layers" && <div className="flex items-center gap-1"><button onClick={() => setLayerZoom((value) => Math.max(0.55, value / 1.2))} title="Zoom out" aria-label="Zoom out layer" className="rounded-lg p-2 text-slate-400 hover:bg-slate-800"><ZoomOut className="h-4 w-4" /></button><button onClick={fitLayer} className="rounded-lg border border-slate-700 px-2.5 py-1.5 text-[11px] text-slate-300">Fit layer</button><button onClick={() => setLayerZoom((value) => Math.min(3, value * 1.2))} title="Zoom in" aria-label="Zoom in layer" className="rounded-lg p-2 text-slate-400 hover:bg-slate-800"><ZoomIn className="h-4 w-4" /></button></div>}</div>{viewMode === "layers" && <div className="mt-3 space-y-1.5"><div className="flex justify-between font-mono text-[10px] text-slate-500"><span>Y {bounds.minY}</span><span className="text-amber-300">Y {currentLayer}</span><span>Y {bounds.maxY}</span></div><input aria-label="Current Y layer" type="range" min={bounds.minY} max={bounds.maxY} value={currentLayer} onChange={(event) => updateLayers("single", Number(event.target.value))} className="schematic-timeline w-full" /><div className="flex items-center justify-between text-[10px] text-slate-600"><span>Construction timeline</span><button onClick={() => setIsPlaying((playing) => !playing)} className="inline-flex items-center gap-1 text-slate-300 hover:text-white">{isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />} {isPlaying ? "Pause" : "Play layers"}</button></div></div>}</div>}
     </div>
   );
 }

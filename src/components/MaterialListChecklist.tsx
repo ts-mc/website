@@ -16,7 +16,6 @@ import {
   MessageSquarePlus,
   Youtube
 } from "lucide-react";
-import { ItemIcon } from "@/components/ItemIcon";
 import type { FarmMaterialItem } from "@/types/farm";
 
 interface MaterialListChecklistProps {
@@ -284,14 +283,6 @@ export function MaterialListChecklist({
                 }`}>
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
-
-                {/* Item Icon from /items/<item>.png (with fallback) */}
-                <ItemIcon
-                  name={mat.name}
-                  color={mat.color}
-                  icon={mat.icon}
-                  className="w-5 h-5"
-                />
 
                 {/* Name & Stacks */}
                 <div className="min-w-0">

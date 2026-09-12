@@ -35,6 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 # file list
-worlds.md
-schematics.md
-/Videos_export
+farms_builds.jsonl
+missing_report.jsonl

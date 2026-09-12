@@ -139,7 +139,7 @@ export const PUBLIC_STAFF_PROFILES: PublicStaffProfile[] = [
     bestAt: ["Community Support", "Player Engagement"],
     bio: "Provides support to the community and engages with players to enhance their experience.",
     discordTag: "@chefjr73",
-    status: "active",
+    status: "retired",
   },
   {
     userId: "1095772392103624796",
@@ -202,7 +202,7 @@ export const PUBLIC_STAFF_PROFILES: PublicStaffProfile[] = [
     bestAt: ["Community Support", "Player Engagement"],
     bio: "Provides support to the community and engages with players to enhance their experience.",
     discordTag: "@.michal_w",
-    status: "active",
+    status: "retired",
   },
   {
     userId: "1276220517191520340",
@@ -211,7 +211,7 @@ export const PUBLIC_STAFF_PROFILES: PublicStaffProfile[] = [
     bestAt: ["Community Support", "Player Engagement"],
     bio: "Provides support to the community and engages with players to enhance their experience.",
     discordTag: "@harshxd073",
-    status: "active",
+    status: "retired",
   },
 ];
 

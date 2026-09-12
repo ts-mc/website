@@ -1,0 +1,62 @@
+[
+  {
+    "name": "water",
+    "count": 3475,
+    "stacks": "54 stacks + 19"
+  },
+  {
+    "name": "cobblestone slab",
+    "count": 2853,
+    "stacks": "44 stacks + 37"
+  },
+  {
+    "name": "cobblestone",
+    "count": 1200,
+    "stacks": "18 stacks + 48"
+  },
+  {
+    "name": "oak fence",
+    "count": 68,
+    "stacks": "1 stack + 4"
+  },
+  {
+    "name": "oak pressure plate",
+    "count": 36,
+    "stacks": "36 items"
+  },
+  {
+    "name": "hopper",
+    "count": 25,
+    "stacks": "25 items"
+  },
+  {
+    "name": "glass",
+    "count": 9,
+    "stacks": "9 items"
+  },
+  {
+    "name": "chest",
+    "count": 6,
+    "stacks": "6 items"
+  },
+  {
+    "name": "kelp",
+    "count": 3,
+    "stacks": "3 items"
+  },
+  {
+    "name": "torch",
+    "count": 2,
+    "stacks": "2 items"
+  },
+  {
+    "name": "oak sign",
+    "count": 1,
+    "stacks": "1 items"
+  },
+  {
+    "name": "oak trapdoor",
+    "count": 1,
+    "stacks": "1 items"
+  }
+]

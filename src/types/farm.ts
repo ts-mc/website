@@ -37,6 +37,11 @@ export interface FarmData {
   schematicUrl?: string;
   youtubeUrl: string;
   version?: string;
+  gameMode?: "Survival" | "Creative" | "Adventure" | "Spectator";
+  seed?: string;
+  worldVersion?: string;
+  dimension?: string;
+  dimensions?: [number, number, number];
   rates?: string;
   difficulty?: "Easy" | "Medium" | "Hard" | "Expert";
   tags?: string[];

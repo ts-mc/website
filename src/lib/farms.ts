@@ -1,9 +1,86 @@
 import fs from "fs";
 import path from "path";
 import type { FarmCategory, FarmData, FarmWithMetadata, FarmMaterialItem } from "@/types/farm";
-import { createClient } from "@/lib/supabase/server";
 
 export const BOTH_PLATFORMS_TAG = "Both Platforms";
+
+type JsonlLinkOverride = {
+  dn: string;
+  title?: string;
+  video_link?: string | null;
+  world_link?: string | null;
+  schematic_link?: string | null;
+};
+
+function getJsonlLinkOverrides(): Map<string, JsonlLinkOverride> {
+  const filePath = path.join(process.cwd(), "farms_builds.jsonl");
+  const overrides = new Map<string, JsonlLinkOverride>();
+  if (!fs.existsSync(filePath)) return overrides;
+
+  for (const line of fs.readFileSync(filePath, "utf-8").split(/\r?\n/).filter(Boolean)) {
+    try {
+      const entry = JSON.parse(line) as JsonlLinkOverride;
+      if (entry.dn) overrides.set(entry.dn.toLowerCase(), entry);
+    } catch {
+      // Ignore malformed archive rows and keep loading the remaining farms.
+    }
+  }
+  return overrides;
+}
+
+function isPlaceholderTitle(title: string): boolean {
+  return /^📭?\s*DN\s*:\s*\S+$/i.test(title.trim());
+}
+
+function applyJsonlLinkOverrides(farms: FarmWithMetadata[]): FarmWithMetadata[] {
+  const overrides = getJsonlLinkOverrides();
+  return farms.map((farm) => {
+    const override = overrides.get(farm.dn.toLowerCase());
+    if (!override) return farm;
+
+    const supportsSchematic = farm.category !== "bedrock";
+    const externalSchematic = override.schematic_link?.trim() || undefined;
+    const archiveTitle = override.title?.trim();
+    const title = archiveTitle && (!isPlaceholderTitle(archiveTitle) || isPlaceholderTitle(farm.title))
+      ? archiveTitle
+      : farm.title;
+    const schematicUrl = supportsSchematic ? externalSchematic : undefined;
+    const youtubeUrl = override.video_link?.trim() || "";
+    const worldDownloadUrl = override.world_link?.trim() || "link";
+
+    return {
+      ...farm,
+      title,
+      schematicUrl,
+      hasSchematic: Boolean(schematicUrl),
+      worldDownloadUrl,
+      hasWorldDownload: worldDownloadUrl !== "#" && worldDownloadUrl.toLowerCase() !== "link",
+      youtubeUrl,
+      hasYoutube: Boolean(youtubeUrl && youtubeUrl !== "#" && youtubeUrl.toLowerCase() !== "link"),
+      youtubeId: extractYouTubeId(youtubeUrl),
+    };
+  });
+}
+
+function getCachedMaterials(dn: string): FarmMaterialItem[] {
+  const filePath = path.join(process.cwd(), "src", "data", "materials", `${dn.toLowerCase()}.json`);
+  if (!fs.existsSync(filePath)) return [];
+
+  try {
+    const materials = JSON.parse(fs.readFileSync(filePath, "utf-8")) as unknown;
+    return Array.isArray(materials) ? materials as FarmMaterialItem[] : [];
+  } catch {
+    return [];
+  }
+}
+
+function applyMaterialCache(farms: FarmWithMetadata[]): FarmWithMetadata[] {
+  return farms.map((farm) => {
+    if (farm.materials.length > 0) return farm;
+    const materials = getCachedMaterials(farm.dn);
+    return materials.length > 0 ? { ...farm, materials, hasMaterials: true } : farm;
+  });
+}
 
 function parseBuildArchive(filePath: string, linkLabel: string): Map<string, string> {
   const links = new Map<string, string>();
@@ -19,6 +96,143 @@ function parseBuildArchive(filePath: string, linkLabel: string): Map<string, str
     if (linkSection) links.set(dnMatch[1].toUpperCase(), linkSection[1].trim());
   }
   return links;
+}
+
+function inferFarmTypeFromTitle(title: string): string {
+  const t = title.toLowerCase();
+  if (t.includes("iron")) return "Iron";
+  if (t.includes("creeper")) return "Creeper";
+  if (t.includes("raid") || t.includes("stacking raid")) return "Raid";
+  if (t.includes("shulker")) return "Shulker";
+  if (t.includes("xp") || t.includes("experience")) return "XP";
+  if (t.includes("witch") || t.includes("mob")) return "Mob";
+  if (t.includes("bonemeal")) return "Bonemeal";
+  if (t.includes("wood") || t.includes("tree") || t.includes("logs") || t.includes("bamboo")) return "Wood";
+  if (t.includes("cobblestone") || t.includes("stone") || t.includes("sand duper") || t.includes("rail dupe") || t.includes("rail")) return "Cobblestone & Stone";
+  if (t.includes("kelp")) return "Kelp";
+  return "Other";
+}
+
+export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
+  const jsonlPath = path.join(process.cwd(), "farms_builds.jsonl");
+  if (!fs.existsSync(jsonlPath)) return [];
+
+  const content = fs.readFileSync(jsonlPath, "utf-8");
+  const lines = content.split(/\r?\n/).filter(Boolean);
+
+  const builds: FarmWithMetadata[] = [];
+
+  for (const line of lines) {
+    let entry: {
+      dn?: string;
+      title?: string;
+      upload_date?: string;
+      video_link?: string;
+      world_link?: string;
+      schematic_link?: string | null;
+    };
+    try {
+      entry = JSON.parse(line);
+    } catch {
+      continue;
+    }
+
+    const dn: string = entry.dn || "";
+    if (!dn) continue;
+
+    if (existingDns.has(dn.toLowerCase())) continue;
+
+    const dnUpper = dn.toUpperCase();
+    let category: FarmCategory;
+    let farmType: string;
+    let supportsBoth = false;
+    let tags: string[];
+
+    if (dnUpper.startsWith("C")) {
+      category = "build";
+      farmType = "Build";
+      supportsBoth = true;
+      tags = ["Build", "Java & Bedrock"];
+    } else if (dnUpper.startsWith("B")) {
+      category = "bedrock";
+      farmType = inferFarmTypeFromTitle(entry.title || "");
+      supportsBoth = false;
+      tags = ["Bedrock"];
+    } else {
+      category = "java";
+      farmType = inferFarmTypeFromTitle(entry.title || "");
+      supportsBoth = false;
+      tags = ["Java"];
+    }
+
+    const title: string = entry.title || `TheySix Minecraft Build ${dn}`;
+    const rawVideoUrl = entry.video_link || "";
+    const rawWorldUrl = entry.world_link || "link";
+    const rawSchematicUrl = entry.schematic_link || undefined;
+    const uploadDate = entry.upload_date || "";
+    const date = uploadDate ? uploadDate.split("T")[0] : "";
+
+    const youtubeUrl = rawVideoUrl && rawVideoUrl !== "#" && rawVideoUrl.toLowerCase() !== "link" ? rawVideoUrl : "";
+    const hasYoutube = Boolean(youtubeUrl);
+    const youtubeId = hasYoutube ? extractYouTubeId(youtubeUrl) : undefined;
+    const resolvedThumbnail = getThumbnailUrl(youtubeUrl, undefined);
+
+    let worldDownloadUrl = rawWorldUrl;
+    if (rawWorldUrl.includes("sites.google.com/view/theysixdownloads/home/")) {
+      worldDownloadUrl = "link";
+    }
+    const hasWorldDownload = Boolean(
+      worldDownloadUrl &&
+      worldDownloadUrl !== "#" &&
+      worldDownloadUrl.toLowerCase() !== "link" &&
+      !worldDownloadUrl.includes("sites.google.com/view/theysixdownloads/home/")
+    );
+
+    const hasSchematic =
+      (category === "java" || category === "build") &&
+      Boolean(rawSchematicUrl && rawSchematicUrl !== "#" && rawSchematicUrl.toLowerCase() !== "link");
+
+    const normalizedDn = dn.replace(/^-dn$/i, "").replace(/^b/i, "");
+    const calculatedViews = 0;
+
+    builds.push({
+      id: dn,
+      dn,
+      category,
+      title,
+      farmType,
+      description: `${title}. Designed by TheySix for high efficiency, reliability, and ease of construction in survival mode.`,
+      worldDownloadUrl,
+      schematicUrl: hasSchematic ? rawSchematicUrl : undefined,
+      youtubeUrl: hasYoutube ? youtubeUrl : "",
+      version: category === "build" ? "Java & Bedrock" : "1.21+",
+      rates: "",
+      tags,
+      thumbnailUrl: undefined,
+      author: "TheySix",
+      date,
+      featured: false,
+      views: calculatedViews,
+      resolvedThumbnail,
+      hasSchematic,
+      hasWorldDownload,
+      hasYoutube,
+      hasMaterials: false,
+      normalizedDn,
+      youtubeId,
+      viewsDisplay: formatCompactNumber(calculatedViews),
+      schematicFiles: {
+        litematic: `${dn}.litematic`,
+        schematic: `${dn}.schematic`,
+        schem: `${dn}.schem`,
+        nbt: `${dn}.nbt`,
+      },
+      materials: [],
+      supportsBothPlatforms: supportsBoth,
+    });
+  }
+
+  return builds;
 }
 
 function getBuildFarms(): FarmWithMetadata[] {
@@ -212,6 +426,11 @@ function parseFarmFileContent(content: string, filename: string): FarmData {
     const schematicUrl = extractStringField("schematicUrl") || "#";
     const youtubeUrl = extractStringField("youtubeUrl") || "";
     const version = extractStringField("version") || "1.21+";
+    const gameModeRaw = extractStringField("gameMode");
+    const gameMode = ["Survival", "Creative", "Adventure", "Spectator"].includes(gameModeRaw) ? gameModeRaw as FarmData["gameMode"] : undefined;
+    const seed = extractStringField("seed") || undefined;
+    const worldVersion = extractStringField("worldVersion") || undefined;
+    const dimension = extractStringField("dimension") || undefined;
     const rates = extractStringField("rates") || "";
     const difficultyRaw = extractStringField("difficulty") as "Easy" | "Medium" | "Hard" | "Expert";
     const difficulty = ["Easy", "Medium", "Hard", "Expert"].includes(difficultyRaw) ? difficultyRaw : undefined;
@@ -277,6 +496,10 @@ function parseFarmFileContent(content: string, filename: string): FarmData {
       schematicUrl,
       youtubeUrl,
       version,
+      gameMode,
+      seed,
+      worldVersion,
+      dimension,
       rates,
       difficulty,
       author,
@@ -358,8 +581,9 @@ export function getLegacyFarms(): FarmWithMetadata[] {
     // Bedrock Edition does not have schematics at all
     const isJava = category === "java";
     const rawSchematic = parsedData.schematicUrl?.trim();
-    const hasSchematic = Boolean(isJava && rawSchematic && rawSchematic !== "#" && rawSchematic.toLowerCase() !== "link" && rawSchematic.length > 0);
-    const schematicUrl = isJava && hasSchematic ? rawSchematic : undefined;
+    const hasExternalSchematic = Boolean(isJava && rawSchematic && rawSchematic !== "#" && rawSchematic.toLowerCase() !== "link" && rawSchematic.length > 0);
+    const schematicUrl = isJava && hasExternalSchematic ? rawSchematic : undefined;
+    const hasSchematic = Boolean(schematicUrl);
 
     // World download handling & placeholder detection
     let rawWorld = parsedData.worldDownloadUrl?.trim() || "";
@@ -454,8 +678,16 @@ export function getLegacyFarms(): FarmWithMetadata[] {
 
   farms.push(...getBuildFarms());
 
+  const existingDns = new Set<string>();
+  for (const f of farms) {
+    existingDns.add(f.dn.toLowerCase());
+    if (f.id) existingDns.add(f.id.toLowerCase());
+  }
+
+  farms.push(...getJsonlBuilds(existingDns));
+
   // Sort by featured first, then by date descending (newest first), then by dn descending
-  return farms.sort((a, b) => {
+  return applyJsonlLinkOverrides(farms).sort((a, b) => {
     if (a.featured && !b.featured) return -1;
     if (!a.featured && b.featured) return 1;
     const dateA = a.date ? new Date(a.date).getTime() : 0;
@@ -500,100 +732,8 @@ export function getLegacyFarmByCategoryAndDn(
   });
 }
 
-type FarmRow = {
-  id: string;
-  dn: string;
-  title: string;
-  category: FarmCategory;
-  farm_type: string;
-  description: string;
-  detailed_description: string | null;
-  world_download_url: string;
-  schematic_url: string | null;
-  youtube_url: string;
-  version: string | null;
-  rates: string | null;
-  difficulty: FarmData["difficulty"] | null;
-  tags: string[];
-  thumbnail_url: string | null;
-  author: string | null;
-  date: string | null;
-  featured: boolean;
-  views: number;
-  materials: FarmMaterialItem[];
-  schematic_path: string | null;
-};
-
-function isSupabaseConfigured() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
-}
-
-function normalizeDate(date?: string | null) {
-  return date || undefined;
-}
-
-function rowToFarm(row: FarmRow, schematicUrl?: string): FarmWithMetadata {
-  const rawWorld = row.world_download_url?.trim() || "link";
-  const worldDownloadUrl = rawWorld.includes("sites.google.com/view/theysixdownloads/home/") ? "link" : rawWorld;
-  const youtubeUrl = row.youtube_url?.trim() || "";
-  const actualSchematicUrl = schematicUrl || row.schematic_url || undefined;
-  const hasSchematic = Boolean(actualSchematicUrl && actualSchematicUrl !== "#" && actualSchematicUrl.toLowerCase() !== "link");
-  const calculatedViews = Number(row.views) || 0;
-  const materials = Array.isArray(row.materials) ? row.materials : [];
-  const normalizedDn = row.dn.replace(/-dn$/i, "").replace(/^b/i, "");
-
-  return {
-    id: row.id,
-    dn: row.dn,
-    title: row.title,
-    category: row.category,
-    farmType: row.farm_type,
-    description: row.description,
-    detailedDescription: row.detailed_description || undefined,
-    worldDownloadUrl,
-    schematicUrl: hasSchematic ? actualSchematicUrl : undefined,
-    youtubeUrl,
-    version: row.version || undefined,
-    rates: formatCompactRates(row.rates || ""),
-    difficulty: row.difficulty || undefined,
-    tags: row.tags || [],
-    thumbnailUrl: row.thumbnail_url || undefined,
-    author: row.author || undefined,
-    date: normalizeDate(row.date),
-    featured: row.featured,
-    views: calculatedViews,
-    materials,
-    resolvedThumbnail: getThumbnailUrl(youtubeUrl, row.thumbnail_url || undefined),
-    hasSchematic,
-    hasWorldDownload: Boolean(worldDownloadUrl && worldDownloadUrl !== "#" && worldDownloadUrl.toLowerCase() !== "link"),
-    hasYoutube: Boolean(youtubeUrl && youtubeUrl !== "#" && youtubeUrl.toLowerCase() !== "link"),
-    hasMaterials: materials.length > 0,
-    normalizedDn,
-    youtubeId: extractYouTubeId(youtubeUrl),
-    viewsDisplay: formatCompactNumber(calculatedViews),
-    schematicFiles: {
-      litematic: `${row.dn}.litematic`,
-      schematic: `${row.dn}.schematic`,
-      schem: `${row.dn}.schem`,
-      nbt: `${row.dn}.nbt`,
-    },
-    supportsBothPlatforms: farmSupportsBothPlatforms(row.tags),
-  };
-}
-
 export async function getAllFarms(): Promise<FarmWithMetadata[]> {
-  if (!isSupabaseConfigured()) return getLegacyFarms();
-
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("farms").select("*").order("featured", { ascending: false }).order("date", { ascending: false, nullsFirst: false }).order("dn", { ascending: false });
-  if (error) throw new Error(`Unable to load farms: ${error.message}`);
-
-  return (data as FarmRow[]).map((row) => {
-    const storageUrl = row.schematic_path
-      ? supabase.storage.from("schematics").getPublicUrl(row.schematic_path).data.publicUrl
-      : undefined;
-    return rowToFarm(row, storageUrl);
-  });
+  return applyMaterialCache(getLegacyFarms());
 }
 
 export async function getFarmByCategoryAndDn(category: string, dnParam: string): Promise<FarmWithMetadata | undefined> {
@@ -612,5 +752,15 @@ export async function getFarmByCategoryAndDn(category: string, dnParam: string):
   });
 }
 
-export { rowToFarm };
+
+
+
+
+
+
+
+
+
+
+
 

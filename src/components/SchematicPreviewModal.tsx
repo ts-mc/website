@@ -22,21 +22,24 @@ import {
 } from "lucide-react";
 import { SchematicViewer3D } from "@/components/SchematicViewer3D";
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
-import type { FarmWithMetadata } from "@/types/farm";
+import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
 
 interface SchematicPreviewModalProps {
   farm: FarmWithMetadata;
   isOpen: boolean;
   onClose: () => void;
+  onMaterialsExtracted?: (materials: FarmMaterialItem[]) => void;
 }
 
-export function SchematicPreviewModal({ farm, isOpen, onClose }: SchematicPreviewModalProps) {
+export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtracted }: SchematicPreviewModalProps) {
+  const [hasOpened, setHasOpened] = useState(isOpen);
   const [activeTab, setActiveTab] = useState<"viewer" | "materials" | "guide">("viewer");
   const [selectedFormat, setSelectedFormat] = useState<"litematic" | "schematic" | "schem" | "nbt">("litematic");
   const [materialSearch, setMaterialSearch] = useState("");
   const [copiedMaterials, setCopiedMaterials] = useState(false);
 
   useEffect(() => {
+    if (isOpen) setHasOpened(true);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -50,7 +53,7 @@ export function SchematicPreviewModal({ farm, isOpen, onClose }: SchematicPrevie
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!hasOpened) return null;
 
   const farmFormats = {
     litematic: `${farm.dn}.litematic`,
@@ -73,7 +76,10 @@ export function SchematicPreviewModal({ farm, isOpen, onClose }: SchematicPrevie
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 animate-in fade-in duration-200">
+    <div
+      className={`fixed inset-0 z-50 items-center justify-center p-3 sm:p-6 md:p-8 animate-in fade-in duration-200 ${isOpen ? "flex" : "hidden"}`}
+      aria-hidden={!isOpen}
+    >
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/85 backdrop-blur-md"
@@ -154,7 +160,7 @@ export function SchematicPreviewModal({ farm, isOpen, onClose }: SchematicPrevie
           {/* TAB 1: 3D SCHEMAT.IO VIEWER */}
           {activeTab === "viewer" && (
             <div className="space-y-4">
-              <SchematicViewer3D farm={farm} selectedFormat={selectedFormat} />
+              <SchematicViewer3D farm={farm} selectedFormat={selectedFormat} onMaterialsExtracted={onMaterialsExtracted} />
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
