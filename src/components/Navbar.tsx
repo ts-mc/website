@@ -137,7 +137,6 @@ export function Navbar() {
                 setIsOpen(nextOpen);
                 if (!nextOpen) {
                   setIsMobileFarmsOpen(false);
-                  setIsMobileExtrasOpen(false);
                 }
               }}
               className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
@@ -229,7 +228,6 @@ export function Navbar() {
             onClick={() => {
               setIsOpen(false);
               setIsMobileFarmsOpen(false);
-              setIsMobileExtrasOpen(false);
             }}
             className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
               pathname === aboutLink.href
