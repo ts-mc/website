@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, MessageSquare, Compass, Youtube, Box, Server, Bot, Hammer, BookOpen, ChevronDown } from "lucide-react";
+import { Menu, X, MessageSquare, Compass, Youtube, Box, Hammer, BookOpen, ChevronDown } from "lucide-react";
 import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 
 function JavaLogo({ className }: { className: string }) {
@@ -14,7 +14,6 @@ function JavaLogo({ className }: { className: string }) {
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileFarmsOpen, setIsMobileFarmsOpen] = useState(false);
-  const [isMobileExtrasOpen, setIsMobileExtrasOpen] = useState(false);
   const pathname = usePathname();
 
   const farmLinks = [
@@ -24,20 +23,16 @@ export function Navbar() {
     { href: "/#farms", label: "Both", icon: Compass },
   ];
 
-  const extraLinks = [
-    { href: "/server", label: "Minecraft Server", icon: Server },
-    { href: "/bot/about", label: "Discord Bot", icon: Bot },
-  ];
-
   const baseLinks = [
     { href: "/socials", label: "Socials", icon: Youtube },
     { href: "/about", label: "About", icon: BookOpen },
   ];
+  const wikiLink = { href: "/wiki", label: "Wiki", icon: BookOpen };
   const socialsLink = baseLinks[0];
   const aboutLink = baseLinks[1];
 
   const isFarmsActive = pathname === "/";
-  const isExtrasActive = pathname.startsWith("/server") || pathname.startsWith("/bot");
+  const isWikiActive = pathname.startsWith("/wiki");
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
@@ -89,39 +84,17 @@ export function Navbar() {
               </div>
             </div>
 
-            <div className="relative group">
-              <button
-                type="button"
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isExtrasActive
-                    ? "bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/50"
-                }`}
-              >
-                <Server className="w-4 h-4" />
-                Extras
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
-              </button>
-
-              <div className="pointer-events-none absolute left-0 top-full mt-2 w-60 rounded-xl border border-slate-700 bg-slate-950/95 p-2 opacity-0 translate-y-1 transition-all duration-200 shadow-xl shadow-black/40 backdrop-blur-xl group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0">
-                {extraLinks.map((link) => {
-                  const Icon = link.icon;
-                  const isActive = (link.href === "/server" && pathname.startsWith("/server")) || (link.href === "/bot/about" && pathname.startsWith("/bot"));
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                        isActive ? "bg-slate-800 text-cyan-400" : "text-slate-300 hover:text-white hover:bg-slate-800/70"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
+            <Link
+              href={wikiLink.href}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                isWikiActive
+                  ? "bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Wiki
+            </Link>
 
             {baseLinks.map((link) => {
               const Icon = link.icon;
@@ -207,7 +180,6 @@ export function Navbar() {
                       onClick={() => {
                         setIsOpen(false);
                         setIsMobileFarmsOpen(false);
-                        setIsMobileExtrasOpen(false);
                       }}
                       className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
                     >
@@ -220,54 +192,27 @@ export function Navbar() {
             )}
           </div>
 
-          <div className="mt-1">
-            <button
-              type="button"
-              onClick={() => setIsMobileExtrasOpen((prev) => !prev)}
-              className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                isExtrasActive ? "bg-slate-800 text-cyan-400 border border-slate-700" : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <Server className="w-5 h-5" />
-                Extras
-              </span>
-              <ChevronDown className={`w-5 h-5 transition-transform ${isMobileExtrasOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            {isMobileExtrasOpen && (
-              <div className="mt-1 ml-2 border-l border-slate-800 pl-2">
-                {extraLinks.map((link) => {
-                  const Icon = link.icon;
-                  const isActive = (link.href === "/server" && pathname.startsWith("/server")) || (link.href === "/bot/about" && pathname.startsWith("/bot"));
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      onClick={() => {
-                        setIsOpen(false);
-                        setIsMobileFarmsOpen(false);
-                        setIsMobileExtrasOpen(false);
-                      }}
-                      className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        isActive ? "bg-slate-800 text-cyan-400" : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <Link
+            href={wikiLink.href}
+            onClick={() => {
+              setIsOpen(false);
+              setIsMobileFarmsOpen(false);
+            }}
+            className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
+              isWikiActive
+                ? "bg-slate-800 text-cyan-400 border border-slate-700"
+                : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+            }`}
+          >
+            <BookOpen className="w-5 h-5" />
+            Wiki
+          </Link>
 
           <Link
             href={socialsLink.href}
             onClick={() => {
               setIsOpen(false);
               setIsMobileFarmsOpen(false);
-              setIsMobileExtrasOpen(false);
             }}
             className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
               pathname === socialsLink.href

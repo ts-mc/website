@@ -25,8 +25,6 @@ A modern, lightning-fast Next.js 14 website for **TheySix** to share Minecraft J
 - **🏰 Minecraft Server SMP Hub (`/server`, `/server/about`)**:
   - Community events and tournaments managed by **ro_mihaiu** at **[discord.ro-mihaiu.xyz](https://discord.ro-mihaiu.xyz)**.
   - Sub-pages for `/server/rules`, `/server/events`, and `/server/staff`.
-- **🤖 TS-Bot Integration (`/bot/about`, `/bot/commands`, `/bot/tos`)**:
-  - Documentation and command list for the open-source discord.js bot (`https://github.com/ro-mihaiu/ts-bot`).
 - **📱 Socials & Channels (`/socials`)**:
   - Links to YouTube Java (`@TheySix`), YouTube Bedrock (`@TheySixMC`), and YouTube Minecraft Builds (`@TheySixCreations`).
 
@@ -41,7 +39,6 @@ src/
 ├── app/                  # Next.js App Router pages
 │   ├── farm/[category]/[dn]/page.tsx   # Dynamic farm detail view
 │   ├── server/           # Minecraft SMP pages (about, events, rules, staff)
-│   ├── bot/              # Discord bot pages (about, commands, tos)
 │   └── socials/          # Social media directory
 ├── components/           # React UI components
 │   ├── SchematicViewer3D.tsx     # 3D voxel canvas renderer

@@ -63,6 +63,11 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/wiki" className="hover:text-cyan-400 transition-colors">
+                    Minecraft Mechanics Wiki
+                  </Link>
+                </li>
+                <li>
                   <Link href="/about" className="hover:text-cyan-400 transition-colors">
                     About & Contact
                   </Link>
@@ -70,11 +75,6 @@ export function Footer() {
                 <li>
                   <Link href="/server/about" className="hover:text-amber-400 transition-colors">
                     Minecraft Server
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/bot/about" className="hover:text-cyan-400 transition-colors">
-                    TheySix Helper (Discord Bot)
                   </Link>
                 </li>
               </ul>
@@ -171,6 +171,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/wiki" className="hover:text-cyan-400 transition-colors">
+                  Minecraft Mechanics Wiki
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-cyan-400 transition-colors">
                   About & Contact
                 </Link>
@@ -180,17 +185,12 @@ export function Footer() {
                   Minecraft Server
                 </Link>
               </li>
-              <li>
-                <Link href="/bot/about" className="hover:text-cyan-400 transition-colors">
-                  TheySix Helper (Discord Bot)
-                </Link>
-              </li>
             </ul>
           </div>
 
-          {/* Legal & Bot Policies */}
+          {/* Legal */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-200 tracking-wider uppercase font-mono">Legal & Bot Docs</h3>
+            <h3 className="text-xs font-bold text-slate-200 tracking-wider uppercase font-mono">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/cookies" className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -205,16 +205,6 @@ export function Footer() {
               <li>
                 <Link href="/privacy" className="flex items-center gap-1.5 hover:text-white transition-colors">
                   <Shield className="w-3.5 h-3.5" /> Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/bot/tos" className="hover:text-slate-300 transition-colors">
-                  Bot Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/bot/privacy" className="hover:text-slate-300 transition-colors">
-                  Bot Privacy Policy
                 </Link>
               </li>
             </ul>

@@ -1,14 +1,14 @@
 import type { MetadataRoute } from "next";
 import { getAllFarms } from "@/lib/farms";
+import { getAllWikiArticles } from "@/data/wiki/articles";
 
 const siteUrl = "https://theysix.ro-mihaiu.xyz";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/about", "/socials", "/server", "/server/about", "/server/events",
-    "/server/rules", "/server/staff", "/bot/about", "/bot/commands", "/bot/terms",
-    "/bot/tos", "/cookies", "/privacy", "/terms", "/tos", "/staff", "/staff/retired",
-    "/tricks/java", "/tricks/bedrock",
+    "/server/rules", "/server/staff", "/cookies", "/privacy", "/terms", "/tos", "/staff", "/staff/retired",
+    "/tricks/java", "/tricks/bedrock", "/wiki",
   ];
 
   const routes = staticRoutes.map((route) => ({
@@ -25,5 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...routes, ...farmRoutes];
+  const wikiRoutes = getAllWikiArticles().map((article) => ({
+    url: `${siteUrl}/wiki/${article.edition}/${article.slug}`,
+    lastModified: new Date(article.lastUpdated),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...routes, ...farmRoutes, ...wikiRoutes];
 }
