@@ -98,7 +98,7 @@ function parseBuildArchive(filePath: string, linkLabel: string): Map<string, str
   return links;
 }
 
-function inferFarmTypeFromTitle(title: string): string {
+function inferFarmTypeFromTitle(title: string, fallbackType?: string): string {
   const t = title.toLowerCase();
   if (t.includes("iron")) return "Iron";
   if (t.includes("creeper")) return "Creeper";
@@ -110,6 +110,9 @@ function inferFarmTypeFromTitle(title: string): string {
   if (t.includes("wood") || t.includes("tree") || t.includes("logs") || t.includes("bamboo")) return "Wood";
   if (t.includes("cobblestone") || t.includes("stone") || t.includes("sand duper") || t.includes("rail dupe") || t.includes("rail")) return "Cobblestone & Stone";
   if (t.includes("kelp")) return "Kelp";
+  if (fallbackType) {
+    return fallbackType.charAt(0).toUpperCase() + fallbackType.slice(1);
+  }
   return "Other";
 }
 
@@ -130,6 +133,7 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
       video_link?: string;
       world_link?: string;
       schematic_link?: string | null;
+      farm_type?: string;
     };
     try {
       entry = JSON.parse(line);
@@ -155,12 +159,12 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
       tags = ["Build", "Java & Bedrock"];
     } else if (dnUpper.startsWith("B")) {
       category = "bedrock";
-      farmType = inferFarmTypeFromTitle(entry.title || "");
+      farmType = inferFarmTypeFromTitle(entry.title || "", entry.farm_type);
       supportsBoth = false;
       tags = ["Bedrock"];
     } else {
       category = "java";
-      farmType = inferFarmTypeFromTitle(entry.title || "");
+      farmType = inferFarmTypeFromTitle(entry.title || "", entry.farm_type);
       supportsBoth = false;
       tags = ["Java"];
     }

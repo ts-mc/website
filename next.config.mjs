@@ -7,6 +7,22 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Legacy /farm/<category>/<dn> URLs now live at /dn/<dn>. Permanent redirects
+  // so old links and search results keep working.
+  async redirects() {
+    return [
+      {
+        source: "/farm",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/farm/:category/:dn*",
+        destination: "/dn/:dn*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

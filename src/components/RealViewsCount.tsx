@@ -78,14 +78,14 @@ export function RealViewsCount({
 
   return (
     <div className={`inline-flex items-center gap-1.5 ${className}`} title={`~${displayViews} estimated views`}>
-      <Eye className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-      <span className="font-mono text-slate-300">
+      <Eye className="w-3.5 h-3.5 text-[#4CADD0] shrink-0" />
+      <span className="font-mono text-ink">
         {displayViews} views
       </span>
 
       {showLivePulse && (
-        <span className="hidden sm:inline-flex items-center gap-1 pl-1 text-[10px] text-emerald-400 font-mono">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="hidden sm:inline-flex items-center gap-1 pl-1 text-[10px] text-[#4CAF50] font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
           <span>{activeViewers} live</span>
         </span>
       )}

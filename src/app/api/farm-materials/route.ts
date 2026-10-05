@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     await writeFile(cachePath, `${JSON.stringify(materials, null, 2)}\n`, "utf-8");
 
     for (const farmCategory of ["java", "bedrock", "build"]) {
-      revalidatePath(`/farm/${farmCategory}/${dn}`);
+      revalidatePath(`/dn/\$dn`);
     }
     revalidatePath("/");
     return NextResponse.json({ saved: true });

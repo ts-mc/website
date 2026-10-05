@@ -129,14 +129,14 @@ export function MaterialListChecklist({
   };
   if (!materials || materials.length === 0) {
     return (
-      <div className="p-5 sm:p-6 rounded-2xl bg-amber-950/20 border border-amber-500/30 text-slate-200 space-y-4">
+      <div className="p-5 sm:p-6 rounded-2xl bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-ink space-y-4">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <AlertCircle className="w-5 h-5 text-[#FBBF24] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold text-amber-300">
+            <h4 className="text-sm font-semibold text-[#FBBF24]">
               No Material List Available
             </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-ink leading-relaxed">
               This farm doesn&apos;t have a material list provided yet. Create a ticket in Discord to request it, or watch the video tutorial for required items and building steps.
             </p>
           </div>
@@ -147,7 +147,7 @@ export function MaterialListChecklist({
             href="https://discord.gg/theysix"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold transition-all shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-ink text-xs font-bold transition-all shadow-sm"
           >
             <MessageSquarePlus className="w-4 h-4" />
             <span>Open Discord Ticket</span>
@@ -157,9 +157,9 @@ export function MaterialListChecklist({
               href={youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold transition-all"
+              className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#FF3B3B]/20 hover:bg-[#FF3B3B]/30 text-[#FF3B3B] border border-[#FF3B3B]/30 text-xs font-bold transition-all"
             >
-              <Youtube className="w-4 h-4 text-red-400" />
+              <Youtube className="w-4 h-4 text-[#FB7185]" />
               <span>Watch Video Tutorial</span>
             </a>
           )}
@@ -171,13 +171,13 @@ export function MaterialListChecklist({
   return (
     <div className="space-y-4 select-none">
       {/* Progress & Header Bar */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 shadow-inner">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#0B0E14]/80 border border-hairline space-y-3 shadow-inner">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-              <Boxes className="w-4 h-4 text-amber-400" /> In-Game Resource Tracker
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FBBF24] flex items-center gap-1.5">
+              <Boxes className="w-4 h-4 text-[#FBBF24]" /> In-Game Resource Tracker
             </span>
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-slate-900 text-cyan-300 border border-slate-700">
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-bg-elev text-[#9FEBF6] border border-hairline">
               {collectedCount}/{totalItems} items ({progressPercent}%)
             </span>
           </div>
@@ -185,13 +185,13 @@ export function MaterialListChecklist({
           <div className="flex items-center gap-1.5 text-xs">
             <button
               onClick={handleCheckAll}
-              className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-[11px] font-medium transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-bg-elev hover:bg-bg-elev text-ink hover:text-ink border border-hairline text-[11px] font-medium transition-colors"
             >
               Check All
             </button>
             <button
               onClick={handleReset}
-              className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-rose-300 border border-slate-700 text-[11px] font-medium transition-colors flex items-center gap-1"
+              className="px-2.5 py-1 rounded-lg bg-bg-elev hover:bg-bg-elev text-ink-muted hover:text-[#FB7185] border border-hairline text-[11px] font-medium transition-colors flex items-center gap-1"
               title="Reset all checkboxes"
             >
               <RotateCcw className="w-3 h-3" /> Reset
@@ -200,12 +200,12 @@ export function MaterialListChecklist({
         </div>
 
         {/* Visual Progress Bar */}
-        <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+        <div className="w-full bg-bg-elev rounded-full h-2 overflow-hidden border border-hairline">
           <div
             className={`h-full transition-all duration-500 rounded-full ${
               isAllDone
-                ? "bg-gradient-to-r from-emerald-500 to-teal-400 shadow-md shadow-emerald-500/30"
-                : "bg-gradient-to-r from-amber-500 to-cyan-400"
+                ? "bg-gradient-to-r from-[#4CAF50] to-[#2DD4BF] shadow-md shadow-[#4CAF50]/30"
+                : "bg-gradient-to-r from-[#FBBF24] to-[#4CADD0]"
             }`}
             style={{ width: `${progressPercent}%` }}
           />
@@ -213,8 +213,8 @@ export function MaterialListChecklist({
 
         {/* All items done message */}
         {isAllDone && (
-          <div className="flex items-center gap-2 text-xs text-emerald-300 font-semibold pt-0.5 animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-xs text-[#4CAF50] font-semibold pt-0.5 animate-in fade-in">
+            <CheckCircle2 className="w-4 h-4 text-[#4CAF50]" />
             <span>All materials gathered! You have everything ready in your inventory to build this farm.</span>
           </div>
         )}
@@ -223,20 +223,20 @@ export function MaterialListChecklist({
       {/* Toolbar: Search & Copy Buttons */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-ink-dim absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search items (e.g. Hopper, Piston, Glass)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-950/90 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60"
+            className="w-full bg-[#0B0E14]/90 border border-hairline rounded-xl pl-8 pr-3 py-1.5 text-xs text-ink placeholder-ink-dim focus:outline-none focus:border-[#4CADD0]/60"
           />
         </div>
 
         <div className="flex items-center gap-1.5 text-xs">
           <button
             onClick={handleCopyRemaining}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-amber-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-elev hover:bg-bg-elev text-[#FBBF24] hover:text-[#FBBF24] text-xs font-semibold border border-hairline transition-colors"
             title="Copy only uncollected items"
           >
             <ClipboardList className="w-3.5 h-3.5" />
@@ -245,7 +245,7 @@ export function MaterialListChecklist({
 
           <button
             onClick={handleCopyAll}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-semibold border border-slate-700 transition-colors"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-elev hover:bg-bg-elev text-ink hover:text-ink text-xs font-semibold border border-hairline transition-colors"
           >
             <ClipboardList className="w-3.5 h-3.5" />
             <span>Copy All</span>
@@ -255,7 +255,7 @@ export function MaterialListChecklist({
 
       {/* Copied notification toast */}
       {copiedNotification && (
-        <div className="p-2 rounded-xl bg-cyan-950/90 border border-cyan-800 text-cyan-300 text-xs font-mono text-center animate-in fade-in">
+        <div className="p-2 rounded-xl bg-[#0E3A47]/90 border border-[#155E75] text-[#9FEBF6] text-xs font-mono text-center animate-in fade-in">
           {copiedNotification}
         </div>
       )}
@@ -270,26 +270,26 @@ export function MaterialListChecklist({
               onClick={() => toggleItem(mat.name)}
               className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
                 isChecked
-                  ? "bg-emerald-950/20 border-emerald-800/60 text-slate-400 opacity-75"
-                  : "bg-slate-950/70 border-slate-800/90 text-slate-200 hover:border-slate-700 hover:bg-slate-900/60"
+                  ? "bg-[#4CAF50]/10 border-[#4CAF50]/60 text-ink-muted opacity-75"
+                  : "bg-[#070A12]/70 border-[#1E293B] text-ink hover:border-hairline hover:bg-[#111726]/60"
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
                 {/* Checkbox Icon */}
                 <div className={`p-1 rounded-lg border transition-colors shrink-0 ${
                   isChecked
-                    ? "bg-emerald-500 border-emerald-400 text-slate-950"
-                    : "bg-slate-900 border-slate-700 text-transparent"
+                    ? "bg-[#4CAF50] border-[#4CAF50] text-slate-950"
+                    : "bg-bg-elev border-hairline text-transparent"
                 }`}>
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
 
                 {/* Name & Stacks */}
                 <div className="min-w-0">
-                  <div className={`text-xs font-semibold truncate ${isChecked ? "line-through text-slate-400" : "text-white"}`}>
+                  <div className={`text-xs font-semibold truncate ${isChecked ? "line-through text-ink-muted" : "text-ink"}`}>
                     {mat.name}
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono">
+                  <div className="text-[11px] text-ink-muted font-mono">
                     {mat.stacks || `${mat.count} items`}
                   </div>
                 </div>
@@ -298,8 +298,8 @@ export function MaterialListChecklist({
               {/* Total Count Badge */}
               <span className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold border shrink-0 ${
                 isChecked
-                  ? "bg-emerald-950/50 text-emerald-400 border-emerald-800/80"
-                  : "bg-slate-900 text-cyan-300 border-slate-800"
+                  ? "bg-[#4CAF50]/15 text-[#4CAF50] border-[#4CAF50]/80"
+                  : "bg-bg-elev text-[#9FEBF6] border-hairline"
               }`}>
                 x{mat.count}
               </span>

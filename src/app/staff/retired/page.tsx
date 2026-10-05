@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 export default function RetiredStaffPage() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
-      <Link href="/staff" className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white">
+      <Link href="/staff" className="inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink">
         <ArrowLeft className="h-4 w-4" /> Back to active staff
       </Link>
 
-      <div className="rounded-3xl border border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950 p-8 sm:p-10 text-center space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Retired Staff</h1>
-        <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-400">
+      <div className="rounded-3xl border border-hairline bg-gradient-to-b from-bg-elev to-[#070A12] p-8 sm:p-10 text-center space-y-3">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-ink">Retired Staff</h1>
+        <p className="mx-auto max-w-2xl text-sm sm:text-base text-ink-muted">
           Former team members who contributed to moderation, technical growth, and community events.
         </p>
       </div>
@@ -27,11 +27,11 @@ export default function RetiredStaffPage() {
         {RETIRED_PUBLIC_STAFF.map((member) => (
           <article
             key={member.userId}
-            className="glass-panel rounded-3xl border border-slate-800 p-6 shadow-lg transition-all hover:border-slate-700"
+            className="glass-panel rounded-3xl border border-hairline p-6 shadow-lg transition-all hover:border-hairline"
           >
             <div className="space-y-4">
               <div className="flex items-center gap-3.5">
-                <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950">
+                <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-hairline bg-[#070A12]">
                   <Image
                     src={getPublicStaffAvatarPath(member.userId)}
                     alt={member.name}
@@ -41,17 +41,17 @@ export default function RetiredStaffPage() {
                   />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-white">{member.name}</h2>
-                  <p className="text-xs font-mono text-slate-400">{member.headline}</p>
+                  <h2 className="text-base font-bold text-ink">{member.name}</h2>
+                  <p className="text-xs font-mono text-ink-muted">{member.headline}</p>
                 </div>
               </div>
 
-              <p className="text-sm text-slate-300 leading-relaxed">{member.bio}</p>
+              <p className="text-sm text-ink leading-relaxed">{member.bio}</p>
             </div>
 
-            <div className="mt-5 flex items-center justify-between border-t border-slate-800 pt-3 text-xs text-slate-400">
+            <div className="mt-5 flex items-center justify-between border-t border-hairline pt-3 text-xs text-ink-muted">
               <span className="font-mono">{member.discordTag}</span>
-              <Link href={`/staff/${member.userId}`} className="text-cyan-400 transition-colors hover:text-cyan-300" title="Open detailed staff profile">
+              <Link href={`/staff/${member.userId}`} className="text-[#4CADD0] transition-colors hover:text-[#9FEBF6]" title="Open detailed staff profile">
                 <MessageSquare className="h-4 w-4" />
               </Link>
             </div>

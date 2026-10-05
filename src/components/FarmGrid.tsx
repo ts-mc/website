@@ -195,11 +195,11 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
   return (
     <div id="farms-grid-section" className="space-y-8 scroll-mt-6">
       {/* Search & Filter Bar */}
-      <div className="glass-panel p-4 sm:p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+      <div className="glass-panel p-4 sm:p-6 rounded-panel shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
           {/* Search Box */}
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
             <input
               type="text"
               value={searchQuery}
@@ -208,12 +208,12 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                 setCurrentPage(1);
               }}
               placeholder="Search 500+ farms by name, type, tags, or #111-dn..."
-              className="w-full pl-11 pr-10 py-3 rounded-2xl bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-sm transition-all shadow-inner"
+              className="w-full pl-11 pr-10 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink placeholder-ink-dim focus:outline-none focus:border-[#4CADD0] focus:ring-1 focus:ring-[#4CADD0] text-sm transition-all shadow-inner"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-ink-muted hover:text-ink"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -229,7 +229,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                   setSelectedType(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3.5 py-3 rounded-2xl bg-slate-950/80 border border-slate-800 text-slate-200 text-sm focus:outline-none focus:border-cyan-500 appearance-none pr-8 cursor-pointer"
+                className="w-full px-3.5 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink text-sm focus:outline-none focus:border-[#4CADD0] appearance-none pr-8 cursor-pointer"
               >
                 <option value="all">All Farm Types</option>
                 {farmTypes.map((type) => (
@@ -238,7 +238,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                   </option>
                 ))}
               </select>
-              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
             </div>
 
               {/* Sort Dropdown */}
@@ -246,7 +246,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-2xl bg-slate-950/80 border border-slate-800 text-slate-200 text-sm focus:outline-none focus:border-cyan-500 appearance-none pr-8 cursor-pointer"
+                className="w-full px-3.5 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink text-sm focus:outline-none focus:border-[#4CADD0] appearance-none pr-8 cursor-pointer"
               >
                 <option value="featured">Featured First</option>
                 <option value="date_desc">Newest Uploaded</option>
@@ -254,20 +254,20 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                 <option value="dn_asc">DN Number (Low to High)</option>
                 <option value="dn_desc">DN Number (High to Low)</option>
               </select>
-              <SlidersHorizontal className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+              <SlidersHorizontal className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* Edition Switcher Tabs */}
-        <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-800/80">
+        <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-hairline">
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => handleCategoryChange("all")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedCategory === "all"
-                  ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/20"
-                  : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                  ? "bg-brand text-slate-950 shadow-lg shadow-[#4CADD0]/20"
+                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
               }`}
             >
               <span>All Editions</span>
@@ -280,8 +280,8 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
               onClick={() => handleCategoryChange("java")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedCategory === "java"
-                  ? "bg-[#9fff99] text-slate-950 shadow-lg shadow-[#9fff99]/25 font-bold"
-                  : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                  ? "bg-lime text-slate-950 shadow-lg shadow-[#9FFF99]/25 font-bold"
+                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
               }`}
             >
               <JavaBrandIcon size={14} />
@@ -296,7 +296,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedCategory === "bedrock"
                   ? "bg-slate-100 text-slate-950 shadow-lg shadow-white/20 font-bold"
-                  : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
               }`}
             >
               <Box className="w-3.5 h-3.5" />
@@ -310,12 +310,12 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
               onClick={() => handleCategoryChange("both")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedCategory === "both"
-                  ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 font-bold"
-                  : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                  ? "bg-brand text-slate-950 shadow-lg shadow-[#4CADD0]/20 font-bold"
+                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
               }`}
             >
               <span>Both Platforms</span>
-              <span className={`px-1.5 py-0.2 rounded text-[11px] font-mono ${selectedCategory === "both" ? "bg-black/20 text-white font-bold" : "bg-black/30"}`}>
+              <span className={`px-1.5 py-0.2 rounded text-[11px] font-mono ${selectedCategory === "both" ? "bg-black/20 text-ink font-bold" : "bg-black/30"}`}>
                 {bothCount}
               </span>
             </button>
@@ -323,7 +323,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
             <button
               onClick={() => handleCategoryChange("build")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "build" ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20" : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                selectedCategory === "build" ? "bg-amber text-slate-950 shadow-lg shadow-[#FBBF24]/20" : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
               }`}
             >
               <Hammer className="w-3.5 h-3.5" />
@@ -332,8 +332,8 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
             </button>
           </div>
 
-          <div className="text-xs text-slate-400 font-mono">
-            Showing <span className="text-white font-semibold">{filteredFarms.length}</span> farm designs
+          <div className="label-mono text-ink-muted">
+            Showing <span className="text-ink font-semibold">{filteredFarms.length}</span> farm designs
           </div>
         </div>
       </div>
@@ -347,17 +347,17 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
         </div>
       ) : (
         /* Empty State */
-        <div className="glass-panel text-center py-16 px-6 rounded-3xl border border-slate-800 space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-slate-500">
+        <div className="glass-panel text-center py-16 px-6 rounded-panel space-y-4">
+          <div className="w-16 h-16 rounded-card bg-bg-elev border border-hairline flex items-center justify-center mx-auto text-ink-dim">
             <Search className="w-8 h-8" />
           </div>
-          <h3 className="text-xl font-bold text-white">No farms found</h3>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">
+          <h3 className="text-xl font-bold text-ink">No farms found</h3>
+          <p className="text-sm text-ink-muted max-w-md mx-auto">
             We couldn&apos;t find any farms matching your search filters. Try adjusting your query or resetting filters.
           </p>
           <button
             onClick={handleResetFilters}
-            className="px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold transition-all shadow-md"
+            className="px-5 py-2.5 rounded-control bg-brand hover:bg-[#4CADD0]/80 text-slate-950 text-sm font-semibold transition-all shadow-md"
           >
             Reset All Filters
           </button>
@@ -370,7 +370,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
           <button
             onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
             disabled={currentPage === 1}
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            className="p-2.5 rounded-control bg-bg-elev border border-hairline text-ink-muted hover:text-ink disabled:opacity-40 disabled:pointer-events-none transition-colors"
             aria-label="Previous page"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -382,7 +382,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                 return (
                   <span
                     key={`ellipsis-${idx}`}
-                    className="w-7 sm:w-8 h-9 flex items-center justify-center text-slate-500 font-bold select-none tracking-widest text-xs sm:text-sm"
+                    className="w-7 sm:w-8 h-9 flex items-center justify-center text-ink-dim font-bold select-none tracking-widest text-xs sm:text-sm"
                   >
                     ..
                   </span>
@@ -398,8 +398,8 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
                   onClick={() => handlePageChange(pageNum)}
                   className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl font-semibold transition-all text-xs sm:text-sm ${
                     isActive
-                      ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/30"
-                      : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800"
+                      ? "bg-brand text-slate-950 shadow-md shadow-[#4CADD0]/30"
+                      : "bg-bg-elev border border-hairline text-ink-muted hover:text-ink hover:bg-surface-hover"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                   aria-label={`Page ${pageNum}`}
@@ -413,7 +413,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
           <button
             onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            className="p-2.5 rounded-control bg-bg-elev border border-hairline text-ink-muted hover:text-ink disabled:opacity-40 disabled:pointer-events-none transition-colors"
             aria-label="Next page"
           >
             <ChevronRight className="w-5 h-5" />

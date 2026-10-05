@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -15,6 +15,9 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileFarmsOpen, setIsMobileFarmsOpen] = useState(false);
   const pathname = usePathname();
+  const panelId = useId();
+  const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const farmLinks = [
     { href: "/?category=java#farms", label: "Java Edition", icon: JavaLogo },
@@ -27,138 +30,145 @@ export function Navbar() {
     { href: "/socials", label: "Socials", icon: Youtube },
     { href: "/about", label: "About", icon: BookOpen },
   ];
-  const wikiLink = { href: "/wiki", label: "Wiki", icon: BookOpen };
   const socialsLink = baseLinks[0];
   const aboutLink = baseLinks[1];
 
   const isFarmsActive = pathname === "/";
-  const isWikiActive = pathname.startsWith("/wiki");
+
+  // Close the mobile panel on navigation and on Escape.
+  useEffect(() => {
+    setIsOpen(false);
+    setIsMobileFarmsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
+
+  const isActive = (href: string) => pathname === href;
+
+  const desktopLinkClass = (active: boolean) =>
+    `flex items-center gap-2 px-3 py-2 rounded-control text-sm font-medium transition-colors duration-200 ${
+      active ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
+    }`;
+
+  const mobileLinkClass = (active: boolean) =>
+    `flex items-center gap-3 px-4 py-3 rounded-control text-base font-medium transition-colors duration-200 ${
+      active ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
+    }`;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Brand / Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-lg overflow-hidden border border-slate-700 bg-slate-900 group-hover:border-cyan-500/60 transition-all shadow-md">
-              <Image src="/logo.gif" alt="TheySix Logo" fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-                TheySix <span className="text-xs px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono font-normal">FARMS</span>
-              </span>
-              <span className="text-xs text-slate-400 font-medium">World & Schematic Vault</span>
-            </div>
-          </Link>
-
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1">
-            <div className="relative group">
-              <button
-                type="button"
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isFarmsActive
-                    ? "bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/50"
-                }`}
-              >
-                <Compass className="w-4 h-4" />
-                All Farms
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
-              </button>
-
-              <div className="pointer-events-none absolute left-0 top-full mt-2 w-56 rounded-xl border border-slate-700 bg-slate-950/95 p-2 opacity-0 translate-y-1 transition-all duration-200 shadow-xl shadow-black/40 backdrop-blur-xl group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0">
-                {farmLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors"
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            <Link
-              href={wikiLink.href}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                isWikiActive
-                  ? "bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm"
-                  : "text-slate-300 hover:text-white hover:bg-slate-800/50"
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              Wiki
-            </Link>
-
-            {baseLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/50"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right Action: Discord Button */}
-          <div className="hidden sm:flex items-center gap-3">
-            <a
-              href="https://discord.gg/theysix"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-semibold transition-all shadow-md shadow-[#5865F2]/20 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <MessageSquare className="w-4 h-4 fill-current" />
-              <span>Discord</span>
-            </a>
+    <header className="sticky top-0 z-50 h-[var(--nav-height)] w-full border-b border-hairline bg-[#0B0E14]/85 backdrop-blur-xl">
+      <div className="shell flex h-full items-center gap-4">
+        {/* Brand / Logo */}
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-control" aria-label="TheySix Farms, home">
+          <div className="relative size-9 overflow-hidden rounded-lg border border-hairline bg-surface">
+            <Image src="/logo.gif" alt="TheySix Logo" fill className="object-cover" unoptimized />
           </div>
+          <span className="flex items-baseline gap-2">
+            <span className="text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">TheySix</span>
+            <span className="label-mono rounded-pill bg-[#0E3A47] px-2 py-[3px] text-brand-hi">Farms</span>
+          </span>
+          <span className="hidden md:inline text-xs text-ink-muted font-medium">World &amp; Schematic Vault</span>
+        </Link>
 
-          {/* Mobile Menu Toggle */}
-          <div className="flex lg:hidden">
+        {/* Desktop Nav Links */}
+        <nav aria-label="Primary" className="ml-auto hidden items-center gap-1 lg:flex">
+          <div className="relative group">
             <button
-              onClick={() => {
-                const nextOpen = !isOpen;
-                setIsOpen(nextOpen);
-                if (!nextOpen) {
-                  setIsMobileFarmsOpen(false);
-                }
-              }}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
-              aria-label="Toggle navigation menu"
+              type="button"
+              className={desktopLinkClass(isFarmsActive)}
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Compass className="w-4 h-4" />
+              All Farms
+              <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
             </button>
+
+            <div className="pointer-events-none absolute left-0 top-full mt-2 w-56 rounded-card border border-hairline bg-[#0B0E14]/95 p-2 opacity-0 translate-y-1 transition-all duration-200 shadow-xl shadow-black/40 backdrop-blur-xl group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0">
+              {farmLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-control text-sm text-ink-muted hover:text-ink hover:bg-white/5 transition-colors duration-200"
+                  >
+                    <Icon className="w-4 h-4" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
+
+          {baseLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={desktopLinkClass(isActive(link.href))}
+              >
+                <Icon className="w-4 h-4" />
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right Action: Discord Button */}
+        <div className="hidden sm:flex items-center gap-2 lg:ml-3">
+          <a
+            href="https://discord.gg/theysix"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-2 px-3 py-2 rounded-control text-sm font-medium text-ink-muted transition-colors duration-200 hover:bg-[#5865F2]/15 hover:text-ink md:inline-flex"
+          >
+            <MessageSquare className="w-4 h-4 fill-current" />
+            <span>Discord</span>
+          </a>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="flex lg:hidden ml-auto">
+          <button
+            ref={menuButtonRef}
+            type="button"
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+            onClick={() => setIsOpen((open) => !open)}
+            className="inline-flex size-10 items-center justify-center rounded-control border border-hairline text-ink transition-colors duration-200 hover:bg-white/5"
+          >
+            <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
+            {isOpen ? <X className="w-5 h-5" aria-hidden /> : <Menu className="w-5 h-5" aria-hidden />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
-      {isOpen && (
-        <>
-          <button aria-label="Close navigation menu" onClick={() => setIsOpen(false)} className="fixed inset-0 top-16 z-40 bg-black/40 lg:hidden" />
-          <div className="absolute right-4 top-[calc(100%+0.5rem)] z-50 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-slate-700 bg-slate-950/95 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl lg:hidden">
-          <div className="mt-1">
+      <div
+        id={panelId}
+        hidden={!isOpen}
+        className="absolute inset-x-0 top-[var(--nav-height)] border-b border-hairline bg-[#0B0E14]/95 backdrop-blur-xl lg:hidden"
+      >
+        <nav aria-label="Primary mobile" className="shell flex flex-col gap-1 py-4">
+          <div>
             <button
               type="button"
               onClick={() => setIsMobileFarmsOpen((prev) => !prev)}
-              className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                isFarmsActive ? "bg-slate-800 text-cyan-400 border border-slate-700" : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+              aria-expanded={isMobileFarmsOpen}
+              className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-control text-base font-medium transition-colors duration-200 ${
+                isFarmsActive ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
               }`}
             >
               <span className="flex items-center gap-3">
@@ -169,7 +179,7 @@ export function Navbar() {
             </button>
 
             {isMobileFarmsOpen && (
-              <div className="mt-1 ml-2 border-l border-slate-800 pl-2">
+              <div className="mt-1 ml-2 border-l border-hairline pl-2">
                 {farmLinks.map((link) => {
                   const Icon = link.icon;
                   return (
@@ -180,7 +190,7 @@ export function Navbar() {
                         setIsOpen(false);
                         setIsMobileFarmsOpen(false);
                       }}
-                      className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 rounded-control text-sm font-medium text-ink-muted hover:text-ink hover:bg-white/5 transition-colors duration-200"
                     >
                       <Icon className="w-4 h-4" />
                       {link.label}
@@ -191,68 +201,30 @@ export function Navbar() {
             )}
           </div>
 
-          <Link
-            href={wikiLink.href}
-            onClick={() => {
-              setIsOpen(false);
-              setIsMobileFarmsOpen(false);
-            }}
-            className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-              isWikiActive
-                ? "bg-slate-800 text-cyan-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-            }`}
-          >
-            <BookOpen className="w-5 h-5" />
-            Wiki
-          </Link>
 
-          <Link
-            href={socialsLink.href}
-            onClick={() => {
-              setIsOpen(false);
-              setIsMobileFarmsOpen(false);
-            }}
-            className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-              pathname === socialsLink.href
-                ? "bg-slate-800 text-cyan-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-            }`}
-          >
+          <Link href={socialsLink.href} aria-current={isActive(socialsLink.href) ? "page" : undefined} className={mobileLinkClass(isActive(socialsLink.href))}>
             <Youtube className="w-5 h-5" />
             {socialsLink.label}
           </Link>
 
-          <Link
-            href={aboutLink.href}
-            onClick={() => {
-              setIsOpen(false);
-              setIsMobileFarmsOpen(false);
-            }}
-            className={`mt-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-              pathname === aboutLink.href
-                ? "bg-slate-800 text-cyan-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-            }`}
-          >
+          <Link href={aboutLink.href} aria-current={isActive(aboutLink.href) ? "page" : undefined} className={mobileLinkClass(isActive(aboutLink.href))}>
             <BookOpen className="w-5 h-5" />
             {aboutLink.label}
           </Link>
 
-          <div className="pt-2">
+          <div className="mt-3 border-t border-hairline pt-4">
             <a
               href="https://discord.gg/theysix"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-[#5865F2] text-white font-medium shadow"
+              className="flex h-11 items-center justify-center gap-2 w-full px-4 rounded-control bg-[#5865F2]/15 border border-hairline font-semibold text-ink transition-colors duration-200 hover:bg-[#5865F2]/25"
             >
               <MessageSquare className="w-5 h-5 fill-current" />
               Join our Discord Server
             </a>
           </div>
-          </div>
-        </>
-      )}
+        </nav>
+      </div>
     </header>
   );
 }

@@ -11,29 +11,70 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0c0f17",
-        surface: {
-          50: "#1e2433",
-          100: "#181d2a",
-          200: "#131722",
-          300: "#0f131c",
-          DEFAULT: "#131722",
-        },
+        /* Token aliases — the events design system. */
+        bg: "var(--bg)",
+        "bg-base": "var(--bg-base)",
+        "bg-elev": "var(--bg-elev)",
+        surface: "var(--surface)",
+        "surface-hover": "var(--surface-hover)",
+        hairline: "var(--border)",
+        "hairline-hover": "var(--border-hover)",
+        ink: "var(--text)",
+        "ink-muted": "var(--text-muted)",
+        "ink-dim": "var(--text-dim)",
+        brand: "var(--brand)",
+        "brand-hi": "var(--brand-hi)",
+        "brand-2": "var(--brand-2)",
+        lime: "var(--lime)",
+        emerald: "var(--emerald)",
+        amber: "var(--amber)",
+        orange: "var(--orange)",
+        rose: "var(--rose)",
+        crimson: "var(--crimson)",
+        magenta: "var(--magenta)",
+        violet: "var(--violet)",
+        indigo: "var(--indigo)",
+        sky: "var(--sky)",
+        teal: "var(--teal)",
+        blurple: "var(--blurple)",
+        "blurple-text": "var(--blurple-text)",
+        "indigo-text": "var(--indigo-text)",
+        /* Legacy farms mappings, kept working and aliased to the new tokens. */
+        background: "var(--bg-base)",
+        "surface-50": "var(--bg-elev)",
+        "surface-100": "#181d2a",
+        "surface-200": "#131722",
+        "surface-300": "#0f131c",
         mc: {
           green: "#2ecc71",
-          emerald: "#10b981",
-          bedrock: "#f1f5f9",
-          java: "#9fff99",
-          cyan: "#06b6d4",
+          emerald: "var(--emerald)",
+          bedrock: "var(--text)",
+          java: "var(--lime)",
+          cyan: "var(--brand)",
           blue: "#3b82f6",
-          purple: "#a855f7",
-          gold: "#eab308",
-          dark: "#0b0e14",
+          purple: "var(--violet)",
+          gold: "var(--amber)",
+          dark: "var(--bg-base)",
         },
       },
       fontFamily: {
-        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      borderRadius: {
+        panel: "28px",
+        card: "20px",
+        control: "12px",
+        pill: "9999px",
+      },
+      fontSize: {
+        mono: ["0.6875rem", { lineHeight: "1rem" }],
+      },
+      maxWidth: {
+        shell: "1200px",
+      },
+      transitionTimingFunction: {
+        reveal: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -43,4 +84,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-

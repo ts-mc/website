@@ -13,12 +13,12 @@ interface FarmCardProps {
 export function FarmCard({ farm }: FarmCardProps) {
   const isJava = farm.category === "java";
   const isBuild = farm.category === "build";
-  const farmUrl = `/farm/${farm.category}/${farm.dn}`;
+  const farmUrl = `/dn/${farm.normalizedDn}`;
 
   return (
-    <div className="group glass-panel rounded-2xl border border-slate-800/80 hover:border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-950/20">
+    <div className="group card-hue glass-panel rounded-card border border-hairline bg-[#131722]/60 overflow-hidden flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30">
       {/* Media / Thumbnail Header */}
-      <Link href={farmUrl} className="relative aspect-video w-full overflow-hidden bg-slate-950 block">
+      <Link href={farmUrl} className="relative aspect-video w-full overflow-hidden bg-[#070A12] block">
         <Image
           src={farm.resolvedThumbnail}
           alt={farm.title}
@@ -27,26 +27,26 @@ export function FarmCard({ farm }: FarmCardProps) {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           unoptimized={farm.resolvedThumbnail.startsWith("http")}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E14] via-transparent to-transparent opacity-80" />
 
         {/* Edition Badge */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10 flex-wrap max-w-[70%]">
           {isBuild ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase font-mono shadow-md backdrop-blur-md bg-amber-400/90 text-slate-950">
+            <span className="label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md bg-[#FBBF24]/90 text-slate-950">
               <Hammer className="w-3 h-3" /> Builds
             </span>
           ) : farm.supportsBothPlatforms ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase font-mono shadow-md backdrop-blur-md bg-slate-950/80 text-cyan-200 border border-cyan-400/40">
+            <span className="label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md bg-[#0B0E14]/80 text-[#B2F9FF] border border-[#4CADD0]/40">
               <JavaBrandIcon size={12} />
-              <Box className="w-3 h-3 text-slate-100" />
+              <Box className="w-3 h-3 text-ink" />
               Both Platforms
             </span>
           ) : (
             <span
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase font-mono shadow-md backdrop-blur-md ${
+              className={`label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md ${
                 isJava
-                  ? "bg-[#9fff99]/15 text-[#9fff99] border border-[#9fff99]/30 bg-slate-950/80"
-                  : "bg-white/15 text-slate-100 border border-slate-300/30 bg-slate-950/80"
+                  ? "bg-[#9FFF99]/15 text-[#9FFF99] border border-[#9FFF99]/30 bg-[#0B0E14]/80"
+                  : "bg-white/15 text-ink border border-white/30 bg-[#0B0E14]/80"
               }`}
             >
               {isJava ? <JavaBrandIcon size={12} /> : <Box className="w-3 h-3" />}
@@ -55,7 +55,7 @@ export function FarmCard({ farm }: FarmCardProps) {
           )}
 
           {farm.version && (
-            <span className="px-2 py-1 rounded-md text-xs font-mono font-medium text-slate-300 bg-slate-950/80 border border-slate-700 backdrop-blur-md">
+            <span className="label-mono px-2 py-1.5 rounded-pill text-[#94A3B8] bg-[#0B0E14]/80 border border-hairline backdrop-blur-md">
               {farm.version}
             </span>
           )}
@@ -63,19 +63,19 @@ export function FarmCard({ farm }: FarmCardProps) {
 
         {/* DN ID Badge */}
         <div className="absolute top-3 right-3 z-10">
-          <span className="px-2 py-1 rounded-md text-xs font-mono font-bold text-slate-400 bg-slate-950/90 border border-slate-800 backdrop-blur-md">
+          <span className="label-mono px-2 py-1.5 rounded-pill text-[#94A3B8] bg-[#0B0E14]/90 border border-hairline backdrop-blur-md">
             #{farm.dn}
           </span>
         </div>
 
         {/* Bottom thumbnail bar: View count on bottom-left, Rates on bottom-right */}
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-slate-200 z-10 pointer-events-none">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 text-slate-300 border border-slate-700/80 backdrop-blur-md font-mono text-[11px] shadow-sm pointer-events-auto">
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-ink z-10 pointer-events-none">
+          <span className="label-mono inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-[#0B0E14]/90 text-[#CBD5E1] border border-hairline backdrop-blur-md shadow-sm pointer-events-auto">
             <RealViewsCount dn={farm.dn} initialViews={farm.views} />
           </span>
 
           {farm.rates && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-800/80 backdrop-blur-md font-mono text-[11px] shadow-sm">
+            <span className="label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-[#0E3A47]/90 text-[#B2F9FF] border border-[#4CADD0]/40 backdrop-blur-md shadow-sm">
               <Gauge className="w-3 h-3" /> {farm.rates}
             </span>
           )}
@@ -87,25 +87,25 @@ export function FarmCard({ farm }: FarmCardProps) {
         <div>
           {/* Farm Type */}
           <div className="flex items-center justify-between gap-2 mb-1.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400 font-mono">
+            <span className="label-mono text-brand">
               {farm.farmType}
             </span>
             {farm.difficulty && (
-              <span className="text-[11px] font-medium text-slate-400">
+              <span className="text-[11px] font-medium text-ink-muted">
                 {farm.difficulty}
               </span>
             )}
           </div>
 
           {/* Title */}
-          <Link href={farmUrl} className="group-hover:text-cyan-300 transition-colors">
-            <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:underline">
+          <Link href={farmUrl} className="group-hover:text-brand-hi transition-colors">
+            <h3 className="text-lg font-bold text-ink line-clamp-1 group-hover:underline">
               {farm.title}
             </h3>
           </Link>
 
           {/* Description */}
-          <p className="text-sm text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-ink-muted mt-2 line-clamp-2 leading-relaxed">
             {farm.description}
           </p>
 
@@ -125,15 +125,15 @@ export function FarmCard({ farm }: FarmCardProps) {
                   key={tag}
                   className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
                     /both platforms/i.test(tag)
-                      ? "text-cyan-300 bg-cyan-950/60 border-cyan-800"
-                      : "text-slate-400 bg-slate-800/60 border-slate-800"
+                      ? "text-[#B2F9FF] bg-[#0E3A47]/60 border-[#1E293B]"
+                      : "text-ink-muted bg-[#111726]/60 border-hairline"
                   }`}
                 >
                   #{tag}
                 </span>
               ))}
               {farm.tags.length > 3 && (
-                <span className="text-[11px] text-slate-500 self-center">
+                <span className="text-[11px] text-ink-dim self-center">
                   +{farm.tags.length - 3}
                 </span>
               )}
@@ -142,23 +142,23 @@ export function FarmCard({ farm }: FarmCardProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-3 border-t border-slate-800/80 flex items-center gap-2">
+        <div className="pt-3 border-t border-hairline flex items-center gap-2">
           {/* World Download Link */}
           {farm.hasWorldDownload && farm.worldDownloadUrl && farm.worldDownloadUrl !== "link" && farm.worldDownloadUrl !== "#" ? (
             <a
               href={farm.worldDownloadUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-all"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-control text-xs font-semibold text-ink bg-bg-elev hover:bg-surface-hover border border-hairline hover:border-hairline-hover transition-all"
               title="Download World Save"
             >
-              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <Download className="w-3.5 h-3.5 text-brand" />
               <span>World Save</span>
             </a>
           ) : (
             <Link
               href={farmUrl}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-medium text-slate-500 bg-slate-900/80 border border-slate-800/80 hover:text-cyan-400 hover:border-slate-700 transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-control text-[11px] font-medium text-ink-dim bg-[#111726]/80 border border-hairline hover:text-brand hover:border-hairline-hover transition-colors"
               title="No world file provided - Click to request ticket"
             >
               <span>No World</span>
@@ -172,16 +172,16 @@ export function FarmCard({ farm }: FarmCardProps) {
                 href={farm.schematicUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-all"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-control text-xs font-semibold text-ink bg-bg-elev hover:bg-surface-hover border border-hairline hover:border-hairline-hover transition-all"
                 title="Download .litematic Schematic"
               >
-                <FileCode className="w-3.5 h-3.5 text-[#9fff99]" />
+                <FileCode className="w-3.5 h-3.5 text-lime" />
                 <span>Schematic</span>
               </a>
             ) : (
               <Link
                 href={farmUrl}
-                className="px-2.5 py-2 rounded-xl text-[11px] font-medium text-slate-500 bg-slate-900/80 border border-slate-800/80 hover:text-[#9fff99] hover:border-slate-700 transition-colors"
+                className="px-2.5 py-2 rounded-control text-[11px] font-medium text-ink-dim bg-[#111726]/80 border border-hairline hover:text-lime hover:border-hairline-hover transition-colors"
                 title="No schematic provided - Click to request ticket"
               >
                 <span>No Schem.</span>
@@ -195,7 +195,7 @@ export function FarmCard({ farm }: FarmCardProps) {
               href={farm.youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-slate-800 hover:border-red-500/30 transition-all"
+              className="p-2 rounded-control text-ink-muted hover:text-rose hover:bg-[#FB7185]/10 border border-hairline hover:border-[#FB7185]/30 transition-all"
               title="Watch Video Tutorial on YouTube"
               aria-label="Watch YouTube video"
             >
@@ -204,7 +204,7 @@ export function FarmCard({ farm }: FarmCardProps) {
           ) : (
             <Link
               href={farmUrl}
-              className="p-2 rounded-xl text-slate-600 hover:text-red-400 hover:bg-red-500/10 border border-slate-800/80 hover:border-slate-700 transition-colors"
+              className="p-2 rounded-control text-ink-dim hover:text-rose hover:bg-[#FB7185]/10 border border-hairline hover:border-hairline-hover transition-colors"
               title="No video link provided - Click to request ticket"
               aria-label="No video link provided"
             >
@@ -215,7 +215,7 @@ export function FarmCard({ farm }: FarmCardProps) {
           {/* View Details Link */}
           <Link
             href={farmUrl}
-            className="p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 border border-slate-800 hover:border-cyan-500/30 transition-all"
+            className="p-2 rounded-control text-ink-muted hover:text-brand hover:bg-[#4CADD0]/10 border border-hairline hover:border-[#4CADD0]/30 transition-all"
             title="View Full Farm Page"
             aria-label="View Full Farm Page"
           >
