@@ -1,7 +1,21 @@
 {
   "date": "2026-10-01",
   "type": "release",
-  "title": "TheySix Events expands",
-  "summary": "Added in-game event roles, five leaderboards, King of the Week, and 19 minigames for testing."
+  "title": "TheySix Events launches",
+  "summary": "TheySix Events went live with a full role hierarchy, five leaderboards, King of the Week, and nineteen minigames to test.",
+  "description": "The TheySix Events system is now live, bringing in-game roles, leaderboards, weekly competitions, and new message components to the server.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "TheySix Events roles" },
+    { "type": "paragraph", "text": "We added a full set of in-game roles for TheySix Events so everyone has a clear place in the community." },
+    { "type": "list", "items": ["default", "verified", "voter", "booster", "staff", "helper", "mod", "head mod", "admin", "manager", "theysix"] },
+    { "type": "heading", "level": 1, "text": "Components V2 messages" },
+    { "type": "paragraph", "text": "Rolled out Components V2 messages across the server for a cleaner look and feel." },
+    { "type": "heading", "level": 1, "text": "Leaderboards" },
+    { "type": "paragraph", "text": "Five new leaderboards track the top players in each category." },
+    { "type": "list", "items": ["Top #5 voters", "Top #5 kills", "Top #5 deaths", "Top #5 wins", "Top #5 games played"] },
+    { "type": "heading", "level": 1, "text": "King of the Week (KotW)" },
+    { "type": "paragraph", "text": "King of the Week celebrates the player who won the most games in 1st place." },
+    { "type": "heading", "level": 1, "text": "Nineteen minigames" },
+    { "type": "paragraph", "text": "Added nineteen new minigames for everyone to try out." }
+  ]
 }
-

@@ -1,34 +1,17 @@
 {
   "date": "2026-10-27",
   "type": "release",
-  "title": "Farm archive feed connected",
-  "summary": "The archive now reads the dated farms.jsonl feed so new farm records, videos, worlds, and schematics appear without replacing the existing catalog."
-}
-
-{
-  "date": "2026-10-27",
-  "type": "maintenance",
-  "title": "mihulish wiki updates",
-  "summary": "Added more wiki articles, fixed some broken links, and updated the farm library to include the latest dated feed."
-}
-
-{
-  "date": "2026-10-27",
-  "type": "release",
-  "title": "Updating staff directory",
-  "summary": "Added new staff members and updated existing profiles to reflect current roles and responsibilities. Added retired staff members to the directory for historical reference."
-}
-
-{
-  "date": "2026-10-27",
-  "type": "release",
-  "title": "Logging and monitoring improvements",
-  "summary": "Enhanced logging and monitoring systems to better track application performance and user activity. This includes more detailed logs for debugging and improved alerting for critical issues."
-}
-
-{
-  "date": "2026-10-27",
-  "type": "release",
-  "title": "Log rotation and archival",
-  "summary": "Posting polished logs to https://theysix.ro-mihaiu.xyz/logs for better accessibility and long-term storage. Implemented log rotation to manage disk space and ensure that logs are archived efficiently."
+  "title": "October server updates",
+  "summary": "Connected the farm archive feed, updated the staff directory, improved logging and monitoring, and added log rotation and archival.",
+  "description": "End-of-month server maintenance including the farm archive feed connection, staff directory updates, logging improvements, and log archival.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Farm archive feed connected" },
+    { "type": "paragraph", "text": "The archive now reads the dated farms.jsonl feed so new farm records, videos, worlds, and schematics appear without replacing the existing catalog." },
+    { "type": "heading", "level": 1, "text": "Staff directory update" },
+    { "type": "paragraph", "text": "Added new staff members and updated existing profiles to reflect current roles and responsibilities. Retired staff members were added to the directory for historical reference." },
+    { "type": "heading", "level": 1, "text": "Logging and monitoring improvements" },
+    { "type": "paragraph", "text": "Improved logging and monitoring to better track application performance and user activity, with more detailed debug logs and better alerting for critical issues." },
+    { "type": "heading", "level": 1, "text": "Log rotation and archival" },
+    { "type": "paragraph", "text": "Posted polished logs to https://theysix.ro-mihaiu.xyz/logs for better accessibility and long-term storage, and set up log rotation to manage disk space efficiently." }
+  ]
 }

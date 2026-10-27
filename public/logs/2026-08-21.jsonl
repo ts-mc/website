@@ -1,28 +1,17 @@
 {
   "date": "2026-08-21",
   "type": "release",
-  "title": "Arcane leveling added",
-  "summary": "Added level and leaderboard commands, restored qualifying member levels, and introduced cumulative chat and booster XP boosts."
+  "title": "Arcane leveling, ticket panels, and site work began",
+  "summary": "Added level and leaderboard commands, expanded ticket panels, began work on the TheySix site, and revised staff applications.",
+  "description": "A busy day of updates: Arcane leveling was added, ticket panels were expanded, work began on the TheySix site, and staff applications were revised.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Arcane leveling added" },
+    { "type": "paragraph", "text": "Added level and leaderboard commands, restored qualifying member levels, and introduced cumulative chat and booster XP boosts." },
+    { "type": "heading", "level": 1, "text": "Ticket panels expanded" },
+    { "type": "paragraph", "text": "Added Java, Bedrock, Discord bug and member reports, partnerships, and the do-not-message scam-reporting channel." },
+    { "type": "heading", "level": 1, "text": "TheySix site work began" },
+    { "type": "paragraph", "text": "Started the server site for farms, builds, events, and social links; planned renderer, uploads, notes, and wiki features." },
+    { "type": "heading", "level": 1, "text": "Staff applications revised" },
+    { "type": "paragraph", "text": "Updated the staff-application link and added more questions." }
+  ]
 }
-
-{
-  "date": "2026-08-21",
-  "type": "release",
-  "title": "Ticket panels expanded",
-  "summary": "Added Java, Bedrock, Discord bug and member reports, partnerships, and the do-not-message scam-reporting channel."
-}
-
-{
-  "date": "2026-08-21",
-  "type": "release",
-  "title": "TheySix site work began",
-  "summary": "Started the server site for farms, builds, events, and social links; planned renderer, uploads, notes, and wiki features."
-}
-
-{
-  "date": "2026-08-21",
-  "type": "maintenance",
-  "title": "Staff applications revised",
-  "summary": "Updated the staff-application link and added more questions."
-}
-

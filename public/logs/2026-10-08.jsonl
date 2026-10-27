@@ -1,13 +1,20 @@
 {
   "date": "2026-10-08",
-  "type": "community",
+  "type": "release",
   "title": "sitian promoted to Moderator",
-  "summary": "SLOA | itz_sitian moved from Helper to Moderator."
-}
-
-{
-  "date": "2026-10-08",
-  "type": "maintenance",
-  "title": "Farm links and ticket automation repaired",
-  "summary": "Moved farm commands to Mihulish, added direct video, schematic, and world buttons, fixed DN 529, and stopped duplicate ticket pings."
+  "summary": "Congrats to SLOA | itz_sitian on the promotion from Helper to Moderator, plus some behind-the-scenes fixes to farm links and ticket automation.",
+  "description": "Staff promotion, migration from @ArchiverBot to @mihulish, reworked /dn links, fixed DN 529, and stopped duplicate ticket pings.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Staff promotion" },
+    { "type": "paragraph", "text": "Big congrats to SLOA | itz_sitian, who moved from Helper to Moderator." },
+    { "type": "heading", "level": 1, "text": "Bot migration" },
+    { "type": "paragraph", "text": "Moved from @ArchiverBot to @mihulish after ArchiverBot stopped working, and rebuilt archiver functionality as best we could." },
+    { "type": "heading", "level": 1, "text": "/dn button links" },
+    { "type": "paragraph", "text": "/dn links no longer redirect to a website. Instead, you now get 1-3 buttons to choose from." },
+    { "type": "list", "items": ["Youtube (red)", "Schematic (green)", "World (blue)"] },
+    { "type": "heading", "level": 1, "text": "DN: 529 video link" },
+    { "type": "paragraph", "text": "Repaired the bugged DN: 529 video link." },
+    { "type": "heading", "level": 1, "text": "Ticket ping fix" },
+    { "type": "paragraph", "text": "Fixed double/mass ping in tickets from @mihulish — the bot was resetting its own 24h cycle and going a bit rogue." }
+  ]
 }

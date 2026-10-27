@@ -1,0 +1,7 @@
+# TheySix v0.4.0 (2026-08-25)
+
+Added Supabase authentication and farm management features.
+
+## Added
+- Supabase auth integration
+- Farm management system

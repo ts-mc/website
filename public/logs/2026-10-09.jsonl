@@ -1,6 +1,20 @@
 {
   "date": "2026-10-09",
   "type": "release",
-  "title": "Mihulish command and ticket updates",
-  "summary": "Added video search, wiki lookup, moderation commands, ticket-panel work, and configurable ticket reminder pings."
+  "title": "Mihulish commands and ticket system",
+  "summary": "Added video search, wiki lookup, moderation commands, a ticket system, and configurable ticket reminder pings to @mihulish.",
+  "description": "@mihulish got a big upgrade with video search, wiki lookup, moderation tools, a ticket system, and a ticket reminder ping toggle.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Video search (/vd)" },
+    { "type": "paragraph", "text": "Added video search to @mihulish. Use /vd link:<link> — it's just like /dn but with a video link for anyone who can't find the dn." },
+    { "type": "heading", "level": 1, "text": "Wiki integration (/wiki)" },
+    { "type": "paragraph", "text": "Added wiki lookup to @mihulish. Use /wiki article:<keyword> to search the wiki by article name." },
+    { "type": "heading", "level": 1, "text": "Moderation commands" },
+    { "type": "paragraph", "text": "Added a set of moderation commands:" },
+    { "type": "list", "items": ["/snipe — detects all deleted messages from the last 6 hours in a channel", "/purge count:<number> — deletes up to 100 messages from the channel", "/addrole user:<user> role:<role> / /removerole user:<user> role:<role> — adds or removes a role from a person", "/learn — pulls information from chat transcripts to help update wiki pages"] },
+    { "type": "heading", "level": 1, "text": "Ticket system" },
+    { "type": "paragraph", "text": "Added a ticket system to @mihulish. The panel options and form are still being debugged." },
+    { "type": "heading", "level": 1, "text": "Ticket ping toggle" },
+    { "type": "paragraph", "text": "Managers can now choose whether tickets need a 24h ping cycle. By default, it pings the ticket creator and the staff member who last sent a message." }
+  ]
 }

@@ -2,6 +2,10 @@
   "date": "2026-09-11",
   "type": "community",
   "title": "Helper retirements",
-  "summary": "Michal, harsh, and Chefjr73 moved from Helper to Cherished Retiree."
+  "summary": "Michal, harsh, and Chefjr73 moved from Helper to Cherished Retiree.",
+  "description": "Michal, harsh, and Chefjr73 moved from Helper to Cherished Retiree, thanking them for their service.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Retirements" },
+    { "type": "paragraph", "text": "Michal, harsh, and Chefjr73 moved from Helper to Cherished Retiree." }
+  ]
 }
-

@@ -1,0 +1,16 @@
+{
+  "version": "0.5.0",
+  "date": "2026-09-12",
+  "title": "Farm data management overhaul",
+  "summary": "Refactored farm data management and added the schematic viewer.",
+  "changes": [
+    {
+      "type": "changed",
+      "text": "Overhauled farm data management system"
+    },
+    {
+      "type": "added",
+      "text": "Schematic viewer for farm designs"
+    }
+  ]
+}

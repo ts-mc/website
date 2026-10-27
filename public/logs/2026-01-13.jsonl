@@ -1,7 +1,11 @@
 {
   "date": "2026-01-13",
   "type": "community",
-  "title": "EvaConly moved to Cherished Retiree",
-  "summary": "EvaConly moved from Helper to Cherished Retiree."
+  "title": "EvaConly retired as Helper",
+  "summary": "EvaConly moved from Helper to Cherished Retiree.",
+  "description": "EvaConly moved from Helper to Cherished Retiree, thanking them for their service.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Retirement" },
+    { "type": "paragraph", "text": "EvaConly moved from Helper to Cherished Retiree." }
+  ]
 }
-

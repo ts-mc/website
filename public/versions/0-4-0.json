@@ -1,0 +1,16 @@
+{
+  "version": "0.4.0",
+  "date": "2026-08-25",
+  "title": "Supabase auth and farm management",
+  "summary": "Added Supabase authentication and farm management features.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Supabase auth integration"
+    },
+    {
+      "type": "added",
+      "text": "Farm management system"
+    }
+  ]
+}

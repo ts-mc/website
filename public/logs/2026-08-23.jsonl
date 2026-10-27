@@ -1,7 +1,11 @@
 {
   "date": "2026-08-23",
   "type": "community",
-  "title": "Primtick moved to Cherished Retiree",
-  "summary": "LOA | primtick moved from Moderator to Cherished Retiree."
+  "title": "Primtick retired as Helper",
+  "summary": "LOA | primtick moved from Moderator to Cherished Retiree.",
+  "description": "LOA | primtick moved from Moderator to Cherished Retiree, thanking them for their service.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Retirement" },
+    { "type": "paragraph", "text": "LOA | primtick moved from Moderator to Cherished Retiree." }
+  ]
 }
-

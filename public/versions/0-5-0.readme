@@ -1,0 +1,9 @@
+# TheySix v0.5.0 (2026-09-12)
+
+Refactored farm data management and added the schematic viewer.
+
+## Changed
+- Overhauled farm data management system
+
+## Added
+- Schematic viewer for farm designs

@@ -1,6 +1,13 @@
 {
   "date": "2026-10-05",
   "type": "maintenance",
-  "title": "Unused bot roles and DiscordSRV data removed",
-  "summary": "Removed individually created bot roles and the DiscordSRV database following a role-synchronization configuration issue."
+  "title": "Cleaned up bot roles and DiscordSRV data",
+  "summary": "Removed roles that were created individually by bots and deleted the DiscordSRV database due to a role-sync issue.",
+  "description": "Cleaned up leftover bot-created roles and removed the DiscordSRV database after a small configuration issue between Discord and Minecraft role synchronization.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Removed bot-created roles" },
+    { "type": "paragraph", "text": "Removed a few roles that had been created individually by bots." },
+    { "type": "heading", "level": 1, "text": "DiscordSRV database" },
+    { "type": "paragraph", "text": "Removed the DiscordSRV database because of a configuration issue between Discord and Minecraft role synchronization." }
+  ]
 }

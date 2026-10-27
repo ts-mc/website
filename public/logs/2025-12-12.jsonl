@@ -1,7 +1,11 @@
 {
   "date": "2025-12-12",
   "type": "community",
-  "title": "EvaConly and Kian Oswald joined Helpers",
-  "summary": "EvaConly and Kian Oswald moved from Player to Helper."
+  "title": "Two new Helpers joined",
+  "summary": "EvaConly and Kian Oswald moved from Player to Helper.",
+  "description": "Welcome EvaConly and Kian Oswald to the Helper team — both moved up from Player.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helpers" },
+    { "type": "paragraph", "text": "EvaConly and Kian Oswald moved from Player to Helper." }
+  ]
 }
-

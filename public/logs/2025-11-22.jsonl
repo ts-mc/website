@@ -1,7 +1,11 @@
 {
   "date": "2025-11-22",
   "type": "community",
-  "title": "Ro_mihaiu joined Helpers",
-  "summary": "SLOA | ro_mihaiu moved from Player to Helper."
+  "title": "ro_mihaiu joined Helpers",
+  "summary": "SLOA | ro_mihaiu moved from Player to Helper.",
+  "description": "ro_mihaiu joined the Helper team, moving up from Player.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "SLOA | ro_mihaiu moved from Player to Helper." }
+  ]
 }
-

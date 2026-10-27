@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "date": "2026-08-22",
+  "title": "Initial project setup",
+  "summary": "First commit of the TheySix farm database project.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Project repository initialized with basic site structure"
+    },
+    {
+      "type": "added",
+      "text": "Real links and Java/Bedrock theming"
+    }
+  ]
+}

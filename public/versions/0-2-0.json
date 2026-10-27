@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "date": "2026-08-23",
+  "title": "Java and Bedrock farms",
+  "summary": "Added farm builds for both editions, analytics, and legal pages.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Java and Bedrock farm uploads with YouTube links"
+    },
+    {
+      "type": "added",
+      "text": "Analytics and legal pages"
+    },
+    {
+      "type": "added",
+      "text": "Java/Bedrock themes and build icon animation"
+    }
+  ]
+}

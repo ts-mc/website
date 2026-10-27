@@ -1,7 +1,13 @@
 {
   "date": "2025-10-07",
   "type": "community",
-  "title": "AJ, primtick, Alex, and Sagar Yadav promoted",
-  "summary": "AJ joined Helpers; primtick, Alex, and Sagar Yadav moved from Helper to Moderator."
+  "title": "New Helpers and Moderators promoted",
+  "summary": "AJ joined Helpers; primtick, Alex, and Sagar Yadav moved from Helper to Moderator.",
+  "description": "Welcome to the team! AJ joined as a Helper, and primtick, Alex, and Sagar Yadav were promoted from Helper to Moderator.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "AJ joined the Helper team." },
+    { "type": "heading", "level": 1, "text": "Promotions to Moderator" },
+    { "type": "paragraph", "text": "primtick, Alex, and Sagar Yadav moved from Helper to Moderator." }
+  ]
 }
-

@@ -1,0 +1,16 @@
+{
+  "version": "0.3.0",
+  "date": "2026-08-24",
+  "title": "Staff directory",
+  "summary": "Added staff directory, staff pages, and farm detail pages.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Staff directory and staff profile pages"
+    },
+    {
+      "type": "added",
+      "text": "Farm detail pages (dn.tsx series)"
+    }
+  ]
+}

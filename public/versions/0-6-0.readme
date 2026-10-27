@@ -1,0 +1,9 @@
+# TheySix v0.6.0 (2026-09-13)
+
+Implemented the wiki system with mob and block guides.
+
+## Added
+- Wiki system with shulker farm troubleshooting guide
+
+## Removed
+- Bot pages removed in favor of wiki

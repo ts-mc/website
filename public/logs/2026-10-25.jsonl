@@ -2,5 +2,16 @@
   "date": "2026-10-25",
   "type": "maintenance",
   "title": "Onboarding and wiki links refreshed",
-  "summary": "Rebuilt the onboarding guide with a simpler design, updated its wording and resource channels, and repaired wiki embed links."
+  "summary": "Gave the Server Guide a minimalistic redesign, reworded Onboarding questions, updated resource channels, and fixed /wiki embed links.",
+  "description": "Refreshed the Server Guide, reworded Onboarding questions to sound more human, updated resource channels, and repaired /wiki embed title links.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Server Guide update" },
+    { "type": "paragraph", "text": "Updated the Server Guide — removed the old images and replaced them with a clean, minimalistic design." },
+    { "type": "heading", "level": 1, "text": "Onboarding reworded" },
+    { "type": "paragraph", "text": "Reworded the Onboarding questions so they sound more human and friendly." },
+    { "type": "heading", "level": 1, "text": "Resource channels" },
+    { "type": "paragraph", "text": "Updated the resource channels to point to more relevant places." },
+    { "type": "heading", "level": 1, "text": "/wiki link repair" },
+    { "type": "paragraph", "text": "Fixed the link behind the embed's title from /wiki article keyword searches." }
+  ]
 }

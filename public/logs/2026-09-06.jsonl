@@ -2,6 +2,10 @@
   "date": "2026-09-06",
   "type": "community",
   "title": "Techoni promoted to Helper",
-  "summary": "Techoni moved from Player to Helper."
+  "summary": "Techoni moved from Player to Helper.",
+  "description": "Techoni joined the Helper team, moving up from Player.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "Techoni moved from Player to Helper." }
+  ]
 }
-

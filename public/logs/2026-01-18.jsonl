@@ -2,6 +2,10 @@
   "date": "2026-01-18",
   "type": "community",
   "title": "Savage pop tart promoted to Head Moderator",
-  "summary": "Savage pop tart moved from Moderator to Head Moderator."
+  "summary": "Savage pop tart moved from Moderator to Head Moderator.",
+  "description": "Savage pop tart was promoted from Moderator to Head Moderator.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Promotion" },
+    { "type": "paragraph", "text": "Savage pop tart moved from Moderator to Head Moderator." }
+  ]
 }
-

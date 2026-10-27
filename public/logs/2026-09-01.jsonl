@@ -1,28 +1,17 @@
 {
   "date": "2026-09-01",
   "type": "release",
-  "title": "Mihulish replaces the old helper",
-  "summary": "Replaced the verification-dependent TheySix Helper with Mihulish; staff can use its commands and send suggestions through the staff channel."
+  "title": "Mihulish replaces old helper, farm archive and events updates",
+  "summary": "Mihulish replaced the verification-dependent TheySix Helper, farm archive and events were updated, channels were organized, and @mihulish was added for staff tools.",
+  "description": "Major changes on September 1st: Mihulish replaced the old helper bot, the farm archive and events received updates, channels were reorganized, and @mihulish was added to support staff tools.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Mihulish replaces the old helper" },
+    { "type": "paragraph", "text": "Replaced the verification-dependent TheySix Helper with Mihulish; staff can use its commands and send suggestions through the staff channel." },
+    { "type": "heading", "level": 1, "text": "Farm archive and events updates" },
+    { "type": "paragraph", "text": "Added developing /dn farm-link delivery, uploaded schematics 529 through 510, added a site schematic renderer, and introduced 19 event minigames for testing." },
+    { "type": "heading", "level": 1, "text": "Channel organization updated" },
+    { "type": "paragraph", "text": "Archived inactive channels, added a self-promotion sticky message, and gave Staff Team and TSE Player access to game chat." },
+    { "type": "heading", "level": 1, "text": "@mihulish added" },
+    { "type": "paragraph", "text": "Added @mihulish to support staff tools and ongoing server automation." }
+  ]
 }
-
-{
-  "date": "2026-09-01",
-  "type": "release",
-  "title": "Farm archive and events updates",
-  "summary": "Added developing /dn farm-link delivery, uploaded schematics 529 through 510, added a site schematic renderer, and introduced 19 event minigames for testing."
-}
-
-{
-  "date": "2026-09-01",
-  "type": "maintenance",
-  "title": "Channel organization updated",
-  "summary": "Archived inactive channels, added a self-promotion sticky message, and gave Staff Team and TSE Player access to game chat."
-}
-
-{
-  "date": "2026-09-01",
-  "type": "community",
-  "title": "Mihulish added",
-  "summary": "Added @mihulish to support staff tools and ongoing server automation."
-}
-

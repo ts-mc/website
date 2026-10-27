@@ -2,5 +2,15 @@
   "date": "2026-10-04",
   "type": "release",
   "title": "Events site and wiki launched",
-  "summary": "Published the TheySix Events guide and began the companion wiki with farm mechanics and Minecraft and Discord tools."
+  "summary": "Published the TheySix Events guide site and launched the companion wiki with farm mechanics and helpful Minecraft/Discord tools.",
+  "description": "Two new sites are now live: the TheySix Events guide to help new players learn before joining, and the TheySix Wiki explaining farm mechanics with useful tools.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "TheySix Events site" },
+    { "type": "paragraph", "text": "We published https://events-theysix.ro-mihaiu.xyz/ as an information hub for new players to learn what they need to know before joining the Minecraft server." },
+    { "type": "heading", "level": 1, "text": "TheySix Wiki" },
+    { "type": "paragraph", "text": "Launched https://wiki-theysix.ro-mihaiu.xyz/ to explain how TheySix farms and builds work." },
+    { "type": "heading", "level": 1, "text": "Wiki tools" },
+    { "type": "paragraph", "text": "The wiki includes handy tools such as:" },
+    { "type": "list", "items": ["discord timestamps", "discord colored text", "minecraft skin downloader", "minecraft server properties", "minecraft server name / MOTD", "minecraft achievement / advancement / challenge / goal tracker", "minecraft nether portal calculator", "inventory / stack calculator", "minecraft rgb gradient"] }
+  ]
 }

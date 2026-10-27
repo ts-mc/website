@@ -2,6 +2,10 @@
   "date": "2025-10-06",
   "type": "community",
   "title": "October staff changes",
-  "summary": "GmsGarcia, not-jariske, and Cellsum87 moved to Cherished Ex-Staff Member."
+  "summary": "GmsGarcia, not-jariske, and Cellsum87 moved to Cherished Ex-Staff Member.",
+  "description": "Three staff members transitioned to Cherished Ex-Staff Member status in October.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Staff changes" },
+    { "type": "paragraph", "text": "GmsGarcia, not-jariske, and Cellsum87 moved to Cherished Ex-Staff Member." }
+  ]
 }
-

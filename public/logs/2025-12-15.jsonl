@@ -2,6 +2,12 @@
   "date": "2025-12-15",
   "type": "community",
   "title": "BreamNZ joined Helpers",
-  "summary": "BreamNZ moved from Player to Helper; Omar was also noted as a Moderator."
+  "summary": "BreamNZ moved from Player to Helper; Omar was also noted as a Moderator.",
+  "description": "BreamNZ joined the Helper team, moving up from Player. Omar was also recognized as a Moderator.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "BreamNZ moved from Player to Helper." },
+    { "type": "heading", "level": 1, "text": "Moderator" },
+    { "type": "paragraph", "text": "Omar was noted as a Moderator." }
+  ]
 }
-

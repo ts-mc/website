@@ -1,7 +1,11 @@
 {
   "date": "2026-05-05",
   "type": "community",
-  "title": "Three Helpers welcomed",
-  "summary": "Teenypea sock, LOA | xerodegreess, and Hollow joined the Helper team."
+  "title": "Three new Helpers welcomed",
+  "summary": "Teenypea sock, LOA | xerodegreess, and Hollow joined the Helper team.",
+  "description": "Welcome Teenypea sock, LOA | xerodegreess, and Hollow to the Helper team!",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helpers" },
+    { "type": "paragraph", "text": "Teenypea sock, LOA | xerodegreess, and Hollow joined the Helper team." }
+  ]
 }
-

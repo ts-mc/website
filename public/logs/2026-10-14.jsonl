@@ -2,5 +2,18 @@
   "date": "2026-10-14",
   "type": "release",
   "title": "Community channels and roles added",
-  "summary": "Added verified schematics, polls and updates, emergency pings, contributor, and related community roles."
+  "summary": "Added submissions channels, the Contributor role, Top Schematics wanted, and new community roles for polls, updates, and emergencies.",
+  "description": "New community channels and roles for schematic submissions, polls, updates, emergency pings, and Question of the day.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "📤╏submissions & @Contributor" },
+    { "type": "paragraph", "text": "Added 📤╏submissions and the @Contributor role. To earn the role, post a farm schematic in 📤╏submissions and wait for it to be verified." },
+    { "type": "heading", "level": 1, "text": "Top Schematics wanted" },
+    { "type": "paragraph", "text": "Created a channel to request schematics for specific DNs called Top Schematics wanted." },
+    { "type": "heading", "level": 1, "text": "@.poll & @.update" },
+    { "type": "paragraph", "text": "Created @.poll and @.update for community polls and changes." },
+    { "type": "heading", "level": 1, "text": "@emergency" },
+    { "type": "paragraph", "text": "Created @emergency for urgent pings when something bad happens. Ping @SLOA | ro_mihaiu or send a DM to get the role." },
+    { "type": "heading", "level": 1, "text": "@unknown-role & unknown channel" },
+    { "type": "paragraph", "text": "Created @unknown-role and the unknown channel for Question of the day." }
+  ]
 }

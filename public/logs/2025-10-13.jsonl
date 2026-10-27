@@ -2,6 +2,10 @@
   "date": "2025-10-13",
   "type": "community",
   "title": "Stella Balls joined Helpers",
-  "summary": "Stella Balls moved from Player to Helper."
+  "summary": "Stella Balls moved from Player to Helper.",
+  "description": "Stella Balls joined the Helper team, moving up from Player.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "Stella Balls moved from Player to Helper." }
+  ]
 }
-

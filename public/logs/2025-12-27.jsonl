@@ -2,6 +2,10 @@
   "date": "2025-12-27",
   "type": "community",
   "title": "EchoWyd joined Helpers",
-  "summary": "EchoWyd moved from Player to Helper."
+  "summary": "EchoWyd moved from Player to Helper.",
+  "description": "EchoWyd joined the Helper team, moving up from Player.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "New Helper" },
+    { "type": "paragraph", "text": "EchoWyd moved from Player to Helper." }
+  ]
 }
-

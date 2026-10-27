@@ -1,0 +1,12 @@
+{
+  "version": "0.7.0",
+  "date": "2026-10-05",
+  "title": "Wiki migrated to farm detail pages",
+  "summary": "Migrated the wiki system to farm detail pages.",
+  "changes": [
+    {
+      "type": "changed",
+      "text": "Wiki system migrated to farm detail page routing"
+    }
+  ]
+}

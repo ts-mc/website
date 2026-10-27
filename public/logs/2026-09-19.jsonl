@@ -2,6 +2,10 @@
   "date": "2026-09-19",
   "type": "community",
   "title": "Primtick promoted to Moderator",
-  "summary": "LOA | primtick moved from Cherished Retiree to Moderator."
+  "summary": "LOA | primtick moved from Cherished Retiree to Moderator.",
+  "description": "LOA | primtick moved from Cherished Retiree back to Moderator.",
+  "body": [
+    { "type": "heading", "level": 1, "text": "Promotion" },
+    { "type": "paragraph", "text": "LOA | primtick moved from Cherished Retiree to Moderator." }
+  ]
 }
-

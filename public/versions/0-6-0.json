@@ -1,0 +1,16 @@
+{
+  "version": "0.6.0",
+  "date": "2026-09-13",
+  "title": "Wiki system",
+  "summary": "Implemented the wiki system with mob and block guides.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Wiki system with shulker farm troubleshooting guide"
+    },
+    {
+      "type": "removed",
+      "text": "Bot pages removed in favor of wiki"
+    }
+  ]
+}
