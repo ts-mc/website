@@ -1,230 +1,87 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, MessageSquare, Compass, Youtube, Box, Hammer, BookOpen, ChevronDown } from "lucide-react";
-import { JavaBrandIcon } from "@/components/JavaBrandIcon";
+import { useState } from "react";
+import { BookOpen, CalendarDays, House, Info, Pause, Play, Scale, Share2, type LucideIcon } from "lucide-react";
 
-function JavaLogo({ className }: { className: string }) {
-  return <JavaBrandIcon size={20} className={className} />;
+type Category = "wiki" | "events" | "about" | "main" | "socials" | "legal";
+
+type Destination = {
+  id: Category;
+  href: string;
+  label: string;
+  icon: LucideIcon;
+};
+
+const destinations: Destination[] = [
+  { id: "wiki", href: "https://wiki-theysix.ro-mihaiu.xyz", label: "Wiki", icon: BookOpen },
+  { id: "events", href: "https://events-theysix.ro-mihaiu.xyz", label: "Events", icon: CalendarDays },
+  { id: "about", href: "/about", label: "About", icon: Info },
+  { id: "main", href: "/", label: "Main", icon: House },
+  { id: "socials", href: "/socials", label: "Socials", icon: Share2 },
+  { id: "legal", href: "https://wiki-theysix.ro-mihaiu.xyz/legal/terms", label: "Legal", icon: Scale },
+];
+
+const slotClass = "flex min-h-12 min-w-14 shrink-0 flex-col items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-[var(--muted)] transition-colors duration-150 hover:bg-white/5 hover:text-[var(--ink)] sm:min-w-24";
+const labelClass = "text-[9px] font-semibold uppercase tracking-[0.16em] sm:text-[10px]";
+
+function selectedCategory(pathname: string): Category {
+  if (pathname.startsWith("/about")) return "about";
+  if (pathname.startsWith("/socials")) return "socials";
+  if (/^\/(privacy|terms|tos|cookies)/.test(pathname)) return "legal";
+  return "main";
+}
+
+function orderedDestinations(selected: Category) {
+  if (selected === "main") return destinations;
+  const items = [...destinations];
+  const mainIndex = items.findIndex((item) => item.id === "main");
+  const selectedIndex = items.findIndex((item) => item.id === selected);
+  [items[mainIndex], items[selectedIndex]] = [items[selectedIndex], items[mainIndex]];
+  return items;
+}
+
+function Divider() {
+  return <li aria-hidden="true" className="h-8 w-px shrink-0 self-center bg-[var(--rule)]" />;
 }
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMobileFarmsOpen, setIsMobileFarmsOpen] = useState(false);
   const pathname = usePathname();
-  const panelId = useId();
-  const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
-  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  const farmLinks = [
-    { href: "/?category=java#farms", label: "Java Edition", icon: JavaLogo },
-    { href: "/?category=bedrock#farms", label: "Bedrock Edition", icon: Box },
-    { href: "/?category=build#farms", label: "Builds", icon: Hammer },
-    { href: "/#farms", label: "Both", icon: Compass },
-  ];
-
-  const baseLinks = [
-    { href: "/socials", label: "Socials", icon: Youtube },
-    { href: "/about", label: "About", icon: BookOpen },
-  ];
-  const socialsLink = baseLinks[0];
-  const aboutLink = baseLinks[1];
-
-  const isFarmsActive = pathname === "/";
-
-  // Close the mobile panel on navigation and on Escape.
-  useEffect(() => {
-    setIsOpen(false);
-    setIsMobileFarmsOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isOpen]);
-
-  const isActive = (href: string) => pathname === href;
-
-  const desktopLinkClass = (active: boolean) =>
-    `flex items-center gap-2 px-3 py-2 rounded-control text-sm font-medium transition-colors duration-200 ${
-      active ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
-    }`;
-
-  const mobileLinkClass = (active: boolean) =>
-    `flex items-center gap-3 px-4 py-3 rounded-control text-base font-medium transition-colors duration-200 ${
-      active ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
-    }`;
+  const [playing, setPlaying] = useState(false);
+  const ordered = orderedDestinations(selectedCategory(pathname));
+  const left = ordered.slice(0, 3);
+  const center = ordered[3];
+  const right = ordered.slice(4);
+  const CenterIcon = center.icon;
 
   return (
-    <header className="sticky top-0 z-50 h-[var(--nav-height)] w-full border-b border-hairline bg-[#0B0E14]/85 backdrop-blur-xl">
-      <div className="shell flex h-full items-center gap-4">
-        {/* Brand / Logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-control" aria-label="TheySix Farms, home">
-          <div className="relative size-9 overflow-hidden rounded-lg border border-hairline bg-surface">
-            <Image src="/logo.gif" alt="TheySix Logo" fill className="object-cover" unoptimized />
-          </div>
-          <span className="flex items-baseline gap-2">
-            <span className="text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">TheySix</span>
-            <span className="label-mono rounded-pill bg-[#0E3A47] px-2 py-[3px] text-brand-hi">Farms</span>
-          </span>
-          <span className="hidden md:inline text-xs text-ink-muted font-medium">World &amp; Schematic Vault</span>
-        </Link>
-
-        {/* Desktop Nav Links */}
-        <nav aria-label="Primary" className="ml-auto hidden items-center gap-1 lg:flex">
-          <div className="relative group">
-            <button
-              type="button"
-              className={desktopLinkClass(isFarmsActive)}
-            >
-              <Compass className="w-4 h-4" />
-              All Farms
-              <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
-            </button>
-
-            <div className="pointer-events-none absolute left-0 top-full mt-2 w-56 rounded-card border border-hairline bg-[#0B0E14]/95 p-2 opacity-0 translate-y-1 transition-all duration-200 shadow-xl shadow-black/40 backdrop-blur-xl group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0">
-              {farmLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-control text-sm text-ink-muted hover:text-ink hover:bg-white/5 transition-colors duration-200"
-                  >
-                    <Icon className="w-4 h-4" />
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {baseLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                aria-current={isActive(link.href) ? "page" : undefined}
-                className={desktopLinkClass(isActive(link.href))}
-              >
-                <Icon className="w-4 h-4" />
-                {link.label}
-              </Link>
-            );
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-3 pb-3" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
+      <nav aria-label="Primary" className="theysix-dock pointer-events-auto max-w-full overflow-x-auto rounded-[999px] px-3 py-2">
+        <ul className="flex items-center gap-1">
+          {left.map((item) => {
+            const Icon = item.icon;
+            return <li key={item.id}><a href={item.href} className={slotClass}><Icon className="size-4" aria-hidden="true" /><span className={labelClass}>{item.label}</span></a></li>;
           })}
-        </nav>
-
-        {/* Right Action: Discord Button */}
-        <div className="hidden sm:flex items-center gap-2 lg:ml-3">
-          <a
-            href="https://discord.gg/theysix"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-2 px-3 py-2 rounded-control text-sm font-medium text-ink-muted transition-colors duration-200 hover:bg-[#5865F2]/15 hover:text-ink md:inline-flex"
-          >
-            <MessageSquare className="w-4 h-4 fill-current" />
-            <span>Discord</span>
-          </a>
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <div className="flex lg:hidden ml-auto">
-          <button
-            ref={menuButtonRef}
-            type="button"
-            aria-expanded={isOpen}
-            aria-controls={panelId}
-            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-            onClick={() => setIsOpen((open) => !open)}
-            className="inline-flex size-10 items-center justify-center rounded-control border border-hairline text-ink transition-colors duration-200 hover:bg-white/5"
-          >
-            <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
-            {isOpen ? <X className="w-5 h-5" aria-hidden /> : <Menu className="w-5 h-5" aria-hidden />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      <div
-        id={panelId}
-        hidden={!isOpen}
-        className="absolute inset-x-0 top-[var(--nav-height)] border-b border-hairline bg-[#0B0E14]/95 backdrop-blur-xl lg:hidden"
-      >
-        <nav aria-label="Primary mobile" className="shell flex flex-col gap-1 py-4">
-          <div>
-            <button
-              type="button"
-              onClick={() => setIsMobileFarmsOpen((prev) => !prev)}
-              aria-expanded={isMobileFarmsOpen}
-              className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-control text-base font-medium transition-colors duration-200 ${
-                isFarmsActive ? "bg-[#4CADD0]/10 text-brand-hi" : "text-ink-muted hover:bg-white/5 hover:text-ink"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <Compass className="w-5 h-5" />
-                All Farms
-              </span>
-              <ChevronDown className={`w-5 h-5 transition-transform ${isMobileFarmsOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            {isMobileFarmsOpen && (
-              <div className="mt-1 ml-2 border-l border-hairline pl-2">
-                {farmLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      onClick={() => {
-                        setIsOpen(false);
-                        setIsMobileFarmsOpen(false);
-                      }}
-                      className="flex items-center gap-3 px-4 py-3 rounded-control text-sm font-medium text-ink-muted hover:text-ink hover:bg-white/5 transition-colors duration-200"
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-
-          <Link href={socialsLink.href} aria-current={isActive(socialsLink.href) ? "page" : undefined} className={mobileLinkClass(isActive(socialsLink.href))}>
-            <Youtube className="w-5 h-5" />
-            {socialsLink.label}
-          </Link>
-
-          <Link href={aboutLink.href} aria-current={isActive(aboutLink.href) ? "page" : undefined} className={mobileLinkClass(isActive(aboutLink.href))}>
-            <BookOpen className="w-5 h-5" />
-            {aboutLink.label}
-          </Link>
-
-          <div className="mt-3 border-t border-hairline pt-4">
-            <a
-              href="https://discord.gg/theysix"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-11 items-center justify-center gap-2 w-full px-4 rounded-control bg-[#5865F2]/15 border border-hairline font-semibold text-ink transition-colors duration-200 hover:bg-[#5865F2]/25"
-            >
-              <MessageSquare className="w-5 h-5 fill-current" />
-              Join our Discord Server
+          <Divider />
+          <li className="-my-3 px-1">
+            <a href={center.href} aria-label={`THEYSIX ${center.label}`} aria-current="page" className="theysix-dock-home grid size-16 place-items-center rounded-full transition-colors duration-150 hover:border-[var(--portal)] sm:size-[4.5rem]">
+              <CenterIcon className="size-6 text-[var(--portal)]" aria-hidden="true" />
+              <span className={`${labelClass} text-[var(--portal)]`}>{center.label}</span>
             </a>
-          </div>
-        </nav>
-      </div>
-    </header>
+          </li>
+          <Divider />
+          {right.map((item) => {
+            const Icon = item.icon;
+            return <li key={item.id}><a href={item.href} className={slotClass}><Icon className="size-4" aria-hidden="true" /><span className={labelClass}>{item.label}</span></a></li>;
+          })}
+          <li>
+            <button type="button" onClick={() => setPlaying((value) => !value)} aria-pressed={playing} aria-label={playing ? "Pause soundtrack" : "Play soundtrack"} className={slotClass}>
+              {playing ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
+              <span className={labelClass}>Audio</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }

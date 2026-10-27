@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-27",
+  "title": "Initial public release",
+  "summary": "First versioned release of the TheySix farm database.",
+  "changes": [
+    {
+      "type": "added",
+      "text": "Farm database with Java and Bedrock editions"
+    },
+    {
+      "type": "added",
+      "text": "Wiki, logs, and news sections"
+    },
+    {
+      "type": "fixed",
+      "text": "Staff profile pages now render correctly"
+    }
+  ]
+}

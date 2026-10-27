@@ -7,17 +7,11 @@ import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import "./globals.css";
 
-/**
- * Both families are loaded for real: the Tailwind theme declares them but
- * nothing was ever fetching them, so every page silently rendered in
- * system-ui. `display: "swap"` stops late font loading from causing layout
- * shift.
- */
-const inter = Inter({
+const bodyFont = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
-  axes: ["opsz"],
+  variable: "--font-body",
+  weight: ["300", "400", "500", "600", "700", "900"],
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -28,9 +22,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://theysix.ro-mihaiu.xyz"),
-  title: "TheySix | Minecraft Java & Bedrock Farm Schematics & Downloads",
+  title: "THEYSIX | Maximum Efficiency Minecraft Farms",
   description:
-    "Official website of TheySix. Explore 500+ high-efficiency Minecraft Java and Bedrock farm designs, schematics (.litematic), world downloads, and video tutorials.",
+    "Next-generation Minecraft farm schematics for Java & Bedrock Edition. High-efficiency designs, world downloads, and video tutorials.",
   keywords: [
     "TheySix",
     "Minecraft Farms",
@@ -38,18 +32,14 @@ export const metadata: Metadata = {
     "Bedrock Farms",
     "Litematica Schematics",
     "Minecraft World Download",
-    "Gunpowder Farm",
-    "Iron Farm",
-    "Gold Farm",
-    "Raid Farm"
   ],
   authors: [{ name: "TheySix" }],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "TheySix - Minecraft Farm Vault",
-    description: "Download high-efficiency Minecraft Java & Bedrock farm schematics and world saves.",
+    title: "THEYSIX - Maximum Efficiency Minecraft Farms",
+    description: "High-efficiency Minecraft Java & Bedrock farm schematics and world saves.",
     url: "https://theysix.ro-mihaiu.xyz",
     siteName: "TheySix",
     images: [
@@ -57,7 +47,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "TheySix — high-efficiency Minecraft farm schematics for Java and Bedrock",
+        alt: "THEYSIX — Maximum Efficiency Minecraft Farms",
       },
     ],
     locale: "en_US",
@@ -71,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070A12",
+  themeColor: "#080818",
   colorScheme: "dark",
 };
 
@@ -81,18 +71,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-bg-base text-ink min-h-screen flex flex-col antialiased">
+    <html lang="en" className={`${bodyFont.variable} ${jetbrainsMono.variable}`}>
+      <body className="min-h-screen flex flex-col antialiased">
         <a
           href="#main"
-          className="label-mono sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-control focus:bg-brand focus:px-4 focus:py-2.5 focus:text-[#070A12]"
+          className="label-mono sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2.5 focus:text-black"
         >
-          Skip to content
+          SKIP TO CONTENT
         </a>
-        <Navbar />
-        <main id="main" className="flex-1 w-full shell py-8 sm:py-12">
+        <main id="main" className="flex-1 w-full">
           {children}
         </main>
+        <Navbar />
         <Footer />
         <CookieBanner />
         <Analytics />

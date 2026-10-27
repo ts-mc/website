@@ -1,0 +1,6 @@
+{
+  "date": "2026-10-05",
+  "type": "maintenance",
+  "title": "Unused bot roles and DiscordSRV data removed",
+  "summary": "Removed individually created bot roles and the DiscordSRV database following a role-synchronization configuration issue."
+}

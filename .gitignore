@@ -37,3 +37,7 @@ yarn-error.log*
 # file list
 missing_report.jsonl
 farms.md
+
+# todo & ideas
+#.docs/**
+#.docs/

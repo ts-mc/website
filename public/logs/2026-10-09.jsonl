@@ -1,0 +1,6 @@
+{
+  "date": "2026-10-09",
+  "type": "release",
+  "title": "Mihulish command and ticket updates",
+  "summary": "Added video search, wiki lookup, moderation commands, ticket-panel work, and configurable ticket reminder pings."
+}

@@ -4,369 +4,72 @@
 
 @layer base {
   :root {
-    /* Base — dark only, no light theme by design. */
-    --bg: #070a12;
-    --bg-base: #0b0e14;
-    --bg-elev: #111726;
-    --surface: rgba(19, 23, 34, 0.85);
-    --surface-hover: rgba(24, 29, 42, 0.95);
-    --border: #1e293b;
-    --border-hover: #334155;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
-    /* Brand — taken from the in-game name gradients. */
-    --brand: #4cadd0;
-    --brand-hi: #b2f9ff;
-    --brand-2: #9febf6;
-    /* Extended spectrum for category coding, states and glows. */
-    --lime: #9fff99;
-    --emerald: #4caf50;
-    --amber: #fbbf24;
-    --orange: #ff8a3d;
-    --rose: #fb7185;
-    --crimson: #ff3b3b;
-    --magenta: #f472b6;
-    --violet: #a855f7;
-    --indigo: #818cf8;
-    --sky: #38bdf8;
-    --teal: #2dd4bf;
-    --blurple: #5865f2;
-    /*
-     * Text-safe tints. The brand hues above are kept verbatim for fills,
-     * borders and large gradient display, but blurple (4.19:1) and indigo
-     * fall short of 4.5:1 for small text. These lighter steps carry the same
-     * hue and are used wherever the colour is applied to small type.
-     */
-    --blurple-text: #96a0fa;
-    --indigo-text: #a5a5fc;
-    --nav-height: 72px;
+    --void: #020202;
+    --sky: #23212c;
+    --raised: #171717;
+    --panel: #1d1d1d;
+    --ink: #f1fec8;
+    --ink-bright: #fbffee;
+    --muted: #969e7d;
+    --rule: #23251e;
+    --edge: #6e735b;
+    --portal: #99e1d9;
+    --portal-hover: #7fd3c9;
+    --danger: #ff0b55;
+    --nav-height: 76px;
   }
-  * {
-    border-color: var(--border);
-  }
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--nav-height) + 16px);
-    -webkit-text-size-adjust: 100%;
-  }
-  body {
-    background-color: var(--bg-base);
-    color: var(--text);
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  /* A fixed deep backdrop so the whole page sits on --bg, not --bg-base. */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background: radial-gradient(
-        ellipse 80% 50% at 50% -10%,
-        rgba(76, 173, 208, 0.1),
-        transparent 70%
-      ),
-      var(--bg);
-    pointer-events: none;
-  }
-  ::selection {
-    background: var(--brand);
-    color: #070a12;
-  }
-  :focus-visible {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-  /* Remove the default focus ring only where :focus-visible replaces it. */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
+  * { min-width: 0; border-color: var(--rule); }
+  html { background: var(--void); color-scheme: dark; scroll-behavior: smooth; scroll-padding-block: 6rem 7rem; }
+  body { min-height: 100vh; overflow-x: clip; background: var(--void); color: var(--ink); font-family: var(--font-body), ui-sans-serif, sans-serif; font-synthesis-weight: none; text-rendering: optimizeLegibility; }
+  a, button, input, select, textarea { touch-action: manipulation; }
+  button, select { cursor: pointer; }
+  ::selection { background: var(--portal); color: var(--void); }
+  :focus-visible { outline: 2px solid var(--portal); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3, h4 { font-weight: 900; line-height: .9; letter-spacing: -.045em; text-wrap: balance; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
 }
 
 @layer components {
-  /* The brand's signature move: gradient text for the H1 and primary CTAs. */
-  .text-gradient {
-    background-image: linear-gradient(
-      100deg,
-      #4cadd0 0%,
-      #9febf6 45%,
-      #b2f9ff 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .glass {
-    background: var(--surface);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .glass-hover {
-    transition:
-      transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 200ms ease,
-      box-shadow 200ms ease,
-      background-color 200ms ease;
-  }
-  .glass-hover:hover {
-    transform: translateY(-2px);
-    background: var(--surface-hover);
-  }
-  /*
-   * Card hover keyed to a per-card hue set through the --card-hue variable, so
-   * the border and shadow tint toward that farm's category colour. focus-within
-   * is included so keyboard users get the same affordance.
-   */
-  .card-hue:hover,
-  .card-hue:focus-within {
-    border-color: color-mix(in srgb, var(--card-hue) 40%, transparent);
-    box-shadow: 0 10px 40px -12px
-      color-mix(in srgb, var(--card-hue) 30%, transparent);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .glass-hover:hover,
-    .card-hue:hover,
-    .card-hue:focus-within {
-      transform: none;
-    }
-  }
-  /*
-   * Every metadata label, stat caption, badge, version string and ID. The
-   * brand's "system voice".
-   */
-  .label-mono {
-    font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular,
-      monospace;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    font-size: 0.6875rem;
-    line-height: 1rem;
-  }
-  /*
-   * Footer and inline prose links are text-first, so their tap target is the
-   * text itself. Padding the box without padding the line box would shift the
-   * type, so vertical rhythm is given via inline-block padding instead.
-   */
-  .tap-target {
-    display: inline-block;
-    padding-block: 0.5rem;
-  }
-  .shell {
-    width: 100%;
-    max-width: 1200px;
-    margin-inline: auto;
-    padding-inline: 1.25rem;
-  }
-  @media (min-width: 768px) {
-    .shell {
-      padding-inline: 2rem;
-    }
-  }
-  .cta-sweep {
-    background-image: linear-gradient(
-      100deg,
-      #4cadd0 0%,
-      #9febf6 45%,
-      #b2f9ff 100%
-    );
-    background-size: 200% 100%;
-    animation: cta-sweep 6s linear infinite;
-  }
-  .glow-orb {
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(64px);
-    pointer-events: none;
-    z-index: -1;
-  }
-  /* Scroll reveal: opacity alone is animated so reduced motion still shows it. */
-  .reveal,
-  [data-reveal-child] {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  .reveal[data-visible="true"],
-  [data-reveal-child][data-visible="true"] {
-    opacity: 1;
-    transform: translateY(0);
-    transition:
-      opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .reveal,
-    .reveal[data-visible="true"],
-    [data-reveal-child],
-    [data-reveal-child][data-visible="true"] {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
-}
-
-/* Custom scrollbars (farms behaviour — keep). */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0d1117;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #21283b;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* Subtle glow animations */
-@keyframes glow-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@keyframes cta-sweep {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.skeleton-shimmer {
-  background: linear-gradient(100deg, #151b27 25%, #273247 45%, #151b27 65%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.8s ease-in-out infinite;
-}
-
-/*
- * The layer timeline slider in the schematic viewer. These rules hand-style
- * the native range input in two browser engines — change nothing here except
- * the thumb colour token, or the schematic viewer breaks.
- */
-.schematic-timeline {
-  appearance: none;
-  height: 18px;
-  cursor: pointer;
-  border-radius: 999px;
-  background: #263244;
-}
-
-.schematic-timeline::-webkit-slider-runnable-track {
-  height: 5px;
-  border-radius: 999px;
-  background: #263244;
-}
-
-.schematic-timeline::-webkit-slider-thumb {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  margin-top: -6px;
-  border: 3px solid #071019;
-  border-radius: 50%;
-  background: var(--amber);
-  box-shadow:
-    0 0 0 2px rgba(251, 191, 36, 0.35),
-    0 2px 8px rgba(0, 0, 0, 0.45);
-}
-
-.schematic-timeline::-moz-range-track {
-  height: 5px;
-  border-radius: 999px;
-  background: #263244;
-}
-
-.schematic-timeline::-moz-range-progress {
-  height: 5px;
-  border-radius: 999px;
-  background: var(--amber);
-}
-
-.schematic-timeline::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: 3px solid #071019;
-  border-radius: 50%;
-  background: var(--amber);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-shimmer {
-    animation: none;
-    background: #1b2433;
-  }
-}
-
-.animate-glow {
-  animation: glow-pulse 4s ease-in-out infinite;
-}
-
-/* Glassmorphism helpers — kept as aliases of .glass so existing call sites work. */
-.glass-panel {
-  background: var(--surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-panel-hover {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-panel-hover:hover {
-  background: var(--surface-hover);
-  border-color: rgba(255, 255, 255, 0.16);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  .shell { width: min(100% - 3rem, 1200px); margin-inline: auto; }
+  .label-mono, .reference-index, .eyebrow { font: 700 .6875rem var(--font-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+  .label-mono, .reference-index, .eyebrow { color: var(--portal); }
+  .signal-opening { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; justify-content: center; padding: 6rem clamp(1.5rem, 8vw, 8rem) 8rem; }
+  .signal-opening-bg { position: absolute; inset: 0; z-index: -3; background: var(--sky) url('/scene/signal-field-static.jpg') center bottom / cover no-repeat; }
+  .signal-opening-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, rgba(2,2,2,.9), rgba(2,2,2,.35) 30%, transparent 62%), linear-gradient(to top, rgba(2,2,2,.9), rgba(2,2,2,.2) 32%, transparent 55%); }
+  .signal-vignette { position: absolute; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(132% 104% at 50% 44%, transparent 46%, rgba(2,2,2,.66) 100%); }
+  .signal-mark { position: absolute; z-index: -1; right: 12%; bottom: 20%; width: min(38vw, 520px); filter: drop-shadow(0 0 24px rgba(153,225,217,.9)) drop-shadow(0 0 80px rgba(0,200,170,.5)); animation: signal-breathe 5s ease-in-out infinite; }
+  .signal-mark img { display: block; width: 100%; height: auto; }
+  .signal-wordmark { position: relative; z-index: 1; margin-top: 5vh; }
+  .signal-wordmark h1 { margin: 0; color: var(--ink-bright); font: 900 clamp(4rem, 12vw, 10.5rem)/.84 var(--font-body), sans-serif; letter-spacing: -.06em; }
+  .signal-wordmark p { margin: 1.2rem 0 0 .45rem; color: rgba(251,255,238,.9); font: 700 clamp(.7rem, 1.5vw, 1rem)/1 var(--font-body), sans-serif; letter-spacing: .34em; }
+  .signal-enter { display: inline-flex; align-items: center; gap: 1.2rem; position: absolute; z-index: 2; left: clamp(1.5rem, 8vw, 8rem); bottom: 8rem; color: var(--ink); font: 700 .85rem var(--font-body), sans-serif; letter-spacing: .34em; text-decoration: none; }
+  .signal-enter span { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 1px solid var(--portal); border-radius: 50%; color: var(--portal); transition: background .2s ease, transform .2s ease; }
+  .signal-enter:hover span { background: rgba(153,225,217,.16); transform: translateX(3px); }
+  .reference-dock-wrap { position: fixed; z-index: 30; right: 0; bottom: 2.4rem; left: 0; display: flex; justify-content: center; padding: 0 1rem; pointer-events: none; }
+  .reference-dock { display: flex; align-items: center; gap: .15rem; min-height: 4.5rem; padding: .35rem .7rem; border: 1px solid rgba(241,254,200,.2); border-radius: 999px; background: rgba(2,2,2,.58); box-shadow: inset 0 1px rgba(241,254,200,.16), 0 28px 70px -24px rgba(2,2,2,.86); backdrop-filter: blur(26px) saturate(145%); pointer-events: auto; }
+  .reference-dock-link, .reference-audio { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-width: 6.3rem; min-height: 3.5rem; padding: .6rem .75rem; border: 0; color: var(--muted); background: transparent; font: 600 .62rem var(--font-body), sans-serif; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: color .15s ease, background .15s ease; }
+  .reference-dock-link:hover, .reference-dock-link:focus-visible, .reference-audio:hover { color: var(--ink); background: rgba(255,255,255,.05); }
+  .reference-dock-center { color: var(--portal); }
+  .reference-dock-center img { width: 1.55rem; height: 1.55rem; object-fit: contain; filter: drop-shadow(0 0 8px rgba(153,225,217,.8)); }
+  .reference-audio { min-width: 4.6rem; cursor: pointer; }
+  .theysix-dock { border: 1px solid rgba(241,254,200,.2); background: linear-gradient(to bottom, rgba(35,33,44,.36), rgba(2,2,2,.7)); box-shadow: inset 0 1px rgba(241,254,200,.24), inset 0 -1px rgba(2,2,2,.24), 0 28px 70px -24px rgba(2,2,2,.86); backdrop-filter: blur(26px) saturate(145%); }
+  .theysix-dock-home { border: 1px solid rgba(153,225,217,.48); background: rgba(35,33,44,.34); box-shadow: inset 0 1px rgba(241,254,200,.18), 0 0 36px rgba(153,225,217,.18); backdrop-filter: blur(24px) saturate(145%); }
+  .reference-chapter, .reference-archive { max-width: 1200px; margin: 0 auto; padding: 8rem 1.5rem; }
+  .reference-chapter h2, .reference-archive h2 { margin: 1.5rem 0 0; color: var(--ink); font: 900 clamp(2.8rem, 7vw, 6rem)/.9 var(--font-body), sans-serif; letter-spacing: -.055em; }
+  .reference-chapter h2 em { color: var(--portal); font-style: normal; }
+  .reference-lede, .reference-archive-heading > p { max-width: 38rem; margin-top: 2rem; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+  .reference-archive { border-top: 1px solid var(--rule); }
+  .reference-archive-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 3rem; }
+  .reference-archive-heading > p { max-width: 18rem; margin: 0; }
+  .reference-loading { padding: 5rem 0; color: var(--portal); }
+  .glass, .glass-panel { background: rgba(23,23,23,.72); border: 1px solid var(--rule); box-shadow: 0 28px 70px -24px rgba(2,2,2,.86); }
+  .footer-shell { border-top: 1px solid var(--rule); margin-top: 6rem; padding: 4rem 0 7rem; background: var(--void); }
+  .footer-shell .text-ink-muted, .footer-shell .text-ink-dim { color: var(--muted); }
+  .footer-shell .text-gradient { color: var(--ink); background: none; }
+  .footer-shell .text-brand, .footer-shell .label-mono { color: var(--portal); }
+  .footer-shell a { color: var(--muted); }
+  .footer-shell a:hover { color: var(--portal); }
+  @keyframes signal-breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.015); } }
+  @media (max-width: 760px) { .shell { width: min(100% - 2rem, 1200px); } .signal-opening { min-height: 92svh; padding: 5rem 1.25rem 8rem; justify-content: flex-start; } .signal-mark { right: -2rem; bottom: 25%; width: 70vw; } .signal-wordmark { margin-top: 19vh; } .signal-wordmark h1 { font-size: clamp(3.4rem, 17vw, 6rem); } .signal-wordmark p { font-size: .55rem; letter-spacing: .2em; } .signal-enter { left: 1.25rem; bottom: 8rem; } .reference-dock { width: 100%; justify-content: space-between; padding-inline: .3rem; } .reference-dock-link { min-width: 0; flex: 1 1 0; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-dock-link svg { width: 15px; } .reference-dock-center img { width: 1.35rem; height: 1.35rem; } .reference-audio { min-width: 2.6rem; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-archive-heading { display: block; } .reference-archive-heading > p { margin-top: 1.2rem; } }
+  @media (prefers-reduced-motion: reduce) { .signal-mark { animation: none; } }
 }

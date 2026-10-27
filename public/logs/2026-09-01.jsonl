@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-01",
+  "type": "release",
+  "title": "Mihulish replaces the old helper",
+  "summary": "Replaced the verification-dependent TheySix Helper with Mihulish; staff can use its commands and send suggestions through the staff channel."
+}
+
+{
+  "date": "2026-09-01",
+  "type": "release",
+  "title": "Farm archive and events updates",
+  "summary": "Added developing /dn farm-link delivery, uploaded schematics 529 through 510, added a site schematic renderer, and introduced 19 event minigames for testing."
+}
+
+{
+  "date": "2026-09-01",
+  "type": "maintenance",
+  "title": "Channel organization updated",
+  "summary": "Archived inactive channels, added a self-promotion sticky message, and gave Staff Team and TSE Player access to game chat."
+}
+
+{
+  "date": "2026-09-01",
+  "type": "community",
+  "title": "Mihulish added",
+  "summary": "Added @mihulish to support staff tools and ongoing server automation."
+}
+

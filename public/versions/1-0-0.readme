@@ -1,0 +1,10 @@
+# TheySix v1.0.0 (2026-10-27)
+
+Initial public release of the TheySix farm database.
+
+## Added
+- Farm database with Java and Bedrock editions
+- Wiki, logs, and news sections
+
+## Fixed
+- Staff profile pages now render correctly

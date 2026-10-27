@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-27",
+  "type": "release",
+  "title": "Farm archive feed connected",
+  "summary": "The archive now reads the dated farms.jsonl feed so new farm records, videos, worlds, and schematics appear without replacing the existing catalog."
+}
+
+{
+  "date": "2026-10-27",
+  "type": "maintenance",
+  "title": "mihulish wiki updates",
+  "summary": "Added more wiki articles, fixed some broken links, and updated the farm library to include the latest dated feed."
+}
+
+{
+  "date": "2026-10-27",
+  "type": "release",
+  "title": "Updating staff directory",
+  "summary": "Added new staff members and updated existing profiles to reflect current roles and responsibilities. Added retired staff members to the directory for historical reference."
+}
+
+{
+  "date": "2026-10-27",
+  "type": "release",
+  "title": "Logging and monitoring improvements",
+  "summary": "Enhanced logging and monitoring systems to better track application performance and user activity. This includes more detailed logs for debugging and improved alerting for critical issues."
+}
+
+{
+  "date": "2026-10-27",
+  "type": "release",
+  "title": "Log rotation and archival",
+  "summary": "Posting polished logs to https://theysix.ro-mihaiu.xyz/logs for better accessibility and long-term storage. Implemented log rotation to manage disk space and ensure that logs are archived efficiently."
+}

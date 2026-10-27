@@ -32,12 +32,12 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
   // Sync category state when URL changes (e.g. clicked navbar link)
   useEffect(() => {
     const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(cat);
-      setCurrentPage(1);
-    } else {
-      setSelectedCategory("all");
-    }
+    const query = searchParams.get("q") || "";
+    const type = searchParams.get("type") || "all";
+    setSelectedCategory(cat || "all");
+    setSearchQuery(query);
+    setSelectedType(type);
+    setCurrentPage(1);
   }, [searchParams]);
 
   // Extract unique farm types combining standard list and any custom types
@@ -183,6 +183,25 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     router.replace(`/?${params.toString()}`, { scroll: false });
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    if (value.trim()) params.set("q", value.trim());
+    else params.delete("q");
+    params.delete("page");
+    router.replace(`/?${params.toString()}#farms`, { scroll: false });
+  };
+
+  const handleTypeChange = (value: string) => {
+    setSelectedType(value);
+    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all") params.delete("type");
+    else params.set("type", value);
+    router.replace(`/?${params.toString()}#farms`, { scroll: false });
+  };
+
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedCategory("all");
@@ -203,16 +222,13 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
+                onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search 500+ farms by name, type, tags, or #111-dn..."
               className="w-full pl-11 pr-10 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink placeholder-ink-dim focus:outline-none focus:border-[#4CADD0] focus:ring-1 focus:ring-[#4CADD0] text-sm transition-all shadow-inner"
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery("")}
+                onClick={() => handleSearchChange("")}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-ink-muted hover:text-ink"
               >
                 <X className="w-4 h-4" />
@@ -225,10 +241,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
             <div className="relative min-w-[160px] flex-1 md:flex-initial">
               <select
                 value={selectedType}
-                onChange={(e) => {
-                  setSelectedType(e.target.value);
-                  setCurrentPage(1);
-                }}
+                onChange={(e) => handleTypeChange(e.target.value)}
                 className="w-full px-3.5 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink text-sm focus:outline-none focus:border-[#4CADD0] appearance-none pr-8 cursor-pointer"
               >
                 <option value="all">All Farm Types</option>

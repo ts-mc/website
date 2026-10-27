@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Mail, MessageSquare, ShieldCheck } from "lucide-react";
+import { BookOpen, Mail, MessageSquare, ShieldCheck, Users } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About TheySix | Minecraft Farm Database",
@@ -36,6 +36,24 @@ export default function AboutPage() {
           <h2 className="text-lg font-bold text-ink">Support and availability</h2>
           <p className="text-sm text-ink-muted leading-relaxed">There is no paid service or checkout on this site. For important issues, contact the team through the official Discord. Community response times vary.</p>
           <a href="https://discord.ro-mihaiu.xyz" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-[#4CADD0] hover:text-[#9FEBF6]">Contact on Discord</a>
+        </div>
+      </section>
+
+      <section className="glass-panel p-6 sm:p-8 rounded-3xl border border-hairline space-y-4">
+        <div className="flex items-center gap-3">
+          <Users className="w-6 h-6 text-[#4CADD0]" />
+          <h2 className="text-xl font-bold text-ink">The staff team</h2>
+        </div>
+        <p className="text-sm text-ink-muted leading-relaxed">
+          Meet the people behind TheySix. The staff directory is its own standalone section on this site — profiles, roles, and contact details live at <code className="rounded bg-bg-elev px-1.5 py-0.5 font-mono text-xs">/staff</code>.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/staff" className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#4CADD0] hover:bg-[#4CADD0] text-ink font-bold text-sm transition-all shadow-md shadow-[#4CADD0]/20">
+            <Users className="w-4 h-4" /> View the staff directory
+          </Link>
+          <Link href="/staff/retired" className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-bg-elev hover:bg-surface-hover text-ink font-semibold text-sm border border-hairline transition-all">
+            Retired staff
+          </Link>
         </div>
       </section>
 

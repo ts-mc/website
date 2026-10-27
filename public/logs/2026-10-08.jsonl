@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-08",
+  "type": "community",
+  "title": "sitian promoted to Moderator",
+  "summary": "SLOA | itz_sitian moved from Helper to Moderator."
+}
+
+{
+  "date": "2026-10-08",
+  "type": "maintenance",
+  "title": "Farm links and ticket automation repaired",
+  "summary": "Moved farm commands to Mihulish, added direct video, schematic, and world buttons, fixed DN 529, and stopped duplicate ticket pings."
+}

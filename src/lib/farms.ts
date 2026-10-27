@@ -12,6 +12,121 @@ type JsonlLinkOverride = {
   schematic_link?: string | null;
 };
 
+type FarmFeedRecord = {
+  type?: string;
+  dn?: string;
+  farm_type?: string | null;
+  video?: string | null;
+  video_title?: string | null;
+  world?: string | null;
+  schematic?: string | null;
+};
+
+function getFarmFeedRecords(): FarmFeedRecord[] {
+  const filePath = path.join(process.cwd(), "farms.jsonl");
+  if (!fs.existsSync(filePath)) return [];
+
+  return fs.readFileSync(filePath, "utf-8").split(/\r?\n/).flatMap((line) => {
+    try {
+      const entry = JSON.parse(line) as FarmFeedRecord;
+      return entry.type === "farm" && entry.dn ? [entry] : [];
+    } catch {
+      return [];
+    }
+  });
+}
+
+function cleanFeedUrl(value?: string | null): string | undefined {
+  if (!value || value === "#" || value.toLowerCase() === "link" || value.includes("sites.google.com/view/theysixdownloads/home/")) return undefined;
+  return value;
+}
+
+function feedCategory(dn: string): FarmCategory {
+  if (/^b/i.test(dn)) return "bedrock";
+  if (/^c/i.test(dn)) return "build";
+  return "java";
+}
+
+function feedFarmType(value?: string | null): string {
+  if (!value) return "Other";
+  if (value.toLowerCase() === "xp") return "XP";
+  if (value.toLowerCase() === "bonemeal") return "Bonemeal";
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
+function createFeedFarm(record: FarmFeedRecord): FarmWithMetadata {
+  const dn = record.dn!;
+  const category = feedCategory(dn);
+  const youtubeUrl = cleanFeedUrl(record.video) || "";
+  const worldDownloadUrl = cleanFeedUrl(record.world) || "link";
+  const schematicUrl = category === "bedrock" ? undefined : cleanFeedUrl(record.schematic);
+  const title = record.video_title?.trim() || `TheySix Farm ${dn}`;
+  const youtubeId = extractYouTubeId(youtubeUrl);
+  const views = 0;
+  return {
+    id: dn,
+    dn,
+    category,
+    title,
+    farmType: feedFarmType(record.farm_type),
+    description: `${title}. TheySix farm archive entry.`,
+    worldDownloadUrl,
+    schematicUrl,
+    youtubeUrl,
+    version: "1.21+",
+    rates: "",
+    tags: category === "bedrock" ? ["Bedrock"] : category === "build" ? ["Build", "Java & Bedrock"] : ["Java"],
+    author: "TheySix",
+    date: new Date().toISOString().slice(0, 10),
+    featured: false,
+    views,
+    resolvedThumbnail: getThumbnailUrl(youtubeUrl, undefined),
+    hasSchematic: Boolean(schematicUrl),
+    hasWorldDownload: Boolean(worldDownloadUrl !== "link"),
+    hasYoutube: Boolean(youtubeUrl),
+    hasMaterials: false,
+    normalizedDn: dn.replace(/-dn$/i, "").replace(/^b/i, ""),
+    youtubeId,
+    viewsDisplay: formatCompactNumber(views),
+    schematicFiles: { litematic: `${dn}.litematic`, schematic: `${dn}.schematic`, schem: `${dn}.schem`, nbt: `${dn}.nbt` },
+    materials: [],
+    supportsBothPlatforms: category === "build",
+  };
+}
+
+function applyFarmFeed(farms: FarmWithMetadata[]): FarmWithMetadata[] {
+  const records = getFarmFeedRecords();
+  const byDn = new Map(farms.map((farm) => [farm.dn.toLowerCase(), farm]));
+
+  for (const record of records) {
+    const dn = record.dn!.toLowerCase();
+    const existing = byDn.get(dn);
+    if (!existing) {
+      const added = createFeedFarm(record);
+      byDn.set(dn, added);
+      continue;
+    }
+
+    const video = cleanFeedUrl(record.video);
+    const world = cleanFeedUrl(record.world);
+    const schematic = existing.category === "bedrock" ? undefined : cleanFeedUrl(record.schematic);
+    byDn.set(dn, {
+      ...existing,
+      title: record.video_title?.trim() || existing.title,
+      farmType: record.farm_type ? feedFarmType(record.farm_type) : existing.farmType,
+      youtubeUrl: video || existing.youtubeUrl,
+      youtubeId: extractYouTubeId(video || existing.youtubeUrl),
+      hasYoutube: Boolean(video || existing.youtubeUrl),
+      worldDownloadUrl: world || existing.worldDownloadUrl,
+      hasWorldDownload: Boolean(world || existing.hasWorldDownload),
+      schematicUrl: schematic || existing.schematicUrl,
+      hasSchematic: Boolean(schematic || existing.hasSchematic),
+    });
+  }
+
+  return Array.from(byDn.values());
+}
+
 function getJsonlLinkOverrides(): Map<string, JsonlLinkOverride> {
   const filePath = path.join(process.cwd(), "farms_builds.jsonl");
   const overrides = new Map<string, JsonlLinkOverride>();
@@ -124,6 +239,7 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
   const lines = content.split(/\r?\n/).filter(Boolean);
 
   const builds: FarmWithMetadata[] = [];
+  const archiveDns = new Set<string>();
 
   for (const line of lines) {
     let entry: {
@@ -143,6 +259,9 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
 
     const dn: string = entry.dn || "";
     if (!dn) continue;
+    const normalizedArchiveDn = dn.toLowerCase();
+    if (archiveDns.has(normalizedArchiveDn)) continue;
+    archiveDns.add(normalizedArchiveDn);
 
     if (existingDns.has(dn.toLowerCase())) continue;
 
@@ -691,7 +810,7 @@ export function getLegacyFarms(): FarmWithMetadata[] {
   farms.push(...getJsonlBuilds(existingDns));
 
   // Sort by featured first, then by date descending (newest first), then by dn descending
-  return applyJsonlLinkOverrides(farms).sort((a, b) => {
+  return applyFarmFeed(applyJsonlLinkOverrides(farms)).sort((a, b) => {
     if (a.featured && !b.featured) return -1;
     if (!a.featured && b.featured) return 1;
     const dateA = a.date ? new Date(a.date).getTime() : 0;
