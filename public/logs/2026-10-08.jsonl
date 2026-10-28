@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "type": "release",
-  "title": "sitian promoted to Moderator",
-  "summary": "Congrats to SLOA | itz_sitian on the promotion from Helper to Moderator, plus some behind-the-scenes fixes to farm links and ticket automation.",
+  "title": "Farm archive migration",
+  "summary": "Congrats to itz_sitian on the promotion from Helper to Moderator, plus some behind-the-scenes fixes to farm links and ticket automation.",
   "description": "Staff promotion, migration from @ArchiverBot to @mihulish, reworked /dn links, fixed DN 529, and stopped duplicate ticket pings.",
   "body": [
     { "type": "heading", "level": 1, "text": "Staff promotion" },
