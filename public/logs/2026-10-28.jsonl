@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-28",
+  "type": "release",
+  "title": "Halloween preparation",
+  "summary": "Preparing the server for Halloween event.",
+  "description": "We are almost done with polishing details for the upcoming Halloween event.",
+  "body": [
+    { 
+      "type": "heading", 
+      "level": 1, 
+      "text": "Changing Discord Logo & Banner." 
+    },
+    { 
+      "type": "paragraph", 
+      "text": "The logo and the banner from inside the discord server were changed for decorational purposes." 
+    },
+    { 
+      "type": "heading", 
+      "level": 1, 
+      "text": "TheySix Events update" 
+    },
+    { 
+      "type": "paragraph", 
+      "text": "Added custom plugin & maps to host an event for halloween." 
+    },
+    { 
+      "type": "heading", 
+      "level": 1, 
+      "text": "Edited the new discoverable method from Discord." 
+    },
+    { 
+      "type": "paragraph", 
+      "text": "Removed the new Channel Messages from web presence, while keeping important channels for Channel Summaries." 
+    },
+    { 
+      "type": "heading", 
+      "level": 1, 
+      "text": "New custom role" 
+    },
+    { 
+      "type": "paragraph", 
+      "text": "Created a new custom role for Halloween participants, will be available each year." 
+    }
+  ]
+}
