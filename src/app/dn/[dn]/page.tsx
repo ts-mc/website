@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import youtube534 from "@/data/youtube/APCrCMYd294.json";
+import youtubeSnapshots from "@/data/youtube-metadata.json";
 import { getAllFarms } from "@/lib/farms";
 import { FarmDetailView } from "@/components/FarmDetailView";
 import type { FarmWithMetadata } from "@/types/farm";
@@ -54,11 +54,12 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
 }
 
 type YoutubeMetadata = { videoId?: string; title?: string; description?: string };
-const localYoutubeSnapshots: Record<string, YoutubeMetadata> = {
-  APCrCMYd294: youtube534,
-};
+const localYoutubeSnapshots = youtubeSnapshots as Record<string, YoutubeMetadata>;
 
 async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
+  const snapshot = localYoutubeSnapshots[youtubeId];
+  if (snapshot?.description) return snapshot;
+
   const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}&hl=en&gl=US`, {
       cache: "no-store",
       headers: {
@@ -90,7 +91,6 @@ async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
 
   // YouTube sometimes serves a reduced watch page to data-center requests. Use
   // a checked-in snapshot for videos whose metadata has already been imported.
-  const snapshot = localYoutubeSnapshots[youtubeId];
   const description = remoteDescription?.trim() ? remoteDescription : snapshot?.description;
   if (!response.ok && !snapshot && !title) throw new Error(`YouTube metadata request failed (${response.status})`);
   if (!description?.trim()) throw new Error("YouTube full description was not present in the response or local metadata");
