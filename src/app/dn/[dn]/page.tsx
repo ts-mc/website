@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import youtube534 from "@/data/youtube/APCrCMYd294.json";
 import { getAllFarms } from "@/lib/farms";
 import { FarmDetailView } from "@/components/FarmDetailView";
 import type { FarmWithMetadata } from "@/types/farm";
@@ -52,10 +53,13 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
   };
 }
 
-type YoutubeMetadata = { title?: string; description?: string };
+type YoutubeMetadata = { videoId?: string; title?: string; description?: string };
+const localYoutubeSnapshots: Record<string, YoutubeMetadata> = {
+  APCrCMYd294: youtube534,
+};
 
 async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
-  const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}`, {
+  const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}&hl=en&gl=US`, {
       cache: "no-store",
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -74,14 +78,23 @@ async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
     hasTitle: Boolean(titleMatch?.[1]),
     hasFullDescription: Boolean(fullDescriptionMatch?.[1]),
   });
-  if (!response.ok) throw new Error(`YouTube metadata request failed (${response.status})`);
-  if (!fullDescriptionMatch?.[1]) throw new Error("YouTube full description was not present in the video response");
-  const rawDescription = JSON.parse(fullDescriptionMatch[1]) as string;
-  if (!rawDescription.trim()) throw new Error("YouTube returned an empty video description");
-  return {
-    title: titleMatch?.[1] ? decodeHtml(titleMatch[1]) : undefined,
-    description: rawDescription,
-  };
+  const oembedResponse = titleMatch?.[1] ? undefined : await fetch(
+    `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${youtubeId}`)}&format=json`,
+    { cache: "no-store" }
+  ).catch(() => undefined);
+  const oembed = oembedResponse?.ok ? await oembedResponse.json().catch(() => undefined) : undefined;
+  const title = titleMatch?.[1] ? decodeHtml(titleMatch[1]) : oembed?.title;
+  const remoteDescription = fullDescriptionMatch?.[1]
+    ? JSON.parse(fullDescriptionMatch[1]) as string
+    : undefined;
+
+  // YouTube sometimes serves a reduced watch page to data-center requests. Use
+  // a checked-in snapshot for videos whose metadata has already been imported.
+  const snapshot = localYoutubeSnapshots[youtubeId];
+  const description = remoteDescription?.trim() ? remoteDescription : snapshot?.description;
+  if (!response.ok && !snapshot && !title) throw new Error(`YouTube metadata request failed (${response.status})`);
+  if (!description?.trim()) throw new Error("YouTube full description was not present in the response or local metadata");
+  return { title: title || snapshot?.title, description };
 }
 
 async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetadata> {
