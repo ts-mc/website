@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-30",
+  "type": "news",
+  "title": "Halloween event pre-registration is open",
+  "summary": "Pre-registration is now open for our upcoming Halloween event, with more details coming very soon.",
+  "description": "An upcoming TheySix Halloween event is getting closer, and players can now pre-register for a chance to participate before the full event details are revealed.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Pre-registration is open"
+    },
+    {
+      "type": "paragraph",
+      "text": "Players can now pre-register for the upcoming Halloween event through the application form. An official Minecraft account is required, as cracked clients will not be supported."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "More details coming soon"
+    },
+    {
+      "type": "paragraph",
+      "text": "More information about the event will be announced soon, including another notification when the event officially releases. Spam or false applications will be rejected."
+    }
+  ]
+}
