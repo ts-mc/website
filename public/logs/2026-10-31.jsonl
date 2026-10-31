@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-31",
+  "type": "release",
+  "title": "Events infrastructure upgrade",
+  "summary": "Major improvements and preparations for the TheySix Events server.",
+  "description": "Updated and restored several systems behind TheySix Events while preparing the server for upcoming events and improving overall compatibility.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "TheySix Events improvements"
+    },
+    {
+      "type": "paragraph",
+      "text": "Updated the TheySix Events setup, including game messages, menus, rewards and other event-related configurations. All 19 event games successfully loaded during testing."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "NPCs & holograms restored"
+    },
+    {
+      "type": "paragraph",
+      "text": "Restored the NPC and hologram systems used for interactive displays and leaderboards throughout the Events server."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Event lobby improvements"
+    },
+    {
+      "type": "paragraph",
+      "text": "Improved the event lobby setup and prepared /spawn to bring players directly to the event lobby."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Java & Bedrock compatibility"
+    },
+    {
+      "type": "paragraph",
+      "text": "Improved compatibility for both Java and Bedrock players, including updates to cross-version support and preservation of Bedrock-specific server features."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Moderation systems restored"
+    },
+    {
+      "type": "paragraph",
+      "text": "Restored the server's moderation backend and successfully verified that it loads with the updated Events server configuration."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Server cleanup"
+    },
+    {
+      "type": "paragraph",
+      "text": "Removed several outdated and unused server components and restored dependencies required by the current server setup."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Successful startup test"
+    },
+    {
+      "type": "paragraph",
+      "text": "Completed a successful test startup with 45 plugins initialized. TheySix Events reached its ready state and the server completed startup normally."
+    }
+  ]
+}
