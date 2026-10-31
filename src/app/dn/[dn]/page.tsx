@@ -59,23 +59,25 @@ const getYoutubeMetadata = unstable_cache(
   async (youtubeId: string): Promise<YoutubeMetadata> => {
     const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}`, {
       cache: "no-store",
-      headers: { "User-Agent": "Mozilla/5.0" },
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.youtube.com/",
+      },
     });
     if (!response.ok) throw new Error(`YouTube metadata request failed (${response.status})`);
     const html = await response.text();
     const titleMatch = html.match(/<meta\s+name="title"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/i);
-    const descriptionMatch = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:description"\s+content="([^"]*)"/i);
     const fullDescriptionMatch = html.match(/"shortDescription":"((?:\\.|[^"\\])*)"/);
-    const rawDescription = fullDescriptionMatch?.[1]
-      ? JSON.parse(`"${fullDescriptionMatch[1]}"`) as string
-      : descriptionMatch?.[1] ? decodeHtml(descriptionMatch[1]) : "";
-    if (!rawDescription) throw new Error("YouTube description was not present in the video response");
+    if (!fullDescriptionMatch?.[1]) throw new Error("YouTube full description was not present in the video response");
+    const rawDescription = JSON.parse(`"${fullDescriptionMatch[1]}"`) as string;
+    if (!rawDescription.trim()) throw new Error("YouTube returned an empty video description");
     return {
       title: titleMatch?.[1] ? decodeHtml(titleMatch[1]) : undefined,
-      description: rawDescription || undefined,
+      description: rawDescription,
     };
   },
-  ["theysix-youtube-metadata-v1"],
+  ["theysix-youtube-metadata-v2"],
   { revalidate: 86400 }
 );
 
@@ -93,7 +95,8 @@ async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetada
       creatorName,
       latestVersion,
     };
-  } catch {
+  } catch (error) {
+    console.error(`Unable to load full YouTube metadata for farm ${farm.dn}:`, error);
     return farm;
   }
 }
