@@ -41,7 +41,11 @@ function parseMetadata(videoId: string, html: string): VideoEntry | undefined {
 
 const results = new Map<string, VideoEntry>();
 const failures: string[] = [];
-const pending = Array.from(videos.keys()).filter((id) => !existing[id]?.description);
+const requestedIds = process.argv.slice(2);
+const pending = Array.from(videos.keys()).filter((id) =>
+  (!requestedIds.length || requestedIds.includes(id)) && !existing[id]?.description
+);
+const total = pending.length;
 let completed = 0;
 async function worker() {
   while (pending.length) {
@@ -66,8 +70,8 @@ async function worker() {
     if (imported) results.set(videoId, imported);
     else failures.push(videoId);
     completed++;
-    if (completed % 25 === 0 || completed === videos.size) {
-      console.log(`Imported ${completed}/${videos.size} videos (${results.size} descriptions, ${failures.length} unavailable)`);
+    if (completed % 25 === 0 || completed === total) {
+      console.log(`Imported ${completed}/${total} videos (${results.size} descriptions, ${failures.length} unavailable)`);
     }
   }
 }
