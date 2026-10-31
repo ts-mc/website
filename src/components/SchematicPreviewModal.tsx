@@ -193,9 +193,9 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
               ]} />
 
               <GuideSection icon={<FolderOpen className="size-4" />} title="WorldEdit (.schem)" description="Use WorldEdit in single player or on a server to save a selected region." steps={[
-                <>Select the region with the wooden axe, or set the corners with <code>//pos1</code> and <code>//pos2</code>.</>,
-                <>Run <code>//copy</code> while standing where you want the schematic origin.</>,
-                <>Run <code>//schem save {farm.dn}</code>. Find the resulting <code>.schem</code> file in the WorldEdit schematics folder.</>,
+                <>Select the region with the wooden axe, or set the corners with <code>{"//pos1"}</code> and <code>{"//pos2"}</code>.</>,
+                <>Run <code>{"//copy"}</code> while standing where you want the schematic origin.</>,
+                <>Run <code>{"//schem save "}{farm.dn}</code>. Find the resulting <code>.schem</code> file in the WorldEdit schematics folder.</>,
               ]} />
 
               <GuideSection icon={<MousePointer2 className="size-4" />} title="Structure block (.nbt)" description="Vanilla Minecraft can save smaller structures without installing a mod. Use a world where you have permission to use commands." steps={[
