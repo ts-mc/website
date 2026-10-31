@@ -21,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theysix.ro-mihaiu.xyz"),
+  metadataBase: new URL("https://theysix.tech"),
   title: "THEYSIX | Maximum Efficiency Minecraft Farms",
   description:
     "Next-generation Minecraft farm schematics for Java & Bedrock Edition. High-efficiency designs, world downloads, and video tutorials.",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "THEYSIX - Maximum Efficiency Minecraft Farms",
     description: "High-efficiency Minecraft Java & Bedrock farm schematics and world saves.",
-    url: "https://theysix.ro-mihaiu.xyz",
+    url: "https://theysix.tech",
     siteName: "TheySix",
     images: [
       {

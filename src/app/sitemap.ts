@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllFarms } from "@/lib/farms";
 import { getAllWikiArticles } from "@/data/wiki/articles";
-const siteUrl = "https://theysix.ro-mihaiu.xyz";
+const siteUrl = "https://theysix.tech";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/about", "/socials", "/staff", "/staff/retired",

@@ -29,7 +29,7 @@ export default function TermsOfServicePage() {
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-ink">1. Acceptance of Terms</h2>
           <p>
-            By accessing or using the TheySix website (theysix.ro-mihaiu.xyz) and downloading our Minecraft world files or Litematica schematics, you agree to be bound by these Terms of Service.
+            By accessing or using the TheySix website (theysix.tech) and downloading our Minecraft world files or Litematica schematics, you agree to be bound by these Terms of Service.
           </p>
         </section>
 

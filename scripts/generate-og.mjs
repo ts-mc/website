@@ -171,10 +171,10 @@ function ogSvg(logoUri) {
   <!-- Address bar -->
   <rect x="72" y="510" width="360" height="76" rx="20" fill="#111726" fill-opacity="0.9" stroke="${BRAND}" stroke-opacity="0.45" stroke-width="2"/>
   <text x="104" y="544" font-family="${MONO}" font-size="15" font-weight="700" letter-spacing="2.2" fill="${TEXT_MUTED}">BROWSE THE VAULT</text>
-  <text x="104" y="572" font-family="${MONO}" font-size="24" font-weight="700" fill="${BRAND_HI}">theysix.ro-mihaiu.xyz</text>
+  <text x="104" y="572" font-family="${MONO}" font-size="24" font-weight="700" fill="${BRAND_HI}">theysix.tech</text>
 
   <!-- Domain -->
-  <text x="${width - 72}" y="572" font-family="${MONO}" font-size="20" font-weight="700" letter-spacing="1.4" fill="${TEXT_MUTED}" text-anchor="end">theysix.ro-mihaiu.xyz</text>
+  <text x="${width - 72}" y="572" font-family="${MONO}" font-size="20" font-weight="700" letter-spacing="1.4" fill="${TEXT_MUTED}" text-anchor="end">theysix.tech</text>
 
   <!-- Corner rule -->
   <rect x="0" y="${height - 8}" width="${width}" height="8" fill="url(#brand-gradient)"/>

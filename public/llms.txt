@@ -4,13 +4,13 @@
 
 ## Main sections
 
-- Homepage: https://theysix.ro-mihaiu.xyz/
-- About and contact: https://theysix.ro-mihaiu.xyz/about
-- Farm catalog: https://theysix.ro-mihaiu.xyz/?category=all
-- Official socials: https://theysix.ro-mihaiu.xyz/socials
-- Minecraft server: https://events-theysix.ro-mihaiu.xyz
-- Terms of Service: https://theysix.ro-mihaiu.xyz/tos
-- Privacy Policy: https://theysix.ro-mihaiu.xyz/privacy
+- Homepage: https://theysix.tech/
+- About and contact: https://theysix.tech/about
+- Farm catalog: https://theysix.tech/?category=all
+- Official socials: https://theysix.tech/socials
+- Minecraft server: https://theysix.tech
+- Terms of Service: https://theysix.tech/tos
+- Privacy Policy: https://theysix.tech/privacy
 
 ## Content
 

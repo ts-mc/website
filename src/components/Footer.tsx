@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const groups = [
-  { label: "Explore", links: [["Wiki home", "https://wiki-theysix.ro-mihaiu.xyz"], ["Java articles", "https://wiki-theysix.ro-mihaiu.xyz/w/java"], ["Bedrock articles", "https://wiki-theysix.ro-mihaiu.xyz/w/bedrock"], ["Discord articles", "https://wiki-theysix.ro-mihaiu.xyz/w/discord"]] },
-  { label: "Community", links: [["Main", "https://theysix.ro-mihaiu.xyz"], ["Events", "https://events-theysix.ro-mihaiu.xyz"], ["About", "https://theysix.ro-mihaiu.xyz/about"], ["Socials", "https://theysix.ro-mihaiu.xyz/socials"]] },
-  { label: "Legal", links: [["Terms of service", "https://wiki-theysix.ro-mihaiu.xyz/legal/terms"], ["Privacy", "https://wiki-theysix.ro-mihaiu.xyz/legal/privacy"], ["Cookies", "https://wiki-theysix.ro-mihaiu.xyz/legal/cookies"], ["Open-source licences", "https://wiki-theysix.ro-mihaiu.xyz/legal/open-source"]] },
+  { label: "Explore", links: [["Wiki home", "https://wiki.theysix.tech"], ["Java articles", "https://wiki.theysix.tech/w/java"], ["Bedrock articles", "https://wiki.theysix.tech/w/bedrock"], ["Discord articles", "https://wiki.theysix.tech/w/discord"]] },
+  { label: "Community", links: [["Main", "https://theysix.tech"], ["Events", "https://theysix.tech"], ["About", "https://theysix.tech/about"], ["Socials", "https://theysix.tech/socials"]] },
+  { label: "Legal", links: [["Terms of service", "https://wiki.theysix.tech/legal/terms"], ["Privacy", "https://wiki.theysix.tech/legal/privacy"], ["Cookies", "https://wiki.theysix.tech/legal/cookies"], ["Open-source licences", "https://wiki.theysix.tech/legal/open-source"]] },
 ] as const;
 
 export function Footer() {
