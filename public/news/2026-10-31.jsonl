@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-31",
+  "type": "release",
+  "title": "A custom Halloween event is here",
+  "summary": "Celebrate Halloween with a custom-made horror game mode available to both Java and Bedrock players.",
+  "description": "This Halloween, TheySix is introducing a unique custom-made horror game mode for Java and Bedrock players, with applications now open for everyone interested in joining the event.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "A unique Halloween experience"
+    },
+    {
+      "type": "paragraph",
+      "text": "This year's Halloween event features a custom-made horror game mode created especially for the occasion, with support for both Java and Bedrock players."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Applications are open"
+    },
+    {
+      "type": "paragraph",
+      "text": "The event is whitelisted, so players must apply with their Minecraft username before joining. There is plenty of space available and no participant limit."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Get ready to join"
+    },
+    {
+      "type": "paragraph",
+      "text": "Accepted players will receive the server address needed to participate. Please keep in mind that the event contains horror content before deciding to join."
+    }
+  ]
+}
