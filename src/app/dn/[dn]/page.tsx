@@ -1,7 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
 import { getAllFarms } from "@/lib/farms";
 import { FarmDetailView } from "@/components/FarmDetailView";
 import type { FarmWithMetadata } from "@/types/farm";
@@ -55,31 +54,35 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
 
 type YoutubeMetadata = { title?: string; description?: string };
 
-const getYoutubeMetadata = unstable_cache(
-  async (youtubeId: string): Promise<YoutubeMetadata> => {
-    const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}`, {
+async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
+  const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}`, {
       cache: "no-store",
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
         "Referer": "https://www.youtube.com/",
       },
-    });
-    if (!response.ok) throw new Error(`YouTube metadata request failed (${response.status})`);
-    const html = await response.text();
-    const titleMatch = html.match(/<meta\s+name="title"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/i);
-    const fullDescriptionMatch = html.match(/"shortDescription":"((?:\\.|[^"\\])*)"/);
-    if (!fullDescriptionMatch?.[1]) throw new Error("YouTube full description was not present in the video response");
-    const rawDescription = JSON.parse(`"${fullDescriptionMatch[1]}"`) as string;
-    if (!rawDescription.trim()) throw new Error("YouTube returned an empty video description");
-    return {
-      title: titleMatch?.[1] ? decodeHtml(titleMatch[1]) : undefined,
-      description: rawDescription,
-    };
-  },
-  ["theysix-youtube-metadata-v2"],
-  { revalidate: 86400 }
-);
+  });
+  const html = await response.text();
+  const titleMatch = html.match(/<meta\s+name="title"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/i);
+  // YouTube embeds shortDescription as a JSON string in ytInitialPlayerResponse.
+  const fullDescriptionMatch = html.match(/"shortDescription"\s*:\s*("(?:\\.|[^"\\])*")/);
+  console.info("YouTube farm metadata response", {
+    youtubeId,
+    status: response.status,
+    responseBytes: Buffer.byteLength(html),
+    hasTitle: Boolean(titleMatch?.[1]),
+    hasFullDescription: Boolean(fullDescriptionMatch?.[1]),
+  });
+  if (!response.ok) throw new Error(`YouTube metadata request failed (${response.status})`);
+  if (!fullDescriptionMatch?.[1]) throw new Error("YouTube full description was not present in the video response");
+  const rawDescription = JSON.parse(fullDescriptionMatch[1]) as string;
+  if (!rawDescription.trim()) throw new Error("YouTube returned an empty video description");
+  return {
+    title: titleMatch?.[1] ? decodeHtml(titleMatch[1]) : undefined,
+    description: rawDescription,
+  };
+}
 
 async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetadata> {
   if (!farm.youtubeUrl || !farm.youtubeId) return farm;
