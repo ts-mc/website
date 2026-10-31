@@ -5,20 +5,15 @@ import {
   X,
   FileCode,
   Download,
-  Box,
-  Layers,
-  Check,
   Info,
-  ExternalLink,
-  Eye,
-  Terminal,
   Grid,
   ShieldCheck,
-  Search,
-  Lock,
-  GitBranch,
   Sparkles,
-  ClipboardList
+  ClipboardList,
+  ArrowDownToLine,
+  FolderOpen,
+  MousePointer2,
+  Save,
 } from "lucide-react";
 import { SchematicViewer3D } from "@/components/SchematicViewer3D";
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
@@ -35,8 +30,6 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
   const [hasOpened, setHasOpened] = useState(isOpen);
   const [activeTab, setActiveTab] = useState<"viewer" | "materials" | "guide">("viewer");
   const [selectedFormat, setSelectedFormat] = useState<"litematic" | "schematic" | "schem" | "nbt">("litematic");
-  const [materialSearch, setMaterialSearch] = useState("");
-  const [copiedMaterials, setCopiedMaterials] = useState(false);
 
   useEffect(() => {
     if (isOpen) setHasOpened(true);
@@ -62,57 +55,39 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
     nbt: `${farm.dn}.nbt`,
   };
 
-  const materialsList = farm.materials || [];
-
-  const filteredMaterials = materialsList.filter((m) =>
-    m.name.toLowerCase().includes(materialSearch.toLowerCase())
-  );
-
-  const handleCopyMaterialsText = () => {
-    const text = materialsList.map((m) => `${m.name}: ${m.count} (${m.stacks || `${m.count} items`})`).join("\n");
-    navigator.clipboard.writeText(`=== Material List for ${farm.title} (#${farm.dn}) ===\n` + text);
-    setCopiedMaterials(true);
-    setTimeout(() => setCopiedMaterials(false), 2000);
-  };
-
   return (
     <div
-      className={`fixed inset-0 z-50 items-center justify-center p-3 sm:p-6 md:p-8 animate-in fade-in duration-200 ${isOpen ? "flex" : "hidden"}`}
+      className={`fixed inset-0 z-50 items-center justify-center p-0 animate-in fade-in duration-200 ${isOpen ? "flex" : "hidden"}`}
       aria-hidden={!isOpen}
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/85 backdrop-blur-md"
+        className="fixed inset-0 bg-[#08090d]"
         onClick={onClose}
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-4xl glass-panel rounded-3xl border border-hairline bg-[#111726]/95 shadow-2xl shadow-black/40 overflow-hidden flex flex-col max-h-[92vh] z-10 animate-in zoom-in-95 duration-200">
+      <div className="relative z-10 flex h-[100dvh] w-full flex-col overflow-hidden border border-white/10 bg-[#0a0b10] shadow-2xl animate-in fade-in duration-200 sm:h-[min(96dvh,1080px)] sm:max-w-[1800px] sm:shadow-[0_32px_120px_rgba(0,0,0,.72)]">
 
         {/* Modal Header */}
-        <div className="p-5 sm:p-6 border-b border-hairline flex items-center justify-between bg-[#070A12]/70">
+        <div className="flex min-h-12 items-center justify-between gap-4 border-b border-white/10 bg-[#111216] px-4 py-2 sm:min-h-14 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-[#FBBF24]/10 text-[#FBBF24] border border-[#FBBF24]/20 shadow-md">
-              <FileCode className="w-6 h-6" />
-            </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-[#FBBF24] uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-[#4CADD0]" /> Interactive Schematic Viewer
+                <span className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[.16em] text-white/45 sm:text-[10px]">
+                  <Sparkles className="size-3.5 text-emerald-400" /> TheySix / Build preview
                 </span>
-                <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-bg-elev text-ink border border-hairline">
-                  #{farm.dn}
+                <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-[9px] font-bold text-emerald-400">
+                  MC {farm.version || "1.21+"}
                 </span>
               </div>
-              <h2 className="text-base sm:text-xl font-extrabold text-ink line-clamp-1 mt-0.5">
-                {farm.title}
-              </h2>
+              <h2 className="mt-0.5 line-clamp-1 text-sm font-semibold text-white sm:text-base">{farm.title}</h2>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-ink-muted hover:text-ink hover:bg-bg-elev transition-colors border border-transparent hover:border-hairline"
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-white/10 text-white/55 transition-colors hover:bg-white/5 hover:text-white"
             aria-label="Close schematic viewer"
           >
             <X className="w-5 h-5" />
@@ -120,49 +95,49 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1 sm:gap-2 px-4 sm:px-6 pt-2 border-b border-hairline text-xs font-semibold overflow-x-auto scrollbar-none">
+        <div className="flex min-h-10 items-stretch gap-1 border-b border-white/10 bg-[#111216] px-3 text-xs font-semibold overflow-x-auto scrollbar-none sm:px-6">
           <button
             onClick={() => setActiveTab("viewer")}
-            className={`pb-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`flex shrink-0 items-center gap-2 border-b-2 px-4 transition-colors whitespace-nowrap ${
               activeTab === "viewer"
-                ? "border-[#4CADD0] text-[#9FEBF6]"
-                : "border-transparent text-ink-muted hover:text-ink"
+                ? "border-emerald-400 text-emerald-400"
+                : "border-transparent text-white/45 hover:text-white"
             }`}
           >
-            <Grid className="w-3.5 h-3.5" /> 3D View
+            <Grid className="size-3.5" /> 3D View
           </button>
 
           <button
             onClick={() => setActiveTab("materials")}
-            className={`pb-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`flex shrink-0 items-center gap-2 border-b-2 px-4 transition-colors whitespace-nowrap ${
               activeTab === "materials"
-                ? "border-[#FBBF24] text-[#FBBF24]"
-                : "border-transparent text-ink-muted hover:text-ink"
+                ? "border-emerald-400 text-emerald-400"
+                : "border-transparent text-white/45 hover:text-white"
             }`}
           >
-            <ClipboardList className="w-3.5 h-3.5" /> Material List
+            <ClipboardList className="size-3.5" /> Materials
           </button>
 
           <button
             onClick={() => setActiveTab("guide")}
-            className={`pb-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`flex shrink-0 items-center gap-2 border-b-2 px-4 transition-colors whitespace-nowrap ${
               activeTab === "guide"
-                ? "border-[#FBBF24] text-[#FBBF24]"
-                : "border-transparent text-ink-muted hover:text-ink"
+                ? "border-emerald-400 text-emerald-400"
+                : "border-transparent text-white/45 hover:text-white"
             }`}
           >
-            <Info className="w-3.5 h-3.5" /> Litematica Guide
+            <Info className="size-3.5" /> Guide
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-sm text-ink">
+        <div className={`${activeTab === "viewer" ? "overflow-hidden p-0" : "overflow-y-auto bg-[#0b0c11] p-4 sm:p-6"} flex-1 text-sm text-ink`}>
           {/* TAB 1: 3D SCHEMAT.IO VIEWER */}
           {activeTab === "viewer" && (
-            <div className="space-y-4">
+            <div className="h-full min-h-0">
               <SchematicViewer3D farm={farm} selectedFormat={selectedFormat} onMaterialsExtracted={onMaterialsExtracted} />
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="hidden grid-cols-2 gap-px bg-[var(--rule)] text-xs sm:grid sm:grid-cols-4">
                 <div className="p-3 rounded-2xl bg-[#070A12]/70 border border-hairline space-y-1">
                   <span className="text-[10px] text-ink-dim uppercase font-mono">Format</span>
                   <p className="font-mono font-bold text-[#FBBF24]">{farmFormats[selectedFormat]}</p>
@@ -204,40 +179,53 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
 
           {/* TAB 3: LITEMATICA & STRUCTURE GUIDE */}
           {activeTab === "guide" && (
-            <div className="space-y-4 text-xs sm:text-sm">
-              <h3 className="font-bold text-ink text-base">How to Load & Build in Minecraft:</h3>
-              <ol className="list-decimal list-inside space-y-3 text-ink pl-1 leading-relaxed">
-                <li>
-                  <strong>For Litematica (.litematic):</strong> Install Fabric Loader and add the <strong>Litematica</strong> & <strong>MaLiLib</strong> mods to your mods folder.
-                </li>
-                <li>
-                  Place the downloaded <code className="text-[#FBBF24] font-mono">{farmFormats[selectedFormat]}</code> file into your Minecraft schematics directory:
-                  <div className="p-2.5 rounded-xl bg-[#070A12] font-mono text-xs text-[#9FEBF6] mt-1 border border-hairline">
-                    .minecraft/schematics/
-                  </div>
-                </li>
-                <li>
-                  In-game, press <kbd className="px-2 py-0.5 rounded bg-bg-elev text-ink font-mono text-xs border border-hairline">M</kbd> to open the Litematica Menu, click <strong>Load Schematics</strong>, and load this farm.
-                </li>
-                <li>
-                  Use <kbd className="px-2 py-0.5 rounded bg-bg-elev text-ink font-mono text-xs border border-hairline">Alt + Mouse Wheel</kbd> to inspect the hologram layer-by-layer and build without mistakes!
-                </li>
-              </ol>
+            <div className="mx-auto max-w-4xl space-y-7 text-xs leading-relaxed sm:text-sm">
+              <div className="border-b border-white/10 pb-5">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-emerald-400">Schematic guide / {farm.dn}</p>
+                <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">Export a schematic from Minecraft</h3>
+                <p className="mt-2 max-w-3xl text-[#9d9d9d]">Choose the format that matches the tool you use. Litematica is recommended for modern Java Edition; WorldEdit and structure blocks are good alternatives.</p>
+              </div>
+
+              <GuideSection icon={<Save className="size-4" />} title="Litematica (.litematic) · Recommended" description={<>Litematica is the most common format for Minecraft Java builds. Install <strong>Litematica</strong> and its dependency <strong>MaLiLib</strong> for your Minecraft version.</>} steps={[
+                <>Open the Litematica menu with <kbd className="rounded border border-white/10 bg-[#181818] px-1.5 py-0.5 font-mono text-[11px] text-white">M</kbd> and switch to area selection mode.</>,
+                <>Use the selection tool to mark the two corners around the entire build.</>,
+                <>Open the menu and choose <strong>Area Editor → Save Schematic</strong>. Save the <code>.litematic</code> file in <code>.minecraft/schematics</code>.</>,
+              ]} />
+
+              <GuideSection icon={<FolderOpen className="size-4" />} title="WorldEdit (.schem)" description="Use WorldEdit in single player or on a server to save a selected region." steps={[
+                <>Select the region with the wooden axe, or set the corners with <code>//pos1</code> and <code>//pos2</code>.</>,
+                <>Run <code>//copy</code> while standing where you want the schematic origin.</>,
+                <>Run <code>//schem save {farm.dn}</code>. Find the resulting <code>.schem</code> file in the WorldEdit schematics folder.</>,
+              ]} />
+
+              <GuideSection icon={<MousePointer2 className="size-4" />} title="Structure block (.nbt)" description="Vanilla Minecraft can save smaller structures without installing a mod. Use a world where you have permission to use commands." steps={[
+                <>Get a structure block with <code>/give @s structure_block</code> and place it beside the build.</>,
+                <>Set the block to <strong>Save</strong>, enter a name, then adjust the relative position and size to include the build.</>,
+                <>Press <strong>Save</strong>. The structure file is stored under <code>saves/&lt;world&gt;/generated/minecraft/structures</code>.</>,
+              ]} />
+
+              <GuideSection icon={<FileCode className="size-4" />} title="Schematica (.schematic)" description="This legacy format is mainly for Minecraft 1.12 and older. It remains supported for compatibility; use Litematica for current versions." steps={[]} />
+
+              <div className="border-t border-white/10 pt-5 text-[#9d9d9d]">
+                <h4 className="font-semibold text-white">Load this build</h4>
+                <p className="mt-2">Download <code>{farmFormats[selectedFormat]}</code>, place it in your schematic folder, then load it from your mod’s schematic menu. In Litematica, use the layer render controls to inspect the build one Y level at a time.</p>
+                {farm.schematicUrl && <a href={farm.schematicUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#181818] px-4 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:bg-[#222]"><ArrowDownToLine className="size-4" /> Download {farmFormats[selectedFormat]}</a>}
+              </div>
             </div>
           )}
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 sm:p-5 border-t border-hairline bg-[#0B0E14]/90 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className={`flex items-center justify-between gap-3 border-t border-white/10 bg-[#111216] px-4 py-2 sm:px-6 ${activeTab === "viewer" ? "min-h-11" : "flex-col sm:flex-row"}`}>
           <div className="flex items-center gap-2 text-xs font-mono text-ink-muted">
-            <span className="text-ink-dim">Selected:</span>
-            <span className="font-bold text-[#FBBF24]">{farmFormats[selectedFormat]}</span>
+            <span className="text-white/35">Selected:</span>
+            <span className="truncate font-bold text-emerald-400">{farmFormats[selectedFormat]}</span>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex shrink-0 items-center gap-2 w-auto">
             <button
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-semibold text-ink-muted hover:text-ink transition-colors"
+              className="border border-[var(--rule)] px-3 py-2 text-xs font-semibold text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
             >
               Close
             </button>
@@ -246,7 +234,7 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
                 href={farm.schematicUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-[#FBBF24] hover:bg-[#FBBF24]/80 transition-all shadow-md shadow-[#FBBF24]/20"
+                className="inline-flex items-center justify-center gap-2 border border-[var(--portal)] bg-[rgba(153,225,217,.12)] px-3 py-2 text-xs font-bold text-[var(--portal)] transition-colors hover:bg-[rgba(153,225,217,.2)]"
               >
                 <Download className="w-4 h-4" /> Download {farmFormats[selectedFormat]}
               </a>
@@ -256,6 +244,19 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
 
       </div>
     </div>
+  );
+}
+
+function GuideSection({ icon, title, description, steps }: { icon: React.ReactNode; title: string; description: React.ReactNode; steps: React.ReactNode[] }) {
+  return (
+    <section className="grid gap-3 sm:grid-cols-[32px_1fr] sm:gap-4">
+      <span className="grid size-8 place-items-center rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-400">{icon}</span>
+      <div>
+        <h4 className="text-sm font-semibold text-white">{title}</h4>
+        <p className="mt-1 text-[#9d9d9d]">{description}</p>
+        {steps.length > 0 && <ol className="mt-3 space-y-2.5 text-[#c3c7cf]">{steps.map((step, index) => <li key={index} className="flex gap-3"><span className="grid size-5 shrink-0 place-items-center rounded-full bg-[#181818] font-mono text-[10px] text-emerald-400">{index + 1}</span><span>{step}</span></li>)}</ol>}
+      </div>
+    </section>
   );
 }
 

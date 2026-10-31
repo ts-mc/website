@@ -31,6 +31,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Generated Distant Horizons render cache (can exceed Git hosting file limits)
+/src/data/worlds/**/dimensions/minecraft/**/data/DistantHorizons.sqlite
+/src/data/worlds/**/session.lock
+
 # typescript
 *.tsbuildinfo
 

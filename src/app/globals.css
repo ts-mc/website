@@ -36,10 +36,8 @@
   .signal-opening { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; justify-content: center; padding: 6rem clamp(1.5rem, 8vw, 8rem) 8rem; }
   .signal-opening-bg { position: absolute; inset: 0; z-index: -3; background: var(--sky) url('/scene/signal-field-static.jpg') center bottom / cover no-repeat; }
   .signal-opening-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, rgba(2,2,2,.9), rgba(2,2,2,.35) 30%, transparent 62%), linear-gradient(to top, rgba(2,2,2,.9), rgba(2,2,2,.2) 32%, transparent 55%); }
-  .signal-vignette { position: absolute; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(132% 104% at 50% 44%, transparent 46%, rgba(2,2,2,.66) 100%); }
-  .signal-mark { position: absolute; z-index: -1; right: 12%; bottom: 20%; width: min(38vw, 520px); filter: drop-shadow(0 0 24px rgba(153,225,217,.9)) drop-shadow(0 0 80px rgba(0,200,170,.5)); animation: signal-breathe 5s ease-in-out infinite; }
-  .signal-mark img { display: block; width: 100%; height: auto; }
-  .signal-wordmark { position: relative; z-index: 1; margin-top: 5vh; }
+  .signal-vignette { position: absolute; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(132% 104% at 50% 44%, transparent 50%, rgba(2,2,2,.54) 100%); }
+  .signal-wordmark { position: relative; z-index: 1; width: fit-content; max-width: min(66vw, 800px); margin-top: 5vh; }
   .signal-wordmark h1 { margin: 0; color: var(--ink-bright); font: 900 clamp(4rem, 12vw, 10.5rem)/.84 var(--font-body), sans-serif; letter-spacing: -.06em; }
   .signal-wordmark p { margin: 1.2rem 0 0 .45rem; color: rgba(251,255,238,.9); font: 700 clamp(.7rem, 1.5vw, 1rem)/1 var(--font-body), sans-serif; letter-spacing: .34em; }
   .signal-enter { display: inline-flex; align-items: center; gap: 1.2rem; position: absolute; z-index: 2; left: clamp(1.5rem, 8vw, 8rem); bottom: 8rem; color: var(--ink); font: 700 .85rem var(--font-body), sans-serif; letter-spacing: .34em; text-decoration: none; }
@@ -60,7 +58,7 @@
   .reference-chapter h2, .reference-archive h2 { margin: 1.5rem 0 0; color: var(--ink); font: 900 clamp(2.8rem, 7vw, 6rem)/.9 var(--font-body), sans-serif; letter-spacing: -.055em; }
   .reference-chapter h2 em { color: var(--portal); font-style: normal; }
   .reference-lede, .reference-archive-heading > p { max-width: 38rem; margin-top: 2rem; color: var(--muted); font-size: 1rem; line-height: 1.7; }
-  .reference-archive { border-top: 1px solid var(--rule); }
+  .reference-archive { width: min(calc(100% - 3rem), 68rem); max-width: none; border-top: 1px solid var(--rule); padding: 8rem 0; }
   .reference-archive-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 3rem; }
   .reference-archive-heading > p { max-width: 18rem; margin: 0; }
   .reference-loading { padding: 5rem 0; color: var(--portal); }
@@ -71,7 +69,5 @@
   .footer-shell .text-brand, .footer-shell .label-mono { color: var(--portal); }
   .footer-shell a { color: var(--muted); }
   .footer-shell a:hover { color: var(--portal); }
-  @keyframes signal-breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.015); } }
-  @media (max-width: 760px) { .shell { width: min(100% - 2rem, 1200px); } .signal-opening { min-height: 92svh; padding: 5rem 1.25rem 8rem; justify-content: flex-start; } .signal-mark { right: -2rem; bottom: 25%; width: 70vw; } .signal-wordmark { margin-top: 19vh; } .signal-wordmark h1 { font-size: clamp(3.4rem, 17vw, 6rem); } .signal-wordmark p { font-size: .55rem; letter-spacing: .2em; } .signal-enter { left: 1.25rem; bottom: 8rem; } .reference-dock { width: 100%; justify-content: space-between; padding-inline: .3rem; } .reference-dock-link { min-width: 0; flex: 1 1 0; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-dock-link svg { width: 15px; } .reference-dock-center img { width: 1.35rem; height: 1.35rem; } .reference-audio { min-width: 2.6rem; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-archive-heading { display: block; } .reference-archive-heading > p { margin-top: 1.2rem; } }
-  @media (prefers-reduced-motion: reduce) { .signal-mark { animation: none; } }
+  @media (max-width: 760px) { .shell { width: min(100% - 2rem, 1200px); } .signal-opening { min-height: 92svh; padding: 5rem 1.25rem 8rem; justify-content: flex-start; } .signal-wordmark { max-width: 100%; margin-top: 19vh; } .signal-wordmark h1 { font-size: clamp(3.4rem, 17vw, 6rem); } .signal-wordmark p { font-size: .55rem; letter-spacing: .2em; } .signal-enter { left: 1.25rem; bottom: 8rem; } .reference-dock { width: 100%; justify-content: space-between; padding-inline: .3rem; } .reference-dock-link { min-width: 0; flex: 1 1 0; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-dock-link svg { width: 15px; } .reference-dock-center img { width: 1.35rem; height: 1.35rem; } .reference-audio { min-width: 2.6rem; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-archive { width: calc(100% - 2.5rem); padding-block: 6rem; } .reference-archive-heading { display: block; } .reference-archive-heading > p { margin-top: 1.2rem; } }
 }

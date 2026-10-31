@@ -1,0 +1,458 @@
+[
+  {
+    "material": "chest",
+    "slug": "chest",
+    "icon": "chest.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/chest.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/chest"
+  },
+  {
+    "material": "coal ore",
+    "slug": "coal_ore",
+    "icon": "coal_ore.png",
+    "sourceTexture": "coal_ore.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/coal_ore.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/coal_ore"
+  },
+  {
+    "material": "cobblestone",
+    "slug": "cobblestone",
+    "icon": "cobblestone.png",
+    "sourceTexture": "cobblestone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/cobblestone.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/cobblestone"
+  },
+  {
+    "material": "cobblestone slab",
+    "slug": "cobblestone_slab",
+    "icon": "cobblestone_slab.png",
+    "sourceTexture": "cobblestone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/cobblestone_slab.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/cobblestone_slab"
+  },
+  {
+    "material": "cobblestone stairs",
+    "slug": "cobblestone_stairs",
+    "icon": "cobblestone_stairs.png",
+    "sourceTexture": "cobblestone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/cobblestone_stairs.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/cobblestone_stairs"
+  },
+  {
+    "material": "cobblestone wall",
+    "slug": "cobblestone_wall",
+    "icon": "cobblestone_wall.png",
+    "sourceTexture": "cobblestone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/cobblestone_wall.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/cobblestone_wall"
+  },
+  {
+    "material": "composter",
+    "slug": "composter",
+    "icon": "composter.png",
+    "sourceTexture": "composter_side.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/composter.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/composter"
+  },
+  {
+    "material": "copper ore",
+    "slug": "copper_ore",
+    "icon": "copper_ore.png",
+    "sourceTexture": "copper_ore.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/copper_ore.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/copper_ore"
+  },
+  {
+    "material": "diorite",
+    "slug": "diorite",
+    "icon": "diorite.png",
+    "sourceTexture": "diorite.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/diorite.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/diorite"
+  },
+  {
+    "material": "dirt",
+    "slug": "dirt",
+    "icon": "dirt.png",
+    "sourceTexture": "dirt.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/dirt.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/dirt"
+  },
+  {
+    "material": "dirt path",
+    "slug": "dirt_path",
+    "icon": "dirt_path.png",
+    "sourceTexture": "dirt_path_top.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/dirt_path.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/dirt_path"
+  },
+  {
+    "material": "dispenser",
+    "slug": "dispenser",
+    "icon": "dispenser.png",
+    "sourceTexture": "dispenser_front.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/dispenser.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/dispenser"
+  },
+  {
+    "material": "dropper",
+    "slug": "dropper",
+    "icon": "dropper.png",
+    "sourceTexture": "dropper_front.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/dropper.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/dropper"
+  },
+  {
+    "material": "glass",
+    "slug": "glass",
+    "icon": "glass.png",
+    "sourceTexture": "glass.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/glass.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/glass"
+  },
+  {
+    "material": "grass block",
+    "slug": "grass_block",
+    "icon": "grass_block.png",
+    "sourceTexture": "grass_block_top.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/grass_block.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/grass_block"
+  },
+  {
+    "material": "gravel",
+    "slug": "gravel",
+    "icon": "gravel.png",
+    "sourceTexture": "gravel.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/gravel.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/gravel"
+  },
+  {
+    "material": "hopper",
+    "slug": "hopper",
+    "icon": "hopper.png",
+    "sourceTexture": "hopper_outside.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/hopper.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/hopper"
+  },
+  {
+    "material": "jungle leaves",
+    "slug": "jungle_leaves",
+    "icon": "jungle_leaves.png",
+    "sourceTexture": "jungle_leaves.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/jungle_leaves.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/jungle_leaves"
+  },
+  {
+    "material": "kelp",
+    "slug": "kelp",
+    "icon": "kelp.png",
+    "sourceTexture": "kelp.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/kelp.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/kelp"
+  },
+  {
+    "material": "lava",
+    "slug": "lava",
+    "icon": "lava.png",
+    "sourceTexture": "lava_still.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/lava.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/lava"
+  },
+  {
+    "material": "lever",
+    "slug": "lever",
+    "icon": "lever.png",
+    "sourceTexture": "lever.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/lever.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/lever"
+  },
+  {
+    "material": "mud",
+    "slug": "mud",
+    "icon": "mud.png",
+    "sourceTexture": "mud.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/mud.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/mud"
+  },
+  {
+    "material": "oak button",
+    "slug": "oak_button",
+    "icon": "oak_button.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_button.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_button"
+  },
+  {
+    "material": "oak fence",
+    "slug": "oak_fence",
+    "icon": "oak_fence.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_fence.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_fence"
+  },
+  {
+    "material": "oak fence gate",
+    "slug": "oak_fence_gate",
+    "icon": "oak_fence_gate.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_fence_gate.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_fence_gate"
+  },
+  {
+    "material": "oak log",
+    "slug": "oak_log",
+    "icon": "oak_log.png",
+    "sourceTexture": "oak_log.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_log.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_log"
+  },
+  {
+    "material": "oak pressure plate",
+    "slug": "oak_pressure_plate",
+    "icon": "oak_pressure_plate.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_pressure_plate.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_pressure_plate"
+  },
+  {
+    "material": "oak sign",
+    "slug": "oak_sign",
+    "icon": "oak_sign.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_sign.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_sign"
+  },
+  {
+    "material": "oak stairs",
+    "slug": "oak_stairs",
+    "icon": "oak_stairs.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_stairs.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_stairs"
+  },
+  {
+    "material": "oak trapdoor",
+    "slug": "oak_trapdoor",
+    "icon": "oak_trapdoor.png",
+    "sourceTexture": "oak_trapdoor.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_trapdoor.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_trapdoor"
+  },
+  {
+    "material": "oak wall sign",
+    "slug": "oak_wall_sign",
+    "icon": "oak_wall_sign.png",
+    "sourceTexture": "oak_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/oak_wall_sign.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/oak_wall_sign"
+  },
+  {
+    "material": "observer",
+    "slug": "observer",
+    "icon": "observer.png",
+    "sourceTexture": "observer_front.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/observer.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/observer"
+  },
+  {
+    "material": "piston",
+    "slug": "piston",
+    "icon": "piston.png",
+    "sourceTexture": "piston_top.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/piston.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/piston"
+  },
+  {
+    "material": "piston head",
+    "slug": "piston_head",
+    "icon": "piston_head.png",
+    "sourceTexture": "piston_top.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/piston_head.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/piston_head"
+  },
+  {
+    "material": "powered rail",
+    "slug": "powered_rail",
+    "icon": "powered_rail.png",
+    "sourceTexture": "powered_rail.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/powered_rail.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/powered_rail"
+  },
+  {
+    "material": "rail",
+    "slug": "rail",
+    "icon": "rail.png",
+    "sourceTexture": "rail.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/rail.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/rail"
+  },
+  {
+    "material": "redstone wire",
+    "slug": "redstone_wire",
+    "icon": "redstone_wire.png",
+    "sourceTexture": "redstone_dust_dot.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/redstone_wire.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/redstone_wire"
+  },
+  {
+    "material": "repeater",
+    "slug": "repeater",
+    "icon": "repeater.png",
+    "sourceTexture": "repeater.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/repeater.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/repeater"
+  },
+  {
+    "material": "sand",
+    "slug": "sand",
+    "icon": "sand.png",
+    "sourceTexture": "sand.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/sand.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/sand"
+  },
+  {
+    "material": "scaffolding",
+    "slug": "scaffolding",
+    "icon": "scaffolding.png",
+    "sourceTexture": "scaffolding_side.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/scaffolding.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/scaffolding"
+  },
+  {
+    "material": "short grass",
+    "slug": "short_grass",
+    "icon": "short_grass.png",
+    "sourceTexture": "short_grass.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/short_grass.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/short_grass"
+  },
+  {
+    "material": "smooth stone",
+    "slug": "smooth_stone",
+    "icon": "smooth_stone.png",
+    "sourceTexture": "smooth_stone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/smooth_stone.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/smooth_stone"
+  },
+  {
+    "material": "smooth stone slab",
+    "slug": "smooth_stone_slab",
+    "icon": "smooth_stone_slab.png",
+    "sourceTexture": "smooth_stone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/smooth_stone_slab.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/smooth_stone_slab"
+  },
+  {
+    "material": "soul fire",
+    "slug": "soul_fire",
+    "icon": "soul_fire.png",
+    "sourceTexture": "soul_fire_0.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/soul_fire.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/soul_fire"
+  },
+  {
+    "material": "soul sand",
+    "slug": "soul_sand",
+    "icon": "soul_sand.png",
+    "sourceTexture": "soul_sand.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/soul_sand.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/soul_sand"
+  },
+  {
+    "material": "spruce fence",
+    "slug": "spruce_fence",
+    "icon": "spruce_fence.png",
+    "sourceTexture": "spruce_planks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/spruce_fence.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/spruce_fence"
+  },
+  {
+    "material": "stone",
+    "slug": "stone",
+    "icon": "stone.png",
+    "sourceTexture": "stone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/stone.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/stone"
+  },
+  {
+    "material": "stone brick stairs",
+    "slug": "stone_brick_stairs",
+    "icon": "stone_brick_stairs.png",
+    "sourceTexture": "stone_bricks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/stone_brick_stairs.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/stone_brick_stairs"
+  },
+  {
+    "material": "stone brick wall",
+    "slug": "stone_brick_wall",
+    "icon": "stone_brick_wall.png",
+    "sourceTexture": "stone_bricks.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/stone_brick_wall.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/stone_brick_wall"
+  },
+  {
+    "material": "stone button",
+    "slug": "stone_button",
+    "icon": "stone_button.png",
+    "sourceTexture": "stone.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/stone_button.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/stone_button"
+  },
+  {
+    "material": "tall grass",
+    "slug": "tall_grass",
+    "icon": "tall_grass.png",
+    "sourceTexture": "tall_grass_top.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/tall_grass.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/tall_grass"
+  },
+  {
+    "material": "tnt",
+    "slug": "tnt",
+    "icon": "tnt.png",
+    "sourceTexture": "tnt_side.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/tnt.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/tnt"
+  },
+  {
+    "material": "torch",
+    "slug": "torch",
+    "icon": "torch.png",
+    "sourceTexture": "torch.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/torch.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/torch"
+  },
+  {
+    "material": "tripwire",
+    "slug": "tripwire",
+    "icon": "tripwire.png",
+    "sourceTexture": "tripwire.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/tripwire.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/tripwire"
+  },
+  {
+    "material": "water",
+    "slug": "water",
+    "icon": "water.png",
+    "sourceTexture": "water_still.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/water.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/water"
+  },
+  {
+    "material": "weathered lightning rod",
+    "slug": "weathered_lightning_rod",
+    "icon": "weathered_lightning_rod.png",
+    "sourceTexture": "lightning_rod.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/weathered_lightning_rod.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/weathered_lightning_rod"
+  },
+  {
+    "material": "white bed",
+    "slug": "white_bed",
+    "icon": "white_bed.png",
+    "sourceTexture": "white_wool.png",
+    "wikiImageUrl": "https://wiki.theysix.tech/items/i/white_bed.png",
+    "wikiItemUrl": "https://wiki.theysix.tech/items/white_bed"
+  }
+]

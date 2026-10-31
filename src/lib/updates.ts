@@ -64,3 +64,7 @@ export function getLogsForDate(date: string) {
 export function getNews() {
   return [...readUpdates("news"), ...readServerNews()].sort((a, b) => b.date.localeCompare(a.date));
 }
+
+export function getNewsForDate(date: string) {
+  return getNews().filter((entry) => entry.date === date);
+}

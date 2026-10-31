@@ -1,0 +1,31 @@
+{
+  "stats": {
+    "minecraft:picked_up": {
+      "minecraft:diamond_sword": 3,
+      "minecraft:carrot": 1,
+      "minecraft:bow": 1,
+      "minecraft:gunpowder": 1,
+      "minecraft:bone": 9,
+      "minecraft:iron_ingot": 1,
+      "minecraft:rotten_flesh": 3
+    },
+    "minecraft:used": {
+      "minecraft:diamond_sword": 45
+    },
+    "minecraft:killed": {
+      "minecraft:zombie": 44,
+      "minecraft:skeleton": 31,
+      "minecraft:creeper": 30
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 4715,
+      "minecraft:total_world_time": 5115,
+      "minecraft:leave_game": 2,
+      "minecraft:mob_kills": 107,
+      "minecraft:play_time": 4715,
+      "minecraft:damage_dealt": 2348,
+      "minecraft:time_since_death": 4715
+    }
+  },
+  "DataVersion": 5023
+}

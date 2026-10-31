@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  CheckSquare,
-  Square,
   Check,
   Search,
   RotateCcw,
   ClipboardList,
-  Sparkles,
-  Layers,
-  Boxes,
   CheckCircle2,
   AlertCircle,
   MessageSquarePlus,
-  Youtube
+  Youtube,
+  Pin,
+  Box,
 } from "lucide-react";
 import type { FarmMaterialItem } from "@/types/farm";
 
@@ -104,13 +101,29 @@ export function MaterialListChecklist({
   const isAllDone = totalItems > 0 && collectedCount === totalItems;
 
   // Copy helpers
+  const copyText = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedNotification("Material list copied to clipboard.");
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      setCopiedNotification(copied ? "Material list copied to clipboard." : "Could not copy the material list.");
+    }
+    window.setTimeout(() => setCopiedNotification(null), 2500);
+  };
+
   const handleCopyAll = () => {
     const text = materials
       .map((m) => `${m.name}: ${m.count} (${m.stacks || `${m.count} items`})`)
       .join("\n");
-    navigator.clipboard.writeText(`=== Material List: ${farmTitle} (#${farmId}) ===\n` + text);
-    setCopiedNotification("All materials copied!");
-    setTimeout(() => setCopiedNotification(null), 2500);
+    void copyText(`=== Material List: ${farmTitle} (#${farmId}) ===\n` + text);
   };
 
   const handleCopyRemaining = () => {
@@ -123,9 +136,7 @@ export function MaterialListChecklist({
     const text = remaining
       .map((m) => `${m.name}: ${m.count} (${m.stacks || `${m.count} items`})`)
       .join("\n");
-    navigator.clipboard.writeText(`=== Remaining Needed: ${farmTitle} (#${farmId}) ===\n` + text);
-    setCopiedNotification("Remaining items copied!");
-    setTimeout(() => setCopiedNotification(null), 2500);
+    void copyText(`=== Remaining Needed: ${farmTitle} (#${farmId}) ===\n` + text);
   };
   if (!materials || materials.length === 0) {
     return (
@@ -169,143 +180,58 @@ export function MaterialListChecklist({
   }
 
   return (
-    <div className="space-y-4 select-none">
-      {/* Progress & Header Bar */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#0B0E14]/80 border border-hairline space-y-3 shadow-inner">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FBBF24] flex items-center gap-1.5">
-              <Boxes className="w-4 h-4 text-[#FBBF24]" /> In-Game Resource Tracker
-            </span>
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-bg-elev text-[#9FEBF6] border border-hairline">
-              {collectedCount}/{totalItems} items ({progressPercent}%)
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-xs">
-            <button
-              onClick={handleCheckAll}
-              className="px-2.5 py-1 rounded-lg bg-bg-elev hover:bg-bg-elev text-ink hover:text-ink border border-hairline text-[11px] font-medium transition-colors"
-            >
-              Check All
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-2.5 py-1 rounded-lg bg-bg-elev hover:bg-bg-elev text-ink-muted hover:text-[#FB7185] border border-hairline text-[11px] font-medium transition-colors flex items-center gap-1"
-              title="Reset all checkboxes"
-            >
-              <RotateCcw className="w-3 h-3" /> Reset
-            </button>
-          </div>
+    <div className="select-none space-y-4 text-[#e6e8ec]">
+      <div className="border-b border-[#1f232c] pb-3">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-sm font-semibold">Material Checklist</h3>
+          <span className="text-xs text-[#9d9d9d]">Materials checked: {collectedCount}/{totalItems}</span>
         </div>
-
-        {/* Visual Progress Bar */}
-        <div className="w-full bg-bg-elev rounded-full h-2 overflow-hidden border border-hairline">
-          <div
-            className={`h-full transition-all duration-500 rounded-full ${
-              isAllDone
-                ? "bg-gradient-to-r from-[#4CAF50] to-[#2DD4BF] shadow-md shadow-[#4CAF50]/30"
-                : "bg-gradient-to-r from-[#FBBF24] to-[#4CADD0]"
-            }`}
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-
-        {/* All items done message */}
-        {isAllDone && (
-          <div className="flex items-center gap-2 text-xs text-[#4CAF50] font-semibold pt-0.5 animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 text-[#4CAF50]" />
-            <span>All materials gathered! You have everything ready in your inventory to build this farm.</span>
-          </div>
-        )}
+        <p className="mt-1 text-xs text-[#9d9d9d]">Review the materials used in this build, including quantities and details.</p>
+        {isAllDone && <p className="mt-2 flex items-center gap-1.5 text-xs text-[#039437]"><CheckCircle2 className="size-4" /> All materials gathered.</p>}
+        <div className="mt-3 h-1 overflow-hidden rounded-full bg-[#181818]"><div className="h-full bg-[#039437] transition-all" style={{ width: `${progressPercent}%` }} /></div>
       </div>
 
-      {/* Toolbar: Search & Copy Buttons */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-ink-dim absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search items (e.g. Hopper, Piston, Glass)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#0B0E14]/90 border border-hairline rounded-xl pl-8 pr-3 py-1.5 text-xs text-ink placeholder-ink-dim focus:outline-none focus:border-[#4CADD0]/60"
-          />
-        </div>
-
-        <div className="flex items-center gap-1.5 text-xs">
-          <button
-            onClick={handleCopyRemaining}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-elev hover:bg-bg-elev text-[#FBBF24] hover:text-[#FBBF24] text-xs font-semibold border border-hairline transition-colors"
-            title="Copy only uncollected items"
-          >
-            <ClipboardList className="w-3.5 h-3.5" />
-            <span>Copy Needed</span>
-          </button>
-
-          <button
-            onClick={handleCopyAll}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-elev hover:bg-bg-elev text-ink hover:text-ink text-xs font-semibold border border-hairline transition-colors"
-          >
-            <ClipboardList className="w-3.5 h-3.5" />
-            <span>Copy All</span>
-          </button>
-        </div>
+      <div className="flex gap-2">
+        <label className="relative min-w-0 flex-1">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#7b8393]" />
+          <input type="text" placeholder="Search materials..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="h-11 w-full rounded-xl border border-[#1f232c] bg-[#0b0e14] pl-10 pr-3 text-xs text-[#e6e8ec] placeholder:text-[#7b8393] focus:border-[#039437] focus:outline-none" />
+        </label>
+        <button onClick={handleReset} title="Reset checklist" className="grid size-11 shrink-0 place-items-center rounded-xl border border-[#1f232c] bg-[#0b0e14] text-[#9d9d9d] hover:text-white"><RotateCcw className="size-4" /></button>
       </div>
 
-      {/* Copied notification toast */}
-      {copiedNotification && (
-        <div className="p-2 rounded-xl bg-[#0E3A47]/90 border border-[#155E75] text-[#9FEBF6] text-xs font-mono text-center animate-in fade-in">
-          {copiedNotification}
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <h4 className="text-xs font-medium">Materials List</h4>
+          <div className="flex items-center gap-3">
+            <button onClick={handleCheckAll} className="text-[11px] text-[#039437] hover:text-[#1ca848]">Mark all collected</button>
+            <button onClick={handleCopyAll} className="inline-flex items-center gap-1.5 rounded-full bg-[#181818] px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#e6e8ec] transition hover:bg-[#222] hover:text-white"><ClipboardList className="size-3.5" /> Copy list</button>
+          </div>
         </div>
-      )}
-
-      {/* Interactive Item Checkbox Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[380px] overflow-y-auto pr-1">
-        {filtered.map((mat) => {
-          const isChecked = isLoaded && Boolean(checkedMap[mat.name]);
-          return (
-            <div
-              key={mat.name}
-              onClick={() => toggleItem(mat.name)}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
-                isChecked
-                  ? "bg-[#4CAF50]/10 border-[#4CAF50]/60 text-ink-muted opacity-75"
-                  : "bg-[#070A12]/70 border-[#1E293B] text-ink hover:border-hairline hover:bg-[#111726]/60"
-              }`}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                {/* Checkbox Icon */}
-                <div className={`p-1 rounded-lg border transition-colors shrink-0 ${
-                  isChecked
-                    ? "bg-[#4CAF50] border-[#4CAF50] text-slate-950"
-                    : "bg-bg-elev border-hairline text-transparent"
-                }`}>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                </div>
-
-                {/* Name & Stacks */}
-                <div className="min-w-0">
-                  <div className={`text-xs font-semibold truncate ${isChecked ? "line-through text-ink-muted" : "text-ink"}`}>
-                    {mat.name}
-                  </div>
-                  <div className="text-[11px] text-ink-muted font-mono">
-                    {mat.stacks || `${mat.count} items`}
-                  </div>
-                </div>
+        <div className="max-h-[min(58vh,620px)] space-y-2 overflow-y-auto pr-0.5">
+          {filtered.map((mat) => {
+            const isChecked = isLoaded && Boolean(checkedMap[mat.name]);
+            return (
+              <div key={mat.name} role="checkbox" aria-checked={isChecked} tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleItem(mat.name); } }} onClick={() => toggleItem(mat.name)} className={`group flex min-h-[74px] cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors ${isChecked ? "border-[#039437]/40 bg-[#0e2418]" : "border-[#17243b] bg-[#0b1020] hover:border-[#2c3b56]"}`}>
+                <span className={`grid size-4 shrink-0 place-items-center rounded-full border ${isChecked ? "border-[#039437] bg-[#039437] text-[#061812]" : "border-[#4c9aff] bg-transparent text-transparent"}`}><Check className="size-3 stroke-[3]" /></span>
+                <span aria-hidden="true" className="grid size-11 shrink-0 place-items-center rounded-lg border border-white/5 bg-white/[.025] text-[#7b8393]"><Box className="size-5" /></span>
+                <span className="min-w-0 flex-1">
+                  <span className={`block truncate text-xs font-semibold ${isChecked ? "text-[#9d9d9d] line-through" : "text-[#e6e8ec]"}`}>{mat.name}</span>
+                  <span className="mt-1 block truncate text-xs text-[#9d9d9d]">{mat.stacks || `${mat.count} items`}</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-3 text-[#9d9d9d]">
+                  <button type="button" title={`Copy ${mat.name}`} onClick={(event) => { event.stopPropagation(); navigator.clipboard.writeText(`${mat.name}: ${mat.count} (${mat.stacks || `${mat.count} items`})`); setCopiedNotification(`${mat.name} copied`); window.setTimeout(() => setCopiedNotification(null), 1600); }} className="hidden rounded p-1 hover:bg-white/5 hover:text-white sm:inline-flex"><ClipboardList className="size-4" /></button>
+                  <button type="button" title={`Pin ${mat.name}`} onClick={(event) => { event.stopPropagation(); toggleItem(mat.name); }} className="rounded p-1 hover:bg-white/5 hover:text-white"><Pin className={`size-4 ${isChecked ? "text-[#039437]" : ""}`} /></button>
+                </span>
               </div>
-
-              {/* Total Count Badge */}
-              <span className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold border shrink-0 ${
-                isChecked
-                  ? "bg-[#4CAF50]/15 text-[#4CAF50] border-[#4CAF50]/80"
-                  : "bg-bg-elev text-[#9FEBF6] border-hairline"
-              }`}>
-                x{mat.count}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+          {filtered.length === 0 && <p className="rounded-xl border border-[#1f232c] p-5 text-center text-xs text-[#9d9d9d]">No materials match “{searchQuery}”.</p>}
+        </div>
+      </div>
+      {copiedNotification && <p role="status" className="text-center text-xs text-[#039437]">{copiedNotification}</p>}
+      <div className="flex gap-2 border-t border-[#1f232c] pt-3">
+        <button onClick={handleCopyRemaining} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#181818] px-4 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#e6e8ec] hover:bg-[#222]"><ClipboardList className="size-3.5" /> Copy needed</button>
+        <button onClick={handleCopyAll} className="flex items-center justify-center gap-2 rounded-full px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#9d9d9d] hover:text-white">Copy all</button>
       </div>
     </div>
   );

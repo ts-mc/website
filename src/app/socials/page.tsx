@@ -23,18 +23,20 @@ type Social = {
   description: string;
   label: string;
   icon: LucideIcon;
+  tone: string;
+  preview: string;
 };
 
 const socials: Social[] = [
-  { name: "YouTube — Java Edition", handle: "@TheySix", url: "https://www.youtube.com/@TheySix", description: "Technical Java tutorials, high-yield farm designs, and the mechanics behind them.", label: "Java Edition", icon: Youtube },
-  { name: "YouTube — Bedrock Edition", handle: "@TheySixMC", url: "https://www.youtube.com/@TheySixMC", description: "Bedrock farms, trident killers, portal ticking, and mobile or console mechanics.", label: "Bedrock Edition", icon: Youtube },
-  { name: "YouTube — Minecraft Builds", handle: "@TheySixCreations", url: "https://www.youtube.com/@TheySixCreations", description: "Mega-builds, creative farm structures, timelapses, and world design showcases.", label: "Minecraft Builds", icon: Youtube },
-  { name: "Discord Community", handle: "discord.gg/theysix", url: "https://discord.gg/theysix", description: "Get farm help, find schematic downloads, join giveaways, and meet the community.", label: "Community Hub", icon: MessageSquare },
-  { name: "TikTok — Java Edition", handle: "@theysixcreations", url: "https://www.tiktok.com/@theysixcreations", description: "Fast Java farm tips, redstone tricks, and build highlights in short form.", label: "TikTok Java", icon: Tv },
-  { name: "TikTok — Bedrock Edition", handle: "@theysixmc", url: "https://www.tiktok.com/@theysixmc", description: "Quick Bedrock tutorials, bug workarounds, and MCPE survival tips.", label: "TikTok Bedrock", icon: Tv },
-  { name: "Instagram", handle: "@theysixyt", url: "https://www.instagram.com/theysixyt/", description: "Behind the scenes, farm screenshots, releases, and community updates.", label: "Photos & Stories", icon: Instagram },
-  { name: "X / Twitter", handle: "@TheySixYT", url: "https://x.com/TheySixYT", description: "New videos, snapshot coverage, news, and ongoing Minecraft discussions.", label: "Announcements", icon: Twitter },
-  { name: "Business Inquiries", handle: "theysixyt.business@gmail.com", url: "mailto:theysixyt.business@gmail.com", description: "For sponsorships, collaborations, partnerships, and official business contact.", label: "Contact", icon: Mail },
+  { name: "YouTube — Java Edition", handle: "@TheySix", url: "https://www.youtube.com/@TheySix", description: "Technical Java tutorials, high-yield farm designs, and the mechanics behind them.", label: "YouTube / Java", icon: Youtube, tone: "youtube", preview: "Farm designs · Technical tutorials · Shorts" },
+  { name: "YouTube — Bedrock Edition", handle: "@TheySixMC", url: "https://www.youtube.com/@TheySixMC", description: "Bedrock farms, trident killers, portal ticking, and mobile or console mechanics.", label: "YouTube / Bedrock", icon: Youtube, tone: "youtube", preview: "Bedrock farms · MCPE · Console" },
+  { name: "YouTube — Minecraft Builds", handle: "@TheySixCreations", url: "https://www.youtube.com/@TheySixCreations", description: "Mega-builds, creative farm structures, timelapses, and world design showcases.", label: "YouTube / Builds", icon: Youtube, tone: "youtube", preview: "Build showcases · Timelapses · Worlds" },
+  { name: "Discord Community", handle: "discord.gg/theysix", url: "https://discord.gg/theysix", description: "Get farm help, find schematic downloads, join giveaways, and meet the community.", label: "Discord / Community", icon: MessageSquare, tone: "discord", preview: "Support · Downloads · Community events" },
+  { name: "TikTok — Java Edition", handle: "@theysixcreations", url: "https://www.tiktok.com/@theysixcreations", description: "Fast Java farm tips, redstone tricks, and build highlights in short form.", label: "TikTok / Java", icon: Tv, tone: "tiktok", preview: "Quick farm tips · Redstone · Builds" },
+  { name: "TikTok — Bedrock Edition", handle: "@theysixmc", url: "https://www.tiktok.com/@theysixmc", description: "Quick Bedrock tutorials, bug workarounds, and MCPE survival tips.", label: "TikTok / Bedrock", icon: Tv, tone: "tiktok", preview: "Bedrock tips · MCPE · Survival" },
+  { name: "Instagram", handle: "@theysixyt", url: "https://www.instagram.com/theysixyt/", description: "Behind the scenes, farm screenshots, releases, and community updates.", label: "Instagram / Gallery", icon: Instagram, tone: "instagram", preview: "Screenshots · Stories · Updates" },
+  { name: "X / Twitter", handle: "@TheySixYT", url: "https://x.com/TheySixYT", description: "New videos, snapshot coverage, news, and ongoing Minecraft discussions.", label: "X / Updates", icon: Twitter, tone: "x", preview: "Announcements · New releases · News" },
+  { name: "Business Inquiries", handle: "theysixyt.business@gmail.com", url: "mailto:theysixyt.business@gmail.com", description: "For sponsorships, collaborations, partnerships, and official business contact.", label: "Direct / Contact", icon: Mail, tone: "mail", preview: "Sponsorships · Collaborations · Partnerships" },
 ];
 
 export default function SocialsPage() {
@@ -56,29 +58,32 @@ export default function SocialsPage() {
           <p className="hidden text-right text-xs leading-relaxed text-[var(--muted)] sm:block">External links open in a new tab.</p>
         </div>
 
-        <ul className="grid gap-px bg-[var(--rule)] sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {socials.map((social, index) => {
             const Icon = social.icon;
             const external = !social.url.startsWith("mailto:");
 
             return (
-              <li key={social.name} className={`bg-[var(--void)] ${socials.length % 2 === 1 && index === socials.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}>
+              <li key={social.name} className={`group overflow-hidden border border-[var(--rule)] bg-[#10110f] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--edge)] hover:bg-[#151612] ${socials.length % 2 === 1 && index === socials.length - 1 ? "sm:col-span-2 xl:col-span-1" : ""}`}>
                 <a
                   href={social.url}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
-                  className="group flex min-h-64 flex-col p-6 transition-colors duration-200 hover:bg-[color-mix(in_srgb,var(--portal)_7%,var(--void))] focus-visible:bg-[color-mix(in_srgb,var(--portal)_7%,var(--void))] sm:p-7"
+                  className="flex h-full min-h-[270px] flex-col p-4 focus-visible:bg-white/[.03] sm:p-5"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="label-mono text-[var(--muted)]">{String(index + 1).padStart(2, "0")}</span>
-                    <Icon className="size-5 text-[var(--portal)] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                  <div className="mb-4 flex items-center justify-between gap-3">
+                    <span className="label-mono text-[var(--muted)]">{String(index + 1).padStart(2, "0")} / {social.label}</span>
+                    <span className={`grid size-9 place-items-center rounded-lg border ${social.tone === "youtube" ? "border-red-500/20 bg-red-500/10 text-red-400" : social.tone === "discord" ? "border-indigo-400/20 bg-indigo-400/10 text-indigo-300" : social.tone === "instagram" ? "border-pink-400/20 bg-pink-400/10 text-pink-300" : social.tone === "tiktok" ? "border-cyan-300/20 bg-cyan-300/10 text-cyan-200" : social.tone === "x" ? "border-white/15 bg-white/5 text-white" : "border-[var(--portal)]/20 bg-[var(--portal)]/10 text-[var(--portal)]"}`}><Icon className="size-4" aria-hidden="true" /></span>
                   </div>
-                  <div className="mt-auto">
-                    <p className="label-mono text-[var(--portal)]">{social.label}</p>
-                    <h3 className="mt-3 text-2xl text-[var(--ink)] transition-colors group-hover:text-[var(--ink-bright)]">{social.name}</h3>
-                    <p className="mt-2 font-mono text-xs text-[var(--portal)]">{social.handle}</p>
-                    <p className="mt-4 text-sm leading-relaxed text-[var(--muted)]">{social.description}</p>
-                    <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.16em] text-[var(--ink)]">Visit <ExternalLink className="size-3.5" aria-hidden="true" /></span>
+                  <div className={`relative flex min-h-[92px] items-end overflow-hidden border border-white/[.04] p-3 ${social.tone === "youtube" ? "bg-[linear-gradient(115deg,#351414,#171110_60%,#11110f)]" : social.tone === "discord" ? "bg-[linear-gradient(115deg,#242648,#151621_62%,#11110f)]" : social.tone === "instagram" ? "bg-[linear-gradient(115deg,#42242f,#20171f_52%,#11110f)]" : social.tone === "tiktok" ? "bg-[linear-gradient(115deg,#163036,#15191d_56%,#11110f)]" : social.tone === "x" ? "bg-[linear-gradient(115deg,#262626,#151515_56%,#11110f)]" : "bg-[linear-gradient(115deg,#1c3432,#151b19_56%,#11110f)]"}`}>
+                    <Icon className="absolute -right-2 -top-3 size-24 opacity-[.09]" aria-hidden="true" />
+                    <div className="relative"><span className="font-mono text-[9px] font-bold uppercase tracking-[.18em] text-white/50">Official channel</span><p className="mt-1 text-xs font-semibold text-white/90">{social.preview}</p></div>
+                  </div>
+                  <div className="mt-4 flex flex-1 flex-col">
+                    <h3 className="text-lg font-bold leading-tight text-[var(--ink)] transition-colors group-hover:text-[var(--ink-bright)]">{social.name}</h3>
+                    <p className="mt-1 font-mono text-xs text-[var(--portal)]">{social.handle}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">{social.description}</p>
+                    <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[10px] font-bold uppercase tracking-[.16em] text-[var(--ink)]">{external ? "Open channel" : "Send an email"} <ExternalLink className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" /></span>
                   </div>
                 </a>
               </li>
