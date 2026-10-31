@@ -1,0 +1,27 @@
+{
+  "date": "2025-12-29",
+  "type": "community",
+  "title": "Java helper recruitment continues",
+  "summary": "Java helper applications opened for a smaller and more selective recruitment round.",
+  "description": "TheySix looked for a limited number of helpers with strong redstone, farm and player-support knowledge.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Selective applications"
+    },
+    {
+      "type": "paragraph",
+      "text": "This recruitment round was intentionally more selective than previous helper applications."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Minecraft knowledge"
+    },
+    {
+      "type": "paragraph",
+      "text": "Applicants with strong redstone knowledge, especially shulker farm experience, were encouraged to apply."
+    }
+  ]
+}

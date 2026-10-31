@@ -1,0 +1,27 @@
+{
+  "date": "2025-12-31",
+  "type": "community",
+  "title": "Happy New Year from TheySix",
+  "summary": "The TheySix team thanked the community and welcomed another year of events and growth.",
+  "description": "The community closed out the year with a message celebrating the memories made together and teasing more plans for the year ahead.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Thank you for the year"
+    },
+    {
+      "type": "paragraph",
+      "text": "The team thanked everyone for their support, conversations and memories throughout the year."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "More to come"
+    },
+    {
+      "type": "paragraph",
+      "text": "New events and community plans were teased for the year ahead."
+    }
+  ]
+}

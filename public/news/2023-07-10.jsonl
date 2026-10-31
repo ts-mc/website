@@ -1,0 +1,27 @@
+{
+  "date": "2023-07-10",
+  "type": "community",
+  "title": "Staff applications opened",
+  "summary": "The first helper and moderator applications opened for the growing TheySix Discord community.",
+  "description": "TheySix began looking for active and responsible community members interested in helping moderate and support the server.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Applications opened"
+    },
+    {
+      "type": "paragraph",
+      "text": "Helper and moderator applications opened as the Discord community continued to grow."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What we were looking for"
+    },
+    {
+      "type": "paragraph",
+      "text": "Applicants were expected to be active, communicate clearly, understand the server rules and help maintain a welcoming community."
+    }
+  ]
+}

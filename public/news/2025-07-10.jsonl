@@ -1,0 +1,27 @@
+{
+  "date": "2025-07-10",
+  "type": "community",
+  "title": "Self-promotion safety reminder",
+  "summary": "The community received a safety warning after inappropriate and malicious content appeared in self-promotion.",
+  "description": "Members were reminded not to open suspicious links or provide account information and to report inappropriate content immediately.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Stay safe"
+    },
+    {
+      "type": "paragraph",
+      "text": "Do not open suspicious links or provide personal or account information through untrusted pages."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Report harmful content"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members were asked to report inappropriate or malicious posts so staff could remove them quickly."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "date": "2023-08-10",
+  "type": "release",
+  "title": "Stacking raid farm fixes",
+  "summary": "Community-discovered fixes for the stacking raid farm were shared along with a new explanatory video.",
+  "description": "An updated stacking raid farm guide covered fixes, Paper and Spigot behavior, and more details about the farm mechanics.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Community fix"
+    },
+    {
+      "type": "paragraph",
+      "text": "A community member found a way to address problems affecting the stacking raid farm."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Updated guide"
+    },
+    {
+      "type": "paragraph",
+      "text": "A new video explained the fixes as well as additional Paper, Spigot and farm-mechanics details."
+    }
+  ]
+}

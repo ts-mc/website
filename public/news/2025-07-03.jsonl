@@ -1,0 +1,27 @@
+{
+  "date": "2025-07-03",
+  "type": "community",
+  "title": "Self-promotion channel launched",
+  "summary": "A dedicated self-promotion space opened for Minecraft creators to share their work safely.",
+  "description": "The new self-promotion channel gave creators a place to share videos, farms and builds while introducing rules designed to prevent scams and unsafe links.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Self-promotion is live"
+    },
+    {
+      "type": "paragraph",
+      "text": "Minecraft creators can share content from established platforms and show their farms, builds and other Minecraft projects."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Keeping it safe"
+    },
+    {
+      "type": "paragraph",
+      "text": "Suspicious links, scams and inappropriate content are not allowed in the channel."
+    }
+  ]
+}

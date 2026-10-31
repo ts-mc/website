@@ -1,0 +1,27 @@
+{
+  "date": "2025-10-21",
+  "type": "community",
+  "title": "Account security warning",
+  "summary": "Members were warned about malicious messages promising money or rewards through suspicious links.",
+  "description": "A wave of compromised accounts prompted a community-wide reminder to avoid suspicious links and protect account information.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Do not follow suspicious links"
+    },
+    {
+      "type": "paragraph",
+      "text": "Messages promising money, rewards or similar offers may be attempts to compromise Discord accounts."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Compromised messages removed"
+    },
+    {
+      "type": "paragraph",
+      "text": "Staff began removing malicious posts as quickly as possible to reduce the risk to other members."
+    }
+  ]
+}

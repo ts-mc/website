@@ -1,0 +1,27 @@
+{
+  "date": "2023-08-16",
+  "type": "release",
+  "title": "Final stacking raid farm update",
+  "summary": "The stacking raid farm received a major final revision with redstone, timing and reliability improvements.",
+  "description": "The farm was reworked to address vexes, timing problems, mob fall damage and other reliability issues.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Major farm revision"
+    },
+    {
+      "type": "paragraph",
+      "text": "Farm timings, settings and the redstone system were changed to improve reliability and reduce problems with vexes."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Updated tutorial"
+    },
+    {
+      "type": "paragraph",
+      "text": "The revised tutorial explained the new redstone tower, system changes and updated farm timings."
+    }
+  ]
+}

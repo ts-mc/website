@@ -1,0 +1,27 @@
+{
+  "date": "2024-10-03",
+  "type": "community",
+  "title": "Community Minecraft mods spotlight",
+  "summary": "Two community-made Minecraft mods, OfflinePlayers and TwinSession, were highlighted.",
+  "description": "TheySix shared two useful mods created by Mister Fish after testing their features and performance.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "OfflinePlayers"
+    },
+    {
+      "type": "paragraph",
+      "text": "OfflinePlayers allows a server player to leave an offline copy behind for AFK tasks, with inventory and experience handled when the player returns."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "TwinSession"
+    },
+    {
+      "type": "paragraph",
+      "text": "TwinSession allows multiple connections using the same Minecraft account, making it useful for testing and managing multiple in-game tasks."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "date": "2025-12-07",
+  "type": "news",
+  "title": "TheySix event server announced",
+  "summary": "A new Java and Bedrock event server was revealed after weeks of development.",
+  "description": "The management and staff team announced a sponsored Minecraft event server, initially focused on special events with the possibility of expanding in the future.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "A new event server"
+    },
+    {
+      "type": "paragraph",
+      "text": "The server was planned for event-focused gameplay, with a Hunger Games-style concept among the first ideas being prepared."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Java & Bedrock"
+    },
+    {
+      "type": "paragraph",
+      "text": "The event server was being built to support both Java and Bedrock players."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Looking ahead"
+    },
+    {
+      "type": "paragraph",
+      "text": "If the events performed well, a future always-online survival server was considered as a possibility."
+    }
+  ]
+}

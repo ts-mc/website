@@ -1,0 +1,18 @@
+{
+  "date": "2023-07-22",
+  "type": "release",
+  "title": "New flying-machine sugar cane farm",
+  "summary": "A fast automatic sugar cane farm using a flying-machine harvester was released.",
+  "description": "A new automatic farm design introduced a flying-machine harvesting system for high-rate sugar cane production.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "New farm released"
+    },
+    {
+      "type": "paragraph",
+      "text": "The new sugar cane farm uses a flying-machine harvester and was designed around high production rates."
+    }
+  ]
+}

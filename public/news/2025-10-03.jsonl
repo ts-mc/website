@@ -1,0 +1,27 @@
+{
+  "date": "2025-10-03",
+  "type": "community",
+  "title": "Minecraft support moves to the help center",
+  "summary": "Farm, build and Minecraft support requests were redirected away from general chat.",
+  "description": "Members were asked to use the dedicated help system and provide enough information for helpers to understand and solve their issue.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Use the help center"
+    },
+    {
+      "type": "paragraph",
+      "text": "Minecraft support questions should be posted through the dedicated help area rather than general chat."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Help the helpers"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members should include useful information about their issue and avoid repeatedly pinging staff."
+    }
+  ]
+}

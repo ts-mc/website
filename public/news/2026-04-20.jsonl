@@ -1,0 +1,27 @@
+{
+  "date": "2026-04-20",
+  "type": "community",
+  "title": "Java staff applications opened",
+  "summary": "Five new Java helper positions opened for community members with strong Minecraft knowledge.",
+  "description": "A new Java staff recruitment round prioritized people capable of helping with farms, especially shulker farms.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Five helper positions"
+    },
+    {
+      "type": "paragraph",
+      "text": "The team planned to select five new Java helpers from the application round."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Farm knowledge preferred"
+    },
+    {
+      "type": "paragraph",
+      "text": "Applicants with strong farm and shulker-farm knowledge were especially encouraged to apply."
+    }
+  ]
+}

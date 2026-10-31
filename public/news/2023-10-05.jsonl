@@ -1,0 +1,27 @@
+{
+  "date": "2023-10-05",
+  "type": "news",
+  "title": "New high-rate shulker farm announced",
+  "summary": "A new shulker farm with high rates, XP support and a supercharged mechanic was announced.",
+  "description": "TheySix previewed an upcoming shulker farm while also asking viewers for feedback about YouTube notifications.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Shulker farm preview"
+    },
+    {
+      "type": "paragraph",
+      "text": "The upcoming design targeted around 4,500 items per hour, supported XP collection and used a mechanic intended to significantly improve farm speed."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "YouTube notifications"
+    },
+    {
+      "type": "paragraph",
+      "text": "Viewers were asked whether channel notifications were reaching them after a noticeable change in returning viewers."
+    }
+  ]
+}

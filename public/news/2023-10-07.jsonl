@@ -1,0 +1,18 @@
+{
+  "date": "2023-10-07",
+  "type": "release",
+  "title": "Shulker farm released",
+  "summary": "The new shulker farm tutorial became available to watch.",
+  "description": "The previously announced high-rate shulker farm was officially released.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Video released"
+    },
+    {
+      "type": "paragraph",
+      "text": "The new shulker farm tutorial became available for the community."
+    }
+  ]
+}

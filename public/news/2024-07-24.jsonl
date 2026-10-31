@@ -1,0 +1,18 @@
+{
+  "date": "2024-07-24",
+  "type": "community",
+  "title": "Staff recruitment reminder",
+  "summary": "The community was reminded that helper and moderator applications were still open.",
+  "description": "TheySix continued looking for active and dedicated people interested in supporting the growing community.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Applications still open"
+    },
+    {
+      "type": "paragraph",
+      "text": "Players interested in becoming helpers or moderators were encouraged to apply and contribute to the community."
+    }
+  ]
+}

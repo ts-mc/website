@@ -1,0 +1,27 @@
+{
+  "date": "2023-11-11",
+  "type": "release",
+  "title": "New raid farm content released",
+  "summary": "TheySix returned with a new raid farm video after a short period of reduced activity.",
+  "description": "After being busy and unable to publish regularly, TheySix returned with a new raid farm release.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Back to new videos"
+    },
+    {
+      "type": "paragraph",
+      "text": "A new raid farm was prepared as the next special piece of content."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Video available"
+    },
+    {
+      "type": "paragraph",
+      "text": "The finished video was released to the community."
+    }
+  ]
+}

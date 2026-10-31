@@ -1,0 +1,27 @@
+{
+  "date": "2024-01-03",
+  "type": "release",
+  "title": "Wood farm receives a major update",
+  "summary": "The wood farm was redesigned for higher rates, lower cost and improved reliability.",
+  "description": "A major wood farm revision improved collection, redstone timing, TNT behavior and sapling handling.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Higher rates"
+    },
+    {
+      "type": "paragraph",
+      "text": "Testing placed total output around 160,000 items per hour, with roughly 90,000 to 99,000 wood per hour when using large spruce trees."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Reliability improvements"
+    },
+    {
+      "type": "paragraph",
+      "text": "Collection lag, TNT timing and sapling placement problems were addressed, while much of the powered-rail system was removed to make the farm cheaper."
+    }
+  ]
+}

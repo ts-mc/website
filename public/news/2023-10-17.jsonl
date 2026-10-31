@@ -1,0 +1,27 @@
+{
+  "date": "2023-10-17",
+  "type": "news",
+  "title": "Sculk-powered stacking raid farm announced",
+  "summary": "A new high-speed stacking raid farm based on sculk sensors was announced.",
+  "description": "The SinFul Team prepared a new stacking raid farm design using sculk sensors for its next major farm release.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Upcoming raid farm"
+    },
+    {
+      "type": "paragraph",
+      "text": "A new high-speed stacking raid farm based on sculk sensors was announced as the next video."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "SinFul Team"
+    },
+    {
+      "type": "paragraph",
+      "text": "The design was created by the SinFul Team, formed by Ecliptic and TheySix."
+    }
+  ]
+}

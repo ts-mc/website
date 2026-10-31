@@ -1,0 +1,27 @@
+{
+  "date": "2024-12-31",
+  "type": "community",
+  "title": "Happy New Year & creator opportunities",
+  "summary": "The community celebrated the New Year and a short-form Minecraft creator partnership opportunity was announced.",
+  "description": "Alongside New Year wishes, Minecraft Bedrock and MCPE short-form creators were invited to express interest in a content partnership program.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Happy New Year"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix wished the entire community a Happy New Year."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Creator partnership"
+    },
+    {
+      "type": "paragraph",
+      "text": "Minecraft Bedrock and MCPE creators working on TikTok, YouTube Shorts or Instagram Reels were invited to take part in a content partnership opportunity."
+    }
+  ]
+}

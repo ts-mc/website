@@ -1,0 +1,27 @@
+{
+  "date": "2025-12-25",
+  "type": "community",
+  "title": "Merry Christmas & Happy Holidays",
+  "summary": "TheySix thanked the community for another year of support and shared holiday wishes.",
+  "description": "A Christmas message celebrated the community's support throughout the year and wished everyone a happy and successful year ahead.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Thank you"
+    },
+    {
+      "type": "paragraph",
+      "text": "Every view, comment, share and bit of support helped make the year's work worthwhile."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Happy holidays"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix wished the community and their families happiness, good health and success in the coming year."
+    }
+  ]
+}

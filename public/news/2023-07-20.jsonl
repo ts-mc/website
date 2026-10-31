@@ -1,0 +1,18 @@
+{
+  "date": "2023-07-20",
+  "type": "release",
+  "title": "Raid farm update released",
+  "summary": "An improved version of the raid farm was released with fixes for problems found in the previous design.",
+  "description": "A new raid farm tutorial arrived with improvements intended to make the design more reliable for players.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Improved raid farm"
+    },
+    {
+      "type": "paragraph",
+      "text": "The updated design addressed issues found in the previous version, including problems experienced when certain enchantments were not used."
+    }
+  ]
+}

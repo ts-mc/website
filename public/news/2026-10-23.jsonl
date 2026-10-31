@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-23",
+  "type": "community",
+  "title": "New staff ping & emergency guidelines",
+  "summary": "New guidelines clarify when staff should be pinged and introduce an emergency role for urgent situations.",
+  "description": "The support process was updated to reduce unnecessary staff pings while still giving members a way to flag genuinely urgent problems.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Staff ping limits"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members should contact helpers first and avoid repeatedly pinging staff. Moderators should generally only be contacted when helpers have not responded after several hours."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Emergency role"
+    },
+    {
+      "type": "paragraph",
+      "text": "A dedicated emergency ping was introduced for urgent cases, with misuse subject to moderation action."
+    }
+  ]
+}

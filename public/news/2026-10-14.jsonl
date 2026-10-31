@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-14",
+  "type": "release",
+  "title": "Community schematic submissions launched",
+  "summary": "Players can now submit schematics, help others find requested builds and earn recognition for contributing.",
+  "description": "A new community schematic system was introduced after a poll, alongside opt-in roles for polls and updates.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Submit schematics"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members can upload schematics for recent farms to help other players and may receive a reward for useful contributions."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Request schematics"
+    },
+    {
+      "type": "paragraph",
+      "text": "Players can request wanted schematics using the dedicated request format."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Notification roles"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members can choose poll and update roles through the Server Guide."
+    }
+  ]
+}

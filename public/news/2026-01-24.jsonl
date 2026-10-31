@@ -1,0 +1,18 @@
+{
+  "date": "2026-01-24",
+  "type": "status",
+  "title": "Support system temporarily unavailable",
+  "summary": "The support ticket system experienced a temporary outage affecting farm help requests.",
+  "description": "Members were asked to be patient while a technical issue with the ticket tool was being resolved.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Temporary outage"
+    },
+    {
+      "type": "paragraph",
+      "text": "The support ticket tool went offline temporarily, delaying new farm support requests."
+    }
+  ]
+}

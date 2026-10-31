@@ -1,0 +1,18 @@
+{
+  "date": "2026-04-18",
+  "type": "community",
+  "title": "Self-promotion for Minecraft creators",
+  "summary": "Minecraft creators were reminded that they can share farms, builds and videos in the self-promotion area.",
+  "description": "The self-promotion channel remains available for Minecraft creators who want to share their work with the community.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Share your work"
+    },
+    {
+      "type": "paragraph",
+      "text": "Minecraft creators can promote their videos, farms and builds through the dedicated self-promotion channel."
+    }
+  ]
+}

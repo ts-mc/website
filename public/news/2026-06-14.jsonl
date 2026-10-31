@@ -1,0 +1,18 @@
+{
+  "date": "2026-06-14",
+  "type": "community",
+  "title": "Helper applications opened",
+  "summary": "Helper applications reopened for community members interested in joining the support team.",
+  "description": "Applications were accepted through the staff application system, with reviews expected to take some time depending on demand.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Applications open"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members interested in helping the community could submit an application through the staff application channel."
+    }
+  ]
+}

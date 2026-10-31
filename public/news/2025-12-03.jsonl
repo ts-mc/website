@@ -1,0 +1,27 @@
+{
+  "date": "2025-12-03",
+  "type": "community",
+  "title": "Support ticket guide added",
+  "summary": "A guide was added to help members correctly complete the new support ticket form.",
+  "description": "After seeing incomplete support requests, TheySix added guidance explaining what information belongs in each ticket field.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "How to fill a ticket"
+    },
+    {
+      "type": "paragraph",
+      "text": "Members unsure about the support form can check the FAQ for detailed guidance."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Better support requests"
+    },
+    {
+      "type": "paragraph",
+      "text": "Complete information helps the helper team identify problems and provide useful answers faster."
+    }
+  ]
+}

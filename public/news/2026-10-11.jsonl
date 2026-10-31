@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-11",
+  "type": "status",
+  "title": "mihulish restored & new features planned",
+  "summary": "The mihulish bot returned online after a hosting issue, with more community tools planned.",
+  "description": "A missing hosting dependency temporarily took mihulish offline, but the bot was restored and development continued on new knowledge and Q&A features.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Bot restored"
+    },
+    {
+      "type": "paragraph",
+      "text": "mihulish returned online after a hosting-related module issue and its download-number commands became available again."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Smarter answers planned"
+    },
+    {
+      "type": "paragraph",
+      "text": "An auto-learning feature was planned to help create wiki pages and answer community questions more easily."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Website changelog"
+    },
+    {
+      "type": "paragraph",
+      "text": "Work also began on a website changelog following community interest."
+    }
+  ]
+}

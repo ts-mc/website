@@ -1,0 +1,36 @@
+{
+  "date": "2025-12-28",
+  "type": "release",
+  "title": "Holiday event goes live",
+  "summary": "The first TheySix holiday event opened with Capture the Center gameplay for Java and Bedrock players.",
+  "description": "After final connectivity work, the holiday event became available with team-based PvP and one-life rules.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Capture the Center"
+    },
+    {
+      "type": "paragraph",
+      "text": "Teams compete to capture and hold the center of the map, with the final successful team taking the win."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Fair-play rules"
+    },
+    {
+      "type": "paragraph",
+      "text": "The event introduced rules against hacked clients, exploits, outside teaming and spawn camping, with one life per player."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Connectivity restored"
+    },
+    {
+      "type": "paragraph",
+      "text": "A short launch delay caused by connectivity issues was resolved and the server became available to players."
+    }
+  ]
+}

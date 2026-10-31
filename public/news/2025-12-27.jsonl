@@ -1,0 +1,45 @@
+{
+  "date": "2025-12-27",
+  "type": "news",
+  "title": "Holiday event server launching",
+  "summary": "The TheySix event server was scheduled to launch on December 28 with Java and Bedrock support.",
+  "description": "The first large event was announced with team-based gameplay, player applications and special rewards.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "December 28 launch"
+    },
+    {
+      "type": "paragraph",
+      "text": "Applications were planned for the event, with players selected for available slots."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Capture the center"
+    },
+    {
+      "type": "paragraph",
+      "text": "Four teams would compete to capture and hold the center of a large map."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Java & Bedrock"
+    },
+    {
+      "type": "paragraph",
+      "text": "Both Minecraft editions were supported, with players from multiple regions welcome to participate."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Event rewards"
+    },
+    {
+      "type": "paragraph",
+      "text": "Top players could earn an exclusive Discord role with access to special community areas and event information."
+    }
+  ]
+}

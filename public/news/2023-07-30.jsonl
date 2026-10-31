@@ -1,0 +1,27 @@
+{
+  "date": "2023-07-30",
+  "type": "release",
+  "title": "New melon-based bonemeal farm",
+  "summary": "A new flying-machine bonemeal farm based on melons was released alongside a community build submission opportunity.",
+  "description": "TheySix released another farm design and invited builders to submit aesthetic builds and farms for possible future content.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Bonemeal farm released"
+    },
+    {
+      "type": "paragraph",
+      "text": "A melon-based bonemeal farm using a flying machine was released as an alternative design for players and servers."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Community submissions"
+    },
+    {
+      "type": "paragraph",
+      "text": "Players were invited to submit aesthetic builds and farms that could be featured in future content."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "date": "2026-01-25",
+  "type": "status",
+  "title": "Support tickets are back online",
+  "summary": "The support ticket system returned after the previous day's technical problems.",
+  "description": "Members can once again create support tickets for farm issues and wait for the helper team to respond.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Support restored"
+    },
+    {
+      "type": "paragraph",
+      "text": "The ticket tool is back online and available for new support requests."
+    }
+  ]
+}

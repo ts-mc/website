@@ -1,0 +1,27 @@
+{
+  "date": "2023-07-11",
+  "type": "milestone",
+  "title": "10,000 YouTube subscribers",
+  "summary": "TheySix reached 10,000 subscribers on YouTube and updated the Discord leveling system.",
+  "description": "The community celebrated a major YouTube milestone while Discord members received an improved leveling system with boosted XP.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "10K subscribers"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix reached 10,000 subscribers on YouTube. Thank you to everyone who supported the channel."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Level system update"
+    },
+    {
+      "type": "paragraph",
+      "text": "The Discord leveling system was updated, including a temporary XP boost for members."
+    }
+  ]
+}

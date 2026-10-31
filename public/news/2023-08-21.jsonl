@@ -1,0 +1,18 @@
+{
+  "date": "2023-08-21",
+  "type": "news",
+  "title": "TheySix Creations launched",
+  "summary": "A second channel was introduced for aesthetic Minecraft builds and design-focused content.",
+  "description": "After community feedback, aesthetic building content received its own dedicated channel while the main channel remained focused on its established content.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "A channel for builds"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix Creations was introduced for players interested in aesthetic Minecraft designs and builds."
+    }
+  ]
+}

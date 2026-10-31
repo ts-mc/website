@@ -1,0 +1,18 @@
+{
+  "date": "2023-12-31",
+  "type": "community",
+  "title": "Happy New Year",
+  "summary": "TheySix welcomed the New Year together with the community.",
+  "description": "A short New Year message celebrated the beginning of another year with the TheySix community.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Happy New Year"
+    },
+    {
+      "type": "paragraph",
+      "text": "Thank you for being part of the community. Happy New Year!"
+    }
+  ]
+}

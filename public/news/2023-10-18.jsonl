@@ -1,0 +1,18 @@
+{
+  "date": "2023-10-18",
+  "type": "news",
+  "title": "Raid farm video nearly ready",
+  "summary": "The upcoming farm video was delayed slightly while editing and technical information were finalized.",
+  "description": "Additional editing and information checks pushed the release back briefly so the tutorial could be completed properly.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Final checks"
+    },
+    {
+      "type": "paragraph",
+      "text": "Editing took longer than expected while the information in the video was checked before publication."
+    }
+  ]
+}

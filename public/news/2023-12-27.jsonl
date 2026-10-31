@@ -1,0 +1,18 @@
+{
+  "date": "2023-12-27",
+  "type": "community",
+  "title": "Merry Christmas from TheySix",
+  "summary": "A Christmas message was shared with the entire TheySix community.",
+  "description": "TheySix wished the community a warm Christmas season and a fantastic New Year.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Happy holidays"
+    },
+    {
+      "type": "paragraph",
+      "text": "Merry Christmas to everyone in the community, with wishes for warmth, love and joy with family and friends."
+    }
+  ]
+}

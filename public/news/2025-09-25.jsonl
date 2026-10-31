@@ -1,0 +1,27 @@
+{
+  "date": "2025-09-25",
+  "type": "news",
+  "title": "Tutorials continue alongside new series",
+  "summary": "TheySix confirmed that farm tutorials would continue while experimenting with new series content.",
+  "description": "Community feedback helped shape the channel's direction, with tutorials remaining part of the channel alongside new content.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Tutorials are staying"
+    },
+    {
+      "type": "paragraph",
+      "text": "Farm tutorials will continue rather than being replaced by the new series."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Improving future videos"
+    },
+    {
+      "type": "paragraph",
+      "text": "Audio quality and production improvements were also planned for future uploads."
+    }
+  ]
+}

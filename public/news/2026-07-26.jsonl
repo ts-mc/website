@@ -1,0 +1,27 @@
+{
+  "date": "2026-07-26",
+  "type": "release",
+  "title": "Stacking raid farm video released",
+  "summary": "The delayed stacking raid farm video was published with important mechanics and build notes.",
+  "description": "After a recording problem caused a short delay, the new stacking raid farm tutorial became available.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Short release delay"
+    },
+    {
+      "type": "paragraph",
+      "text": "Corrupted recordings briefly delayed publication of the stacking raid farm video."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Video available"
+    },
+    {
+      "type": "paragraph",
+      "text": "The completed tutorial was released with important mechanics and notes that players should review carefully."
+    }
+  ]
+}

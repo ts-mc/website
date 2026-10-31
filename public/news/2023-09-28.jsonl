@@ -1,0 +1,18 @@
+{
+  "date": "2023-09-28",
+  "type": "news",
+  "title": "Adventure content moves to a separate channel",
+  "summary": "Adventure and hardcore series content was separated from the main tutorial-focused channel.",
+  "description": "Following viewer feedback, TheySix decided to keep different types of Minecraft content on separate channels.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Content separated"
+    },
+    {
+      "type": "paragraph",
+      "text": "Adventure and hardcore series content moved to a dedicated channel so the main audience could continue receiving the content they originally followed."
+    }
+  ]
+}

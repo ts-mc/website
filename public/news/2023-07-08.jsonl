@@ -1,0 +1,27 @@
+{
+  "date": "2023-07-08",
+  "type": "community",
+  "title": "Welcome to the TheySix community",
+  "summary": "A welcome message to the growing TheySix community and a look at the work behind new Minecraft farm designs.",
+  "description": "TheySix welcomed its first Discord members and shared more about the time and testing required to create reliable Minecraft farm tutorials.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Welcome to the community"
+    },
+    {
+      "type": "paragraph",
+      "text": "Thank you to everyone who joined and supported the new community."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Behind the designs"
+    },
+    {
+      "type": "paragraph",
+      "text": "Creating new farm designs takes extensive building, testing and troubleshooting, especially for complex farms such as raid and wither farms."
+    }
+  ]
+}

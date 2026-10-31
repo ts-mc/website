@@ -1,0 +1,27 @@
+{
+  "date": "2025-12-11",
+  "type": "community",
+  "title": "Java helper applications opened",
+  "summary": "Applications opened for new Java helpers with a focus on Minecraft and redstone knowledge.",
+  "description": "The staff team began recruiting Java helpers who could support players and remain calm during difficult support situations.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Java applications open"
+    },
+    {
+      "type": "paragraph",
+      "text": "Players with strong Minecraft, redstone and farm knowledge were invited to apply."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Support experience"
+    },
+    {
+      "type": "paragraph",
+      "text": "Applicants were expected to communicate responsibly and handle stressful player interactions appropriately."
+    }
+  ]
+}

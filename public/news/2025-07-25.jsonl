@@ -1,0 +1,27 @@
+{
+  "date": "2025-07-25",
+  "type": "news",
+  "title": "New stacking raid farm in development",
+  "summary": "A lag issue affecting the upcoming stacking raid farm was fixed ahead of its planned release.",
+  "description": "Work continued on a fast stacking raid farm using calibrated sculk sensors after a high-drop-rate lag problem was resolved.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Lag problem fixed"
+    },
+    {
+      "type": "paragraph",
+      "text": "A performance problem caused by the farm's high drop rates was identified and fixed."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Sculk-based design"
+    },
+    {
+      "type": "paragraph",
+      "text": "The upcoming farm uses calibrated sculk sensors as part of its high-speed design."
+    }
+  ]
+}

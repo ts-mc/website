@@ -1,0 +1,27 @@
+{
+  "date": "2025-11-30",
+  "type": "release",
+  "title": "New ticket-based support center",
+  "summary": "The old thread-based help center was replaced by a private ticket system.",
+  "description": "TheySix moved support into a ticket-based system so members could provide the information helpers need while keeping each support request private.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Private support tickets"
+    },
+    {
+      "type": "paragraph",
+      "text": "Support requests can now be created as tickets visible to the member and staff team."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Better issue information"
+    },
+    {
+      "type": "paragraph",
+      "text": "The ticket form requires key information to make it easier for helpers to understand and troubleshoot problems."
+    }
+  ]
+}
