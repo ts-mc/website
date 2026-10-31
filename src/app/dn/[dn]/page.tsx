@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getAllFarms } from "@/lib/farms";
 import { FarmDetailView } from "@/components/FarmDetailView";
 import type { FarmWithMetadata } from "@/types/farm";
@@ -25,9 +26,7 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
   const allSectionMatches = Array.from(withoutBoilerplate.matchAll(sectionPattern));
   const matches = allSectionMatches.filter((match) => /^(Farm Details|Game Information|Data)$/i.test(match[1].trim()));
 
-  if (!matches.length) return { summary: withoutBoilerplate.trim() };
-
-  const intro = withoutBoilerplate.slice(0, matches[0].index).trim();
+  const intro = matches.length ? withoutBoilerplate.slice(0, matches[0].index).trim() : withoutBoilerplate.trim();
   let creatorName: string | undefined;
   matches.forEach((match, index) => {
     const start = (match.index || 0) + match[0].length;
@@ -46,30 +45,49 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
   const latestVersion = listedVersions[listedVersions.length - 1];
 
   const details = sections.join("\n[[FARM_SECTION_DIVIDER]]\n").trim();
-  return { summary: intro, details: details || undefined, creatorName, latestVersion };
+  return {
+    summary: matches.length ? intro : "",
+    details: details || undefined,
+    creatorName,
+    latestVersion,
+  };
 }
 
-async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetadata> {
-  if (!farm.youtubeUrl || !farm.youtubeId) return farm;
-  try {
-    const response = await fetch(`https://www.youtube.com/watch?v=${farm.youtubeId}`, {
+type YoutubeMetadata = { title?: string; description?: string };
+
+const getYoutubeMetadata = unstable_cache(
+  async (youtubeId: string): Promise<YoutubeMetadata> => {
+    const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}`, {
       cache: "no-store",
       headers: { "User-Agent": "Mozilla/5.0" },
     });
-    if (!response.ok) return farm;
+    if (!response.ok) throw new Error(`YouTube metadata request failed (${response.status})`);
     const html = await response.text();
     const titleMatch = html.match(/<meta\s+name="title"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/i);
     const descriptionMatch = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:description"\s+content="([^"]*)"/i);
     const fullDescriptionMatch = html.match(/"shortDescription":"((?:\\.|[^"\\])*)"/);
-    const title = titleMatch?.[1] ? decodeHtml(titleMatch[1]) : farm.title;
     const rawDescription = fullDescriptionMatch?.[1]
       ? JSON.parse(`"${fullDescriptionMatch[1]}"`) as string
       : descriptionMatch?.[1] ? decodeHtml(descriptionMatch[1]) : "";
-    if (!rawDescription) return { ...farm, title };
-    const { summary, details, creatorName, latestVersion } = cleanYoutubeDescription(rawDescription);
+    if (!rawDescription) throw new Error("YouTube description was not present in the video response");
+    return {
+      title: titleMatch?.[1] ? decodeHtml(titleMatch[1]) : undefined,
+      description: rawDescription || undefined,
+    };
+  },
+  ["theysix-youtube-metadata-v1"],
+  { revalidate: 86400 }
+);
+
+async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetadata> {
+  if (!farm.youtubeUrl || !farm.youtubeId) return farm;
+  try {
+    const metadata = await getYoutubeMetadata(farm.youtubeId);
+    if (!metadata.description) return { ...farm, title: metadata.title || farm.title };
+    const { summary, details, creatorName, latestVersion } = cleanYoutubeDescription(metadata.description);
     return {
       ...farm,
-      title,
+      title: metadata.title || farm.title,
       description: summary || farm.description,
       detailedDescription: details || farm.detailedDescription,
       creatorName,
@@ -80,6 +98,8 @@ async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetada
   }
 }
 
+export const dynamic = "force-dynamic";
+
 interface DnPageProps {
   params: {
     dn: string;
@@ -89,22 +109,6 @@ interface DnPageProps {
 /** Matches "531", "531-dn", "B165", "b165-dn", "C42" case-insensitively. */
 function normalizeDnKey(value: string): string {
   return value.toLowerCase().replace(/-dn$/i, "");
-}
-
-export async function generateStaticParams() {
-  const farms = await getAllFarms();
-  const seen = new Set<string>();
-  const params: { dn: string }[] = [];
-
-  farms.forEach((farm) => {
-    const key = normalizeDnKey(farm.dn);
-    if (key && !seen.has(key)) {
-      seen.add(key);
-      params.push({ dn: farm.dn });
-    }
-  });
-
-  return params;
 }
 
 export async function generateMetadata({ params }: DnPageProps): Promise<Metadata> {
