@@ -76,4 +76,7 @@ export interface FarmWithMetadata extends FarmData {
   schematicFiles: SchematicFileFormats;
   materials: FarmMaterialItem[];
   supportsBothPlatforms: boolean;
+  feedOrder?: number;
+  creatorName?: string;
+  latestVersion?: string;
 }

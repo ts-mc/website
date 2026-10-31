@@ -2,8 +2,6 @@ import fs from "fs";
 import path from "path";
 import type { FarmCategory, FarmData, FarmWithMetadata, FarmMaterialItem } from "@/types/farm";
 
-export const BOTH_PLATFORMS_TAG = "Both Platforms";
-
 type JsonlLinkOverride = {
   dn: string;
   title?: string;
@@ -20,6 +18,7 @@ type FarmFeedRecord = {
   video_title?: string | null;
   world?: string | null;
   schematic?: string | null;
+  upload_date?: string | null;
 };
 
 function getFarmFeedRecords(): FarmFeedRecord[] {
@@ -75,9 +74,9 @@ function createFeedFarm(record: FarmFeedRecord): FarmWithMetadata {
     youtubeUrl,
     version: "1.21+",
     rates: "",
-    tags: category === "bedrock" ? ["Bedrock"] : category === "build" ? ["Build", "Java & Bedrock"] : ["Java"],
+    tags: category === "bedrock" ? ["Bedrock"] : category === "build" ? ["Build", "Java", "Bedrock"] : ["Java"],
     author: "TheySix",
-    date: new Date().toISOString().slice(0, 10),
+    date: record.upload_date ? record.upload_date.split("T")[0] : "",
     featured: false,
     views,
     resolvedThumbnail: getThumbnailUrl(youtubeUrl, undefined),
@@ -85,7 +84,7 @@ function createFeedFarm(record: FarmFeedRecord): FarmWithMetadata {
     hasWorldDownload: Boolean(worldDownloadUrl !== "link"),
     hasYoutube: Boolean(youtubeUrl),
     hasMaterials: false,
-    normalizedDn: dn.replace(/-dn$/i, "").replace(/^b/i, ""),
+    normalizedDn: dn.replace(/-dn$/i, ""),
     youtubeId,
     viewsDisplay: formatCompactNumber(views),
     schematicFiles: { litematic: `${dn}.litematic`, schematic: `${dn}.schematic`, schem: `${dn}.schem`, nbt: `${dn}.nbt` },
@@ -98,11 +97,12 @@ function applyFarmFeed(farms: FarmWithMetadata[]): FarmWithMetadata[] {
   const records = getFarmFeedRecords();
   const byDn = new Map(farms.map((farm) => [farm.dn.toLowerCase(), farm]));
 
-  for (const record of records) {
+  for (let feedOrder = 0; feedOrder < records.length; feedOrder++) {
+    const record = records[feedOrder];
     const dn = record.dn!.toLowerCase();
     const existing = byDn.get(dn);
     if (!existing) {
-      const added = createFeedFarm(record);
+      const added = { ...createFeedFarm(record), feedOrder };
       byDn.set(dn, added);
       continue;
     }
@@ -112,6 +112,7 @@ function applyFarmFeed(farms: FarmWithMetadata[]): FarmWithMetadata[] {
     const schematic = existing.category === "bedrock" ? undefined : cleanFeedUrl(record.schematic);
     byDn.set(dn, {
       ...existing,
+      feedOrder,
       title: record.video_title?.trim() || existing.title,
       farmType: record.farm_type ? feedFarmType(record.farm_type) : existing.farmType,
       youtubeUrl: video || existing.youtubeUrl,
@@ -275,7 +276,7 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
       category = "build";
       farmType = "Build";
       supportsBoth = true;
-      tags = ["Build", "Java & Bedrock"];
+      tags = ["Build", "Java", "Bedrock"];
     } else if (dnUpper.startsWith("B")) {
       category = "bedrock";
       farmType = inferFarmTypeFromTitle(entry.title || "", entry.farm_type);
@@ -315,7 +316,7 @@ export function getJsonlBuilds(existingDns: Set<string>): FarmWithMetadata[] {
       (category === "java" || category === "build") &&
       Boolean(rawSchematicUrl && rawSchematicUrl !== "#" && rawSchematicUrl.toLowerCase() !== "link");
 
-    const normalizedDn = dn.replace(/^-dn$/i, "").replace(/^b/i, "");
+    const normalizedDn = dn.replace(/-dn$/i, "").replace(/^b/i, "");
     const calculatedViews = 0;
 
     builds.push({
@@ -391,7 +392,7 @@ function getBuildFarms(): FarmWithMetadata[] {
       schematicUrl,
       youtubeUrl,
       version: "Java & Bedrock",
-      tags: ["Build", "Java & Bedrock"],
+      tags: ["Build", "Java", "Bedrock"],
       thumbnailUrl,
       author: "TheySix",
       date,
@@ -414,9 +415,8 @@ function getBuildFarms(): FarmWithMetadata[] {
 
 export function farmSupportsBothPlatforms(tags?: string[]): boolean {
   if (!tags?.length) return false;
-  return tags.some((t) =>
-    /both platforms|both editions|java\s*&\s*bedrock|java and bedrock/i.test(t)
-  );
+  return tags.some((t) => /both platforms|both editions|java\s*&\s*bedrock|java and bedrock/i.test(t)) ||
+    (tags.some((t) => /^java$/i.test(t)) && tags.some((t) => /^bedrock$/i.test(t)));
 }
 
 /**
@@ -813,6 +813,9 @@ export function getLegacyFarms(): FarmWithMetadata[] {
   return applyFarmFeed(applyJsonlLinkOverrides(farms)).sort((a, b) => {
     if (a.featured && !b.featured) return -1;
     if (!a.featured && b.featured) return 1;
+    if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
+    if (a.feedOrder !== undefined) return -1;
+    if (b.feedOrder !== undefined) return 1;
     const dateA = a.date ? new Date(a.date).getTime() : 0;
     const dateB = b.date ? new Date(b.date).getTime() : 0;
     if (dateB !== dateA) return dateB - dateA;

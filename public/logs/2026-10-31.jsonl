@@ -70,3 +70,31 @@
     }
   ]
 }
+
+{
+  "date": "2026-10-31",
+  "type": "update",
+  "title": "Farm archive and schematic preview improvements",
+  "summary": "Improved farm detail pages, YouTube metadata handling, and schematic previews.",
+  "description": "Farm detail pages now use a compact loading message, show the creator and latest Minecraft version from video descriptions, and present description sections with full-width dividers. Removed the separate schematic viewer route and its unused render settings control. YouTube metadata requests bypass the Next.js data cache to avoid oversized cache errors.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Farm detail pages"
+    },
+    {
+      "type": "paragraph",
+      "text": "Added YouTube title and description details, including creator and latest version extraction. Removed view counts and constrained the detail layout for more comfortable spacing."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Schematic preview"
+    },
+    {
+      "type": "paragraph",
+      "text": "Kept schematic previews in the farm detail modal, removed the standalone viewer page and nonfunctional render settings button, and changed farm detail loading to display “Loading...” instead of a skeleton."
+    }
+  ]
+}

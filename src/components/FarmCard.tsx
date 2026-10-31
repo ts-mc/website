@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Download, FileCode, Youtube, Box, ArrowUpRight, Gauge, Hammer } from "lucide-react";
+import { Download, FileCode, Youtube, ArrowUpRight, Gauge } from "lucide-react";
 import { RealViewsCount } from "@/components/RealViewsCount";
-import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 import type { FarmWithMetadata } from "@/types/farm";
 
 interface FarmCardProps {
@@ -29,45 +28,6 @@ export function FarmCard({ farm }: FarmCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E14] via-transparent to-transparent opacity-80" />
 
-        {/* Edition Badge */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10 flex-wrap max-w-[70%]">
-          {isBuild ? (
-            <span className="label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md bg-[#FBBF24]/90 text-slate-950">
-              <Hammer className="w-3 h-3" /> Builds
-            </span>
-          ) : farm.supportsBothPlatforms ? (
-            <span className="label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md bg-[#0B0E14]/80 text-[#B2F9FF] border border-[#4CADD0]/40">
-              <JavaBrandIcon size={12} />
-              <Box className="w-3 h-3 text-ink" />
-              Both Platforms
-            </span>
-          ) : (
-            <span
-              className={`label-mono inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-md backdrop-blur-md ${
-                isJava
-                  ? "bg-[#9FFF99]/15 text-[#9FFF99] border border-[#9FFF99]/30 bg-[#0B0E14]/80"
-                  : "bg-white/15 text-ink border border-white/30 bg-[#0B0E14]/80"
-              }`}
-            >
-              {isJava ? <JavaBrandIcon size={12} /> : <Box className="w-3 h-3" />}
-              {isJava ? "Java" : "Bedrock"}
-            </span>
-          )}
-
-          {farm.version && (
-            <span className="label-mono px-2 py-1.5 rounded-pill text-[#94A3B8] bg-[#0B0E14]/80 border border-hairline backdrop-blur-md">
-              {farm.version}
-            </span>
-          )}
-        </div>
-
-        {/* DN ID Badge */}
-        <div className="absolute top-3 right-3 z-10">
-          <span className="label-mono px-2 py-1.5 rounded-pill text-[#94A3B8] bg-[#0B0E14]/90 border border-hairline backdrop-blur-md">
-            #{farm.dn}
-          </span>
-        </div>
-
         {/* Bottom thumbnail bar: View count on bottom-left, Rates on bottom-right */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-ink z-10 pointer-events-none">
           <span className="label-mono inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-[#0B0E14]/90 text-[#CBD5E1] border border-hairline backdrop-blur-md shadow-sm pointer-events-auto">
@@ -85,11 +45,7 @@ export function FarmCard({ farm }: FarmCardProps) {
       {/* Content */}
       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
-          {/* Farm Type */}
-          <div className="flex items-center justify-between gap-2 mb-1.5">
-            <span className="label-mono text-brand">
-              {farm.farmType}
-            </span>
+          <div className="flex items-center justify-end gap-2 mb-1.5">
             {farm.difficulty && (
               <span className="text-[11px] font-medium text-ink-muted">
                 {farm.difficulty}
@@ -112,21 +68,21 @@ export function FarmCard({ farm }: FarmCardProps) {
           {/* Tags */}
           {farm.tags && farm.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
-              {(farm.supportsBothPlatforms
-                ? [
-                    "Both Platforms",
-                    ...farm.tags.filter((t) => !/both platforms|java\s*&\s*bedrock/i.test(t)),
-                  ]
-                : farm.tags
-              )
+              {farm.tags
+                .flatMap((tag) => /both platforms|both editions|java\s*&\s*bedrock|java and bedrock/i.test(tag) ? ["Java", "Bedrock"] : [tag])
+                .filter((tag, index, tags) => tags.findIndex((candidate) => candidate.toLowerCase() === tag.toLowerCase()) === index)
                 .slice(0, 3)
                 .map((tag) => (
                 <span
                   key={tag}
                   className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
-                    /both platforms/i.test(tag)
-                      ? "text-[#B2F9FF] bg-[#0E3A47]/60 border-[#1E293B]"
-                      : "text-ink-muted bg-[#111726]/60 border-hairline"
+                    tag.toLowerCase() === "java"
+                        ? "text-[#60A5FA] bg-[#172554] border-[#3B82F6]"
+                        : tag.toLowerCase() === "bedrock"
+                          ? "text-[#FDE047] bg-[#422006] border-[#EAB308]"
+                          : tag.toLowerCase() === "build"
+                            ? "text-[#FCA5A5] bg-[#450A0A] border-[#EF4444]"
+                            : "text-[#D1D5DB] bg-[#374151]/60 border-[#6B7280]"
                   }`}
                 >
                   #{tag}

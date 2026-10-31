@@ -1,42 +1,80 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, SlidersHorizontal, Box, X, ChevronLeft, ChevronRight, Filter, Hammer } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, RotateCcw, ChevronDown } from "lucide-react";
 import { FarmCard } from "@/components/FarmCard";
-import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 import type { FarmWithMetadata } from "@/types/farm";
-
 import { FARM_TYPES } from "@/types/farm";
 
 interface FarmGridProps {
   initialFarms: FarmWithMetadata[];
 }
 
+function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return <fieldset className="min-w-0"><legend className="mb-2.5 font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#969e7d]">{title}</legend><div className="flex flex-wrap gap-1.5">{children}</div></fieldset>;
+}
+
+function FilterChip({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
+  return <label className={`inline-flex min-h-10 cursor-pointer items-center gap-2 border px-3 py-2 text-xs font-medium transition-colors ${checked ? "border-[#99e1d9]/50 bg-[#99e1d9]/10 text-[#fbffee]" : "border-[#23251e] bg-transparent text-[#fbffee] hover:border-[#6e735b]"}`}>
+    <input type="checkbox" checked={checked} onChange={onChange} className="size-3.5 accent-[#99e1d9]" />
+    <span>{label}</span>
+  </label>;
+}
+
 export function FarmGrid({ initialFarms }: FarmGridProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const internalQueryUpdateRef = useRef<string | null>(null);
 
   const initialCategory = searchParams.get("category") || "all";
   const initialQuery = searchParams.get("q") || "";
   const initialType = searchParams.get("type") || "all";
+  const initialResources = searchParams.get("resources")?.split(",").filter(Boolean) || [];
+  const initialVersions = searchParams.get("versions")?.split(",").filter(Boolean) || [];
+  const initialDifficulties = searchParams.get("difficulties")?.split(",").filter(Boolean) || [];
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
-  const [selectedType, setSelectedType] = useState<string>(initialType);
-  const [sortBy, setSortBy] = useState<string>("featured");
+  const [draftEditions, setDraftEditions] = useState<string[]>(initialCategory === "all" ? [] : initialCategory.split(","));
+  const [activeEditions, setActiveEditions] = useState<string[]>(initialCategory === "all" ? [] : initialCategory.split(","));
+  const [draftTypes, setDraftTypes] = useState<string[]>(initialType === "all" ? [] : initialType.split(","));
+  const [activeTypes, setActiveTypes] = useState<string[]>(initialType === "all" ? [] : initialType.split(","));
+  const [draftResources, setDraftResources] = useState<string[]>(initialResources);
+  const [activeResources, setActiveResources] = useState<string[]>(initialResources);
+  const [draftVersions, setDraftVersions] = useState<string[]>(initialVersions);
+  const [activeVersions, setActiveVersions] = useState<string[]>(initialVersions);
+  const [draftDifficulties, setDraftDifficulties] = useState<string[]>(initialDifficulties);
+  const [activeDifficulties, setActiveDifficulties] = useState<string[]>(initialDifficulties);
+  const [sortBy, setSortBy] = useState<string>("date_desc");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 12;
 
   // Sync category state when URL changes (e.g. clicked navbar link)
   useEffect(() => {
+    const queryString = searchParams.toString();
+    if (internalQueryUpdateRef.current === queryString) {
+      internalQueryUpdateRef.current = null;
+      return;
+    }
     const cat = searchParams.get("category");
     const query = searchParams.get("q") || "";
     const type = searchParams.get("type") || "all";
-    setSelectedCategory(cat || "all");
+    const resources = searchParams.get("resources")?.split(",").filter(Boolean) || [];
+    const versions = searchParams.get("versions")?.split(",").filter(Boolean) || [];
+    const difficultyFilters = searchParams.get("difficulties")?.split(",").filter(Boolean) || [];
+    const editions = cat && cat !== "all" ? cat.split(",") : [];
+    const types = type && type !== "all" ? type.split(",") : [];
+    setDraftEditions(editions);
+    setActiveEditions(editions);
     setSearchQuery(query);
-    setSelectedType(type);
+    setDraftTypes(types);
+    setActiveTypes(types);
+    setDraftResources(resources);
+    setActiveResources(resources);
+    setDraftVersions(versions);
+    setActiveVersions(versions);
+    setDraftDifficulties(difficultyFilters);
+    setActiveDifficulties(difficultyFilters);
     setCurrentPage(1);
   }, [searchParams]);
 
@@ -49,28 +87,25 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     return Array.from(types);
   }, [initialFarms]);
 
+  const farmVersions = useMemo(() => Array.from(new Set(initialFarms.map((farm) => farm.version).filter((version): version is string => Boolean(version)))).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })), [initialFarms]);
+  const difficulties = useMemo(() => Array.from(new Set(initialFarms.map((farm) => farm.difficulty).filter((difficulty): difficulty is NonNullable<typeof difficulty> => Boolean(difficulty)))).sort(), [initialFarms]);
+
   // Filter and sort farms
   const filteredFarms = useMemo(() => {
     let result = [...initialFarms];
 
-    // Filter by Category (Java / Bedrock / Both Platforms)
-    if (selectedCategory === "both") {
-      result = result.filter((farm) => farm.supportsBothPlatforms);
-    } else if (selectedCategory !== "all") {
-      result = result.filter((farm) => {
-        if (farm.category.toLowerCase() === selectedCategory.toLowerCase()) return true;
-        if (selectedCategory === "build") return false;
-        if (farm.category === "build") return false;
-        return farm.supportsBothPlatforms;
-      });
-    }
-
-    // Filter by Farm Type
-    if (selectedType !== "all") {
-      result = result.filter(
-        (farm) => farm.farmType.toLowerCase() === selectedType.toLowerCase()
-      );
-    }
+    // Edition values are ORed; resources, type, version, and difficulty refine that set.
+    if (activeEditions.length) result = result.filter((farm) => activeEditions.some((edition) => {
+      if (edition === "both") return farm.supportsBothPlatforms;
+      if (edition === "build") return farm.category === "build";
+      if (edition === "java") return farm.category === "java" || farm.supportsBothPlatforms;
+      if (edition === "bedrock") return farm.category === "bedrock" || farm.supportsBothPlatforms;
+      return false;
+    }));
+    if (activeTypes.length) result = result.filter((farm) => activeTypes.includes(farm.farmType));
+    if (activeResources.length) result = result.filter((farm) => activeResources.every((resource) => resource === "world" ? farm.hasWorldDownload : resource === "schematic" ? farm.hasSchematic : farm.hasYoutube));
+    if (activeVersions.length) result = result.filter((farm) => activeVersions.includes(farm.version || ""));
+    if (activeDifficulties.length) result = result.filter((farm) => activeDifficulties.includes(farm.difficulty || ""));
 
     // Filter by Search Query
     if (searchQuery.trim()) {
@@ -89,6 +124,9 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     // Sorting
     if (sortBy === "date_desc") {
       result.sort((a, b) => {
+        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
+        if (a.feedOrder !== undefined) return -1;
+        if (b.feedOrder !== undefined) return 1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateB !== dateA) return dateB - dateA;
@@ -96,6 +134,9 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
       });
     } else if (sortBy === "date_asc") {
       result.sort((a, b) => {
+        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return b.feedOrder - a.feedOrder;
+        if (a.feedOrder !== undefined) return 1;
+        if (b.feedOrder !== undefined) return -1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateA !== dateB) return dateA - dateB;
@@ -105,11 +146,14 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
       result.sort((a, b) => a.dn.localeCompare(b.dn, undefined, { numeric: true }));
     } else if (sortBy === "dn_desc") {
       result.sort((a, b) => b.dn.localeCompare(a.dn, undefined, { numeric: true }));
-    } else {
+    } else if (sortBy === "featured") {
       // featured
       result.sort((a, b) => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
+        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
+        if (a.feedOrder !== undefined) return -1;
+        if (b.feedOrder !== undefined) return 1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateB !== dateA) return dateB - dateA;
@@ -118,7 +162,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     }
 
     return result;
-  }, [initialFarms, selectedCategory, selectedType, searchQuery, sortBy]);
+  }, [initialFarms, activeEditions, activeTypes, activeResources, activeVersions, activeDifficulties, searchQuery, sortBy]);
 
   // Pagination calculation
   const totalPages = Math.ceil(filteredFarms.length / itemsPerPage) || 1;
@@ -166,22 +210,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     }
   };
 
-  const javaCount = initialFarms.filter((f) => f.category === "java").length;
-  const bedrockCount = initialFarms.filter((f) => f.category === "bedrock").length;
-  const buildCount = initialFarms.filter((f) => f.category === "build").length;
-  const bothCount = initialFarms.filter((f) => f.supportsBothPlatforms).length;
-
-  const handleCategoryChange = (cat: string) => {
-    setSelectedCategory(cat);
-    setCurrentPage(1);
-    const params = new URLSearchParams(searchParams.toString());
-    if (cat === "all") {
-      params.delete("category");
-    } else {
-      params.set("category", cat);
-    }
-    router.replace(`/?${params.toString()}`, { scroll: false });
-  };
+  const toggleDraft = (values: string[], setValues: (next: string[]) => void, value: string) => setValues(values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -190,166 +219,107 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     if (value.trim()) params.set("q", value.trim());
     else params.delete("q");
     params.delete("page");
+    internalQueryUpdateRef.current = params.toString() === searchParams.toString() ? null : params.toString();
     router.replace(`/?${params.toString()}#farms`, { scroll: false });
   };
 
-  const handleTypeChange = (value: string) => {
-    setSelectedType(value);
+  const handleApplyFilters = (event: React.FormEvent) => {
+    event.preventDefault();
+    setActiveEditions(draftEditions);
+    setActiveTypes(draftTypes);
+    setActiveResources(draftResources);
+    setActiveVersions(draftVersions);
+    setActiveDifficulties(draftDifficulties);
     setCurrentPage(1);
     const params = new URLSearchParams(searchParams.toString());
-    if (value === "all") params.delete("type");
-    else params.set("type", value);
+    if (draftEditions.length) params.set("category", draftEditions.join(","));
+    else params.delete("category");
+    if (draftTypes.length) params.set("type", draftTypes.join(","));
+    else params.delete("type");
+    if (draftResources.length) params.set("resources", draftResources.join(","));
+    else params.delete("resources");
+    if (draftVersions.length) params.set("versions", draftVersions.join(","));
+    else params.delete("versions");
+    if (draftDifficulties.length) params.set("difficulties", draftDifficulties.join(","));
+    else params.delete("difficulties");
+    internalQueryUpdateRef.current = params.toString() === searchParams.toString() ? null : params.toString();
     router.replace(`/?${params.toString()}#farms`, { scroll: false });
   };
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setSelectedCategory("all");
-    setSelectedType("all");
+    setDraftEditions([]);
+    setActiveEditions([]);
+    setDraftTypes([]);
+    setActiveTypes([]);
+    setDraftResources([]);
+    setActiveResources([]);
+    setDraftVersions([]);
+    setActiveVersions([]);
+    setDraftDifficulties([]);
+    setActiveDifficulties([]);
     setSortBy("featured");
     setCurrentPage(1);
+    internalQueryUpdateRef.current = searchParams.toString() ? "" : null;
     router.replace("/", { scroll: false });
   };
 
   return (
-    <div id="farms-grid-section" className="space-y-8 scroll-mt-6">
-      {/* Search & Filter Bar */}
-      <div className="glass-panel p-4 sm:p-6 rounded-panel shadow-xl space-y-4">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-          {/* Search Box */}
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
-            <input
-              type="text"
-              value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder="Search 500+ farms by name, type, tags, or #111-dn..."
-              className="w-full pl-11 pr-10 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink placeholder-ink-dim focus:outline-none focus:border-[#4CADD0] focus:ring-1 focus:ring-[#4CADD0] text-sm transition-all shadow-inner"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => handleSearchChange("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-ink-muted hover:text-ink"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-
-          {/* Farm Type Filter */}
-          <div className="flex items-center gap-2">
-            <div className="relative min-w-[160px] flex-1 md:flex-initial">
-              <select
-                value={selectedType}
-                onChange={(e) => handleTypeChange(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink text-sm focus:outline-none focus:border-[#4CADD0] appearance-none pr-8 cursor-pointer"
-              >
-                <option value="all">All Farm Types</option>
-                {farmTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
+    <div id="farms-grid-section" className="space-y-8 scroll-mt-6 pb-28 sm:pb-12">
+      <form onSubmit={handleApplyFilters} className="mx-auto max-w-[68rem] rounded-[5px] border border-[#23251e] bg-[#1d1d1d] p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] shadow-[0_24px_60px_-42px_rgba(0,0,0,.9)] sm:p-5">
+        <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_224px]">
+          <label className="block min-w-0">
+            <span className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#969e7d]">Search</span>
+            <span className="relative block"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#969e7d]" />
+              <input type="search" value={searchQuery} onChange={(e) => handleSearchChange(e.target.value)} placeholder="Title, tag, type, or DN number" className="h-11 w-full rounded-[4px] border border-[#6e735b] bg-[#020202] pl-10 pr-3 text-sm text-[#f1fec8] placeholder:text-[#969e7d] focus:border-[#99e1d9] focus:outline-none" />
+            </span>
+          </label>
+          <label className="block min-w-0">
+            <span className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#969e7d]">Sort</span>
+            <span className="relative block"><SlidersHorizontal className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#969e7d]" />
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="h-11 w-full appearance-none rounded-[4px] border border-[#6e735b] bg-[#020202] px-3 pr-9 text-sm text-[#f1fec8] focus:border-[#99e1d9] focus:outline-none">
+                <option value="featured">Featured first</option><option value="date_desc">Newest uploaded</option><option value="date_asc">Oldest uploaded</option><option value="dn_asc">DN number (low to high)</option><option value="dn_desc">DN number (high to low)</option>
               </select>
-              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
-            </div>
-
-              {/* Sort Dropdown */}
-            <div className="relative min-w-[170px] flex-1 md:flex-initial">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-control bg-[#0B0E14]/80 border border-hairline text-ink text-sm focus:outline-none focus:border-[#4CADD0] appearance-none pr-8 cursor-pointer"
-              >
-                <option value="featured">Featured First</option>
-                <option value="date_desc">Newest Uploaded</option>
-                <option value="date_asc">Oldest Uploaded</option>
-                <option value="dn_asc">DN Number (Low to High)</option>
-                <option value="dn_desc">DN Number (High to Low)</option>
-              </select>
-              <SlidersHorizontal className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
-            </div>
-          </div>
+            </span>
+          </label>
         </div>
 
-        {/* Edition Switcher Tabs */}
-        <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-hairline">
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => handleCategoryChange("all")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "all"
-                  ? "bg-brand text-slate-950 shadow-lg shadow-[#4CADD0]/20"
-                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
-              }`}
-            >
-              <span>All Editions</span>
-              <span className="px-1.5 py-0.2 rounded bg-black/30 text-[11px] font-mono">
-                {initialFarms.length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => handleCategoryChange("java")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "java"
-                  ? "bg-lime text-slate-950 shadow-lg shadow-[#9FFF99]/25 font-bold"
-                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
-              }`}
-            >
-              <JavaBrandIcon size={14} />
-              <span>Java Edition</span>
-              <span className={`px-1.5 py-0.2 rounded text-[11px] font-mono ${selectedCategory === "java" ? "bg-black/20 text-slate-950 font-bold" : "bg-black/30"}`}>
-                {javaCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => handleCategoryChange("bedrock")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "bedrock"
-                  ? "bg-slate-100 text-slate-950 shadow-lg shadow-white/20 font-bold"
-                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
-              }`}
-            >
-              <Box className="w-3.5 h-3.5" />
-              <span>Bedrock Edition</span>
-              <span className={`px-1.5 py-0.2 rounded text-[11px] font-mono ${selectedCategory === "bedrock" ? "bg-black/20 text-slate-950 font-bold" : "bg-black/30"}`}>
-                {bedrockCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => handleCategoryChange("both")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "both"
-                  ? "bg-brand text-slate-950 shadow-lg shadow-[#4CADD0]/20 font-bold"
-                  : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
-              }`}
-            >
-              <span>Both Platforms</span>
-              <span className={`px-1.5 py-0.2 rounded text-[11px] font-mono ${selectedCategory === "both" ? "bg-black/20 text-ink font-bold" : "bg-black/30"}`}>
-                {bothCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => handleCategoryChange("build")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedCategory === "build" ? "bg-amber text-slate-950 shadow-lg shadow-[#FBBF24]/20" : "bg-bg-elev text-ink-muted hover:text-ink hover:bg-surface-hover border border-hairline"
-              }`}
-            >
-              <Hammer className="w-3.5 h-3.5" />
-              <span>Builds</span>
-              <span className="px-1.5 py-0.2 rounded bg-black/30 text-[11px] font-mono">{buildCount}</span>
-            </button>
-          </div>
-
-          <div className="label-mono text-ink-muted">
-            Showing <span className="text-ink font-semibold">{filteredFarms.length}</span> farm designs
-          </div>
+        <div className="mt-5 grid gap-x-8 gap-y-5 border-b border-[#23251e] pb-5 md:grid-cols-2">
+          <FilterGroup title="Edition">
+            {([ ["java", "Java"], ["bedrock", "Bedrock"], ["both", "Java + Bedrock"], ["build", "Build"] ] as const).map(([edition, label]) => <FilterChip key={edition} label={label} checked={draftEditions.includes(edition)} onChange={() => toggleDraft(draftEditions, setDraftEditions, edition)} />)}
+          </FilterGroup>
+          <FilterGroup title="Resources included">
+            {[{ id: "world", label: "World save" }, { id: "schematic", label: "Schematic" }, { id: "tutorial", label: "Tutorial" }].map((resource) => <FilterChip key={resource.id} label={resource.label} checked={draftResources.includes(resource.id)} onChange={() => toggleDraft(draftResources, setDraftResources, resource.id)} />)}
+          </FilterGroup>
+          <FilterGroup title="Minecraft version">
+            {farmVersions.map((version) => <FilterChip key={version} label={version} checked={draftVersions.includes(version)} onChange={() => toggleDraft(draftVersions, setDraftVersions, version)} />)}
+            {!farmVersions.length && <span className="text-xs text-[#969e7d]">No version details available</span>}
+          </FilterGroup>
+          <label className="block min-w-0">
+            <span className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#969e7d]">Farm type</span>
+            <span className="relative block">
+              <select
+                value={draftTypes[0] || ""}
+                onChange={(event) => setDraftTypes(event.target.value ? [event.target.value] : [])}
+                className="h-11 w-full appearance-none rounded-[4px] border border-[#6e735b] bg-[#020202] px-3 pr-9 text-sm text-[#f1fec8] focus:border-[#99e1d9] focus:outline-none"
+              >
+                <option value="">All farm types</option>
+                {farmTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#969e7d]" />
+            </span>
+          </label>
+          {difficulties.length > 0 && <FilterGroup title="Build difficulty">
+            {difficulties.map((difficulty) => <FilterChip key={difficulty} label={difficulty} checked={draftDifficulties.includes(difficulty)} onChange={() => toggleDraft(draftDifficulties, setDraftDifficulties, difficulty)} />)}
+          </FilterGroup>}
         </div>
-      </div>
+
+        <div className="flex flex-wrap items-center gap-3 pt-4">
+          <button type="submit" className="min-h-11 rounded-[4px] bg-[#99e1d9] px-5 text-xs font-bold text-[#020202] transition hover:bg-[#7fd3c9]">Apply filters</button>
+          <button type="button" onClick={handleResetFilters} className="min-h-11 inline-flex items-center gap-2 rounded-[4px] border border-[#6e735b] px-4 text-xs font-semibold text-[#f1fec8] transition hover:border-[#99e1d9]"><RotateCcw className="size-3.5" /> Clear all</button>
+          <p className="ml-auto w-full text-xs text-[#969e7d] sm:w-auto">{filteredFarms.length} {filteredFarms.length === 1 ? "entry" : "entries"}</p>
+        </div>
+      </form>
 
       {/* Farm Cards Grid */}
       {paginatedFarms.length > 0 ? (

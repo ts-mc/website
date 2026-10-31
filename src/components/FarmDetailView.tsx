@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { FarmCard } from "@/components/FarmCard";
 import { SchematicPreviewModal } from "@/components/SchematicPreviewModal";
-import { RealViewsCount } from "@/components/RealViewsCount";
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
 import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
@@ -57,7 +56,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">
       {/* Breadcrumb & Navigation */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
@@ -85,10 +84,6 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
 
           <span className="px-3 py-1 rounded-lg text-xs font-mono font-bold text-ink bg-bg-elev border border-hairline">
             DN #{farm.dn}
-          </span>
-
-          <span className="px-3 py-1 rounded-lg text-xs font-mono font-bold bg-bg-elev border border-hairline">
-            <RealViewsCount dn={farm.dn} initialViews={farm.views} showLivePulse={true} />
           </span>
 
           <button
@@ -163,13 +158,15 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
             </p>
 
             {farm.detailedDescription && (
-              <div className="pt-4 border-t border-hairline space-y-3">
-                <h3 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Info className="w-4 h-4 text-[#4CADD0]" /> Farm Overview & Guide
-                </h3>
-                <p className="text-sm text-ink leading-relaxed whitespace-pre-line">
-                  {farm.detailedDescription}
-                </p>
+              <div className="pt-4 border-t border-hairline">
+                <div className="space-y-3 text-sm text-ink leading-relaxed">
+                  {farm.detailedDescription.split("[[FARM_SECTION_DIVIDER]]").map((section, index) => (
+                    <React.Fragment key={index}>
+                      {index > 0 && <div className="my-5 w-full border-t border-[#f1fec8]/70" aria-hidden="true" />}
+                      <p className="whitespace-pre-line break-words">{section.trim()}</p>
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -424,7 +421,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
               <div className="flex items-center justify-between py-1.5 border-b border-hairline">
                 <span className="text-ink-muted">Minecraft Version</span>
                 <span className="font-mono font-semibold text-ink">
-                  {farm.version || "1.21+"}
+                  {farm.latestVersion || farm.version || "1.21+"}
                 </span>
               </div>
 
@@ -448,13 +445,6 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
                 <span className="font-semibold text-ink">{farm.dimension || "Overworld / not recorded"}</span>
               </div>
 
-              <div className="flex items-center justify-between py-1.5 border-b border-hairline">
-                <span className="text-ink-muted">Total Views</span>
-                <span className="font-mono font-semibold text-[#4CADD0]">
-                  <RealViewsCount dn={farm.dn} initialViews={farm.views} format="full" />
-                </span>
-              </div>
-
               {farm.rates && (
                 <div className="flex items-center justify-between py-1.5 border-b border-hairline">
                   <span className="text-ink-muted">Expected Rates</span>
@@ -473,7 +463,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
 
               <div className="flex items-center justify-between py-1.5 border-b border-hairline">
                 <span className="text-ink-muted">Creator / Designer</span>
-                <span className="font-semibold text-ink">{farm.author || "TheySix"}</span>
+                <span className="font-semibold text-ink">{farm.creatorName || farm.author || "TheySix"}</span>
               </div>
 
               {farm.date && (
