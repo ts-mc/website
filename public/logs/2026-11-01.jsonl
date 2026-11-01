@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-01",
+  "type": "update",
+  "title": "TheySix server refresh",
+  "summary": "Refined server branding, player visibility, chat formatting, and staff tools.",
+  "description": "Updated the TheySix server configuration with its public domains, a full player list that respects hide states, rank-colored chat names, and refreshed staff tooling. Retired glow and tag integrations were removed from active configuration, while the Halloween event remains historical.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Server branding and player list"
+    },
+    {
+      "type": "paragraph",
+      "text": "Updated server displays to use play.theysix.tech, theysix.tech, and events.theysix.tech/vote. The TAB list now supports the full player list and respects TSHide visibility states."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Rank-aware chat"
+    },
+    {
+      "type": "paragraph",
+      "text": "Chat formatting now carries the player's rank color through the separator and username. The TAB rank display keeps the rank and username free of an extra separator."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Staff tools and integrations"
+    },
+    {
+      "type": "paragraph",
+      "text": "Added TSStaff's read-only /update overview for checking plugin releases. Removed retired glow and tag displays and updated vote placeholders to use DankVotes."
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Halloween event retired"
+    },
+    {
+      "type": "paragraph",
+      "text": "The Halloween event is no longer part of the active server configuration. Its historical files remain archived, and no replacement /spawn destination has been assigned."
+    }
+  ]
+}
