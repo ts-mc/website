@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-02",
+  "type": "release",
+  "title": "TheySix Events is now available",
+  "summary": "TheySix Events is a Minecraft minigame server with 19 games for Java and Bedrock players.",
+  "description": "The server is focused on short event-style rounds where players vote for games, compete in arenas and try to finish at the top of each session.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "A server made for events"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix Events is built around minigames and competitive rounds. Players join an arena, vote for the next game and take part in a series of fast-paced challenges."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "19 minigames to play"
+    },
+    {
+      "type": "paragraph",
+      "text": "The server includes 19 minigames such as Race, Bridge Race, TNT Run, Traffic Light, Minefield, One In The Chamber, Snowball Fight, Knockback, Block Party, Spleef, Splegg, TNT Tag and Run From The Beast."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Join the server"
+    },
+    {
+      "type": "paragraph",
+      "text": "TheySix Events supports Java and Bedrock players. Connect using play.theysix.tech and visit events.theysix.tech for the full game list and server information."
+    }
+  ]
+}
