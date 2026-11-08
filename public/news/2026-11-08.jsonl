@@ -1,34 +1,36 @@
 {
   "date": "2026-11-08",
-  "type": "community",
-  "title": "Discord channel list reorganized",
-  "summary": "The Discord channel list was reordered and five channels were moved to the archived category.",
-  "description": "The November 8, 2026 audit records channel position changes and an explicit archive move for the older FAQ. The server owner also confirmed four more channels archived that day.",
+  "type": "news",
+  "title": "Discord channels reorganized and support moved to Mihulish",
+  "summary": "The channel list was tidied up, five older channels were archived, and Mihulish now helps members find answers and open private support requests.",
+  "description": "On November 8, TheySix reordered the Discord channel list and archived five channels. Members can use the wiki, /faq, and Mihulish modmail for current guidance and help.",
   "body": [
     {
       "type": "heading",
       "level": 2,
-      "text": "Channel list reordered"
+      "text": "A tidier channel list"
     },
     {
       "type": "paragraph",
-      "text": "The audit shows position updates across help, community, updates, support, staff, and download channels. These shifts include addons, mechanics, known-problems, installing-worlds, beta-news, chat, interface, updates, suggestions, game-chat, console, whitelists, guide, FAQ, support, worlds, and schematics. The position values in the audit were intermediate changes during the reordering, not a durable final order."
+      "text": "Channels were reordered to make community discussions, updates, downloads, and support easier to find. Five older channels moved to the archived category, including addons, guide, and two FAQ channels."
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Five channels archived on November 8"
+      "text": "Current answers and support"
     },
     {
-      "type": "list",
-      "items": [
-        "💻╏addons - 1359960324756738140",
-        "📗╏guide - 1234984529739907152",
-        "📑╏faq - 1234984787152732241",
-        "🔍╏guide - 1128408107412889660",
-        "❓╏faq - 1109021120310542397",
-        "🆘╏support - 1566441095821262989"
-      ]
+      "type": "paragraph",
+      "text": "Use /faq for common questions, /rules for community guidelines, and the TheySix Wiki for detailed guides. DM Mihulish to choose a support type and answer its questions; the bot then creates a private channel for you and staff."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Farm downloads"
+    },
+    {
+      "type": "paragraph",
+      "text": "Use /dn or the farm archive to find a farm by Download Number. World files and Java schematics remain in their respective download channels."
     }
   ]
 }
