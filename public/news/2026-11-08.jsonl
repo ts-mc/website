@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-08",
+  "type": "community",
+  "title": "Discord channel list reorganized",
+  "summary": "The Discord channel list was reordered and five channels were moved to the archived category.",
+  "description": "The November 8, 2026 audit records channel position changes and an explicit archive move for the older FAQ. The server owner also confirmed four more channels archived that day.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Channel list reordered"
+    },
+    {
+      "type": "paragraph",
+      "text": "The audit shows position updates across help, community, updates, support, staff, and download channels. These shifts include addons, mechanics, known-problems, installing-worlds, beta-news, chat, interface, updates, suggestions, game-chat, console, whitelists, guide, FAQ, support, worlds, and schematics. The position values in the audit were intermediate changes during the reordering, not a durable final order."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Five channels archived on November 8"
+    },
+    {
+      "type": "list",
+      "items": [
+        "💻╏addons - 1359960324756738140",
+        "📗╏guide - 1234984529739907152",
+        "📑╏faq - 1234984787152732241",
+        "🔍╏guide - 1128408107412889660",
+        "❓╏faq - 1109021120310542397",
+        "🆘╏support - 1566441095821262989"
+      ]
+    }
+  ]
+}
