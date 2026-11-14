@@ -2,8 +2,8 @@
   "date": "2026-11-14",
   "type": "release",
   "title": "Farm archive and schematic viewer refresh",
-  "summary": "Improved farm metadata, upload ordering, YouTube descriptions, and the interactive schematic preview.",
-  "description": "The November 14 release connects farm records to current YouTube upload metadata across the TheySix channels, improves the farm detail pages, and refreshes the browser schematic experience.",
+  "summary": "Improved farm metadata, upload ordering, the interactive schematic preview, and the official social directory.",
+  "description": "The November 14 release connects farm records to current YouTube upload metadata across the TheySix channels, improves the farm detail pages, refreshes the browser schematic experience, and adds the full channel directory with brand logos and a dedicated bug-report contact.",
   "body": [
     {
       "type": "heading",
@@ -32,6 +32,19 @@
         "Added browser-side farm activation for supported redstone simulations, with a clear fallback when a schematic cannot be simulated.",
         "Added searchable material lists, copyable material totals, and per-block visibility controls.",
         "Improved renderer lifecycle handling to prevent disposed-camera resize errors and added a responsive farm detail loading skeleton."
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Social directory and bug reports"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Expanded the Socials page with all five YouTube channels: TheySix, TheySixMC, TheySixCreations, TheySixMinecraftJava, and TheySixBedrock.",
+        "Added channel and platform logos for YouTube, TikTok, X, Instagram, Discord, and email, using the shared TheySix handles where applicable.",
+        "Added dev@theysix.tech as a contact for visual bug reports affecting the website, Minecraft server, or schematics."
       ]
     }
   ]
