@@ -1,3 +1,3 @@
 export default function FarmDetailLoading() {
-  return <p className="mx-auto w-full max-w-6xl px-4 py-12 text-sm text-ink-muted sm:px-6 lg:px-8">Loading...</p>;
+  return <div role="status" aria-label="Loading farm" className="mx-auto w-full max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8"><span className="sr-only">Loading farm…</span><div className="h-5 w-40 rounded bg-white/10 motion-safe:animate-pulse" /><div className="grid gap-8 lg:grid-cols-[1fr_300px]"><div className="space-y-6"><div className="aspect-video rounded-2xl bg-white/5 motion-safe:animate-pulse" /><div className="h-9 w-5/6 rounded bg-white/10 motion-safe:animate-pulse" />{[1,2,3].map(line => <div key={line} className="h-4 rounded bg-white/5 motion-safe:animate-pulse" />)}</div><div className="space-y-4 rounded-2xl border border-white/10 p-5">{[1,2,3,4,5].map(line => <div key={line} className="h-14 rounded-xl bg-white/5 motion-safe:animate-pulse" />)}</div></div></div>;
 }

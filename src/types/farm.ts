@@ -66,6 +66,9 @@ export interface FarmWithMetadata extends FarmData {
   category: FarmCategory;
   normalizedDn: string; // e.g. "111" for both "111-dn" and "111"
   youtubeId?: string;
+  /** Public view total imported from the linked YouTube video. */
+  youtubeViewCount?: number;
+  youtubeViewsDisplay?: string;
   resolvedThumbnail: string;
   hasSchematic: boolean;
   hasWorldDownload: boolean;

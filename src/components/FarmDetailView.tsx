@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import {
   Download,
   FileCode,
@@ -24,20 +25,24 @@ import {
   Check,
   Copy,
   Boxes,
-  Hammer
+  Hammer,
+  MessageCircle,
+  ThumbsUp
 } from "lucide-react";
 import { FarmCard } from "@/components/FarmCard";
-import { SchematicPreviewModal } from "@/components/SchematicPreviewModal";
+const SchematicPreviewModal = dynamic(() => import("@/components/SchematicPreviewModal").then(module => module.SchematicPreviewModal), { ssr: false });
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
 import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
+import type { ApprovedYoutubeComment } from "@/types/youtube";
 
 interface FarmDetailViewProps {
   farm: FarmWithMetadata;
   relatedFarms: FarmWithMetadata[];
+  communityNotes?: ApprovedYoutubeComment[];
 }
 
-export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
+export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: FarmDetailViewProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [extractedMaterials, setExtractedMaterials] = useState<FarmMaterialItem[]>(farm.materials);
@@ -46,6 +51,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
   const isBuild = farm.category === "build";
   const ytId = farm.youtubeId;
   const displayFarm = extractedMaterials.length > 0 ? { ...farm, materials: extractedMaterials, hasMaterials: true } : farm;
+  const displayDate = farm.date?.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? farm.date;
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -142,6 +148,13 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
             )}
           </div>
 
+          {farm.youtubeViewCount !== undefined && (
+            <p className="-mt-3 flex items-center gap-1.5 text-xs text-ink-muted">
+              <Youtube className="size-3.5 text-[#FB7185]" aria-hidden="true" />
+              {new Intl.NumberFormat("en-US").format(farm.youtubeViewCount)} total YouTube views
+            </p>
+          )}
+
           {/* Farm Details Card */}
           <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-hairline space-y-6">
             <div className="space-y-2">
@@ -184,6 +197,34 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
               </div>
             )}
           </div>
+
+          <section className="glass-panel rounded-3xl border border-hairline p-6 sm:p-8" aria-labelledby="community-fixes-title">
+            <div className="flex items-start gap-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-[#4CADD0]/25 bg-[#4CADD0]/10 text-[#4CADD0]">
+                <MessageCircle className="size-4" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[#4CADD0]">From comments</p>
+                <h2 id="community-fixes-title" className="mt-1 text-lg font-bold text-ink">Helpful notes from viewers</h2>
+                <p className="mt-1 text-xs leading-relaxed text-ink-muted">Useful suggestions and fixes shared in the video comments.</p>
+              </div>
+            </div>
+            {communityNotes.length > 0 ? (
+              <ul className="mt-5 space-y-3">
+                {communityNotes.map((note) => (
+                  <li key={note.commentId} className="rounded-2xl border border-hairline bg-[#070A12]/60 p-4">
+                    <p className="whitespace-pre-line text-sm leading-relaxed text-ink">{note.text}</p>
+                    <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-muted">
+                      <span>{note.author}</span>
+                      {note.likeCount !== undefined && <span className="inline-flex items-center gap-1"><ThumbsUp className="size-3" aria-hidden="true" /> {note.likeCount}</span>}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-5 rounded-xl border border-dashed border-hairline px-4 py-3 text-xs leading-relaxed text-ink-muted">No helpful viewer notes have been added for this farm yet.</p>
+            )}
+          </section>
 
           {/* Interactive Material List & Checklist (Track items in-game) */}
           {displayFarm.materials && displayFarm.materials.length > 0 ? (
@@ -454,6 +495,13 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
                 </div>
               )}
 
+              {farm.youtubeViewCount !== undefined && (
+                <div className="flex items-center justify-between py-1.5 border-b border-hairline">
+                  <span className="flex items-center gap-1.5 text-ink-muted"><Youtube className="w-3.5 h-3.5 text-[#FB7185]" /> YouTube views</span>
+                  <span className="font-mono font-semibold text-ink">{new Intl.NumberFormat("en-US").format(farm.youtubeViewCount)}</span>
+                </div>
+              )}
+
               {farm.difficulty && (
                 <div className="flex items-center justify-between py-1.5 border-b border-hairline">
                   <span className="text-ink-muted">Difficulty</span>
@@ -469,7 +517,7 @@ export function FarmDetailView({ farm, relatedFarms }: FarmDetailViewProps) {
               {farm.date && (
                 <div className="flex items-center justify-between py-1.5">
                   <span className="text-ink-muted">Updated Date</span>
-                  <span className="font-mono text-ink-muted">{farm.date}</span>
+                  <span className="font-mono text-ink-muted">{displayDate}</span>
                 </div>
               )}
             </div>

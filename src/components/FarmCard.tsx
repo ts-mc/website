@@ -31,7 +31,7 @@ export function FarmCard({ farm }: FarmCardProps) {
         {/* Bottom thumbnail bar: View count on bottom-left, Rates on bottom-right */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-ink z-10 pointer-events-none">
           <span className="label-mono inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-[#0B0E14]/90 text-[#CBD5E1] border border-hairline backdrop-blur-md shadow-sm pointer-events-auto">
-            <RealViewsCount dn={farm.dn} initialViews={farm.views} />
+            {farm.youtubeViewCount !== undefined ? <><Youtube className="w-3 h-3 text-[#FB7185]" /> {farm.youtubeViewsDisplay || farm.youtubeViewCount} views</> : <RealViewsCount dn={farm.dn} initialViews={farm.views} />}
           </span>
 
           {farm.rates && (

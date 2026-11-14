@@ -1,6 +1,12 @@
 import fs from "fs";
 import path from "path";
+import youtubeMetadata from "@/data/youtube-metadata.json";
+import youtubeChannelIndex from "@/data/youtube-channel-index.json";
 import type { FarmCategory, FarmData, FarmWithMetadata, FarmMaterialItem } from "@/types/farm";
+import type { YoutubeChannelVideoSnapshot, YoutubeMetadataSnapshot } from "@/types/youtube";
+
+const youtubeSnapshots = youtubeMetadata as Record<string, YoutubeMetadataSnapshot>;
+const youtubeChannelSnapshots = youtubeChannelIndex as Record<string, YoutubeChannelVideoSnapshot>;
 
 type JsonlLinkOverride = {
   dn: string;
@@ -114,6 +120,7 @@ function applyFarmFeed(farms: FarmWithMetadata[]): FarmWithMetadata[] {
       ...existing,
       feedOrder,
       title: record.video_title?.trim() || existing.title,
+      date: record.upload_date ? record.upload_date.split("T")[0] : existing.date,
       farmType: record.farm_type ? feedFarmType(record.farm_type) : existing.farmType,
       youtubeUrl: video || existing.youtubeUrl,
       youtubeId: extractYouTubeId(video || existing.youtubeUrl),
@@ -195,6 +202,33 @@ function applyMaterialCache(farms: FarmWithMetadata[]): FarmWithMetadata[] {
     if (farm.materials.length > 0) return farm;
     const materials = getCachedMaterials(farm.dn);
     return materials.length > 0 ? { ...farm, materials, hasMaterials: true } : farm;
+  });
+}
+
+/** Add imported public YouTube totals without replacing archive page-view data. */
+function applyYoutubeStats(farms: FarmWithMetadata[]): FarmWithMetadata[] {
+  return farms.map((farm) => {
+    const snapshot = farm.youtubeId ? youtubeSnapshots[farm.youtubeId] : undefined;
+    const channelSnapshot = farm.youtubeId ? youtubeChannelSnapshots[farm.youtubeId] : undefined;
+    if (!snapshot && !channelSnapshot) return farm;
+    const isGeneratedTitle = new RegExp(`^TheySix (?:Minecraft )?(?:Farm|Build)\\s+${farm.dn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i").test(farm.title.trim());
+    const isGeneratedDescription = /TheySix (?:farm|Minecraft build) archive entry|Designed by TheySix for high efficiency/i.test(farm.description);
+    const intro = snapshot?.description?.split(/(?:\r?\n)[_\s]*\[\s*Farm Details\s*\]/i)[0]
+      ?.split(/\r?\n\s*\r?\n/)
+      .map((paragraph) => paragraph.trim())
+      .find((paragraph) => paragraph.length >= 32 && !/(sponsor|hosting|use code|https?:\/\/)/i.test(paragraph));
+    const summary = intro?.replace(/\s+/g, " ").slice(0, 280).trim();
+    const fallbackDescription = `A TheySix ${farm.farmType.toLowerCase()} tutorial for Minecraft ${farm.version || "players"}.`;
+    const videoTitle = snapshot?.title || channelSnapshot?.title;
+    const viewCount = snapshot?.viewCount ?? channelSnapshot?.viewCount;
+    return {
+      ...farm,
+      title: isGeneratedTitle && videoTitle ? videoTitle : farm.title,
+      description: isGeneratedDescription ? summary || fallbackDescription : farm.description,
+      date: snapshot?.publishedAt || channelSnapshot?.publishedAt || farm.date,
+      youtubeViewCount: viewCount,
+      youtubeViewsDisplay: viewCount === undefined ? undefined : formatCompactNumber(viewCount),
+    };
   });
 }
 
@@ -809,13 +843,8 @@ export function getLegacyFarms(): FarmWithMetadata[] {
 
   farms.push(...getJsonlBuilds(existingDns));
 
-  // Sort by featured first, then by date descending (newest first), then by dn descending
-  return applyFarmFeed(applyJsonlLinkOverrides(farms)).sort((a, b) => {
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
-    if (a.feedOrder !== undefined) return -1;
-    if (b.feedOrder !== undefined) return 1;
+  // The archive follows the linked YouTube upload date, newest first.
+  return applyYoutubeStats(applyFarmFeed(applyJsonlLinkOverrides(farms))).sort((a, b) => {
     const dateA = a.date ? new Date(a.date).getTime() : 0;
     const dateB = b.date ? new Date(b.date).getTime() : 0;
     if (dateB !== dateA) return dateB - dateA;

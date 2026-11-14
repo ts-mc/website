@@ -3,17 +3,10 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import youtubeSnapshots from "@/data/youtube-metadata.json";
 import { getAllFarms } from "@/lib/farms";
+import { getApprovedYoutubeComments } from "@/lib/youtube-comments";
 import { FarmDetailView } from "@/components/FarmDetailView";
 import type { FarmWithMetadata } from "@/types/farm";
-
-function decodeHtml(value: string): string {
-  return value
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
-}
+import type { YoutubeMetadataSnapshot } from "@/types/youtube";
 
 function cleanYoutubeDescription(raw: string): { summary: string; details?: string; creatorName?: string; latestVersion?: string } {
   const withoutBoilerplate = raw
@@ -53,56 +46,57 @@ function cleanYoutubeDescription(raw: string): { summary: string; details?: stri
   };
 }
 
-type YoutubeMetadata = { videoId?: string; title?: string; description?: string };
+function cleanSourcedYoutubeDescription(raw: string) {
+  const fallback = cleanYoutubeDescription(raw);
+  const sectionPattern = /(?:^|\n)[_\s]*\[\s*([^\]]+?)\s*\][^\n]*(?:\n|$)/gim;
+  const headings = Array.from(raw.matchAll(sectionPattern));
+  const getSection = (name: string) => {
+    const index = headings.findIndex((heading) => heading[1].trim().toLowerCase() === name.toLowerCase());
+    if (index < 0) return "";
+    const start = (headings[index].index || 0) + headings[index][0].length;
+    const end = index + 1 < headings.length ? headings[index + 1].index || raw.length : raw.length;
+    return raw.slice(start, end)
+      .replace(/📂\s*If you want to download[^\n]*(?:\n|$)/gi, "")
+      .replace(/🔎\s*Link\s*:[^\n]*(?:\n|$)/gi, "")
+      .replace(/📩\s*Download Number[^\n]*(?:\n|$)/gi, "")
+      .trim();
+  };
+  const farmDetails = getSection("Farm Details");
+  const gameInformation = getSection("Game Information");
+  const intro = raw.slice(0, headings[0]?.index ?? raw.length).trim();
+  const summary = intro
+    .split(/\n{2,}/)
+    .filter((paragraph) => !/(sponsor|hosting|use code|https?:\/\/)/i.test(paragraph))
+    .join("\n\n")
+    .trim();
+  const details = [farmDetails, gameInformation].filter(Boolean).join("\n[[FARM_SECTION_DIVIDER]]\n").trim();
+  const creatorName = (farmDetails || raw).match(/(?:Base\s+)?Design\s*By\s*[:：]\s*@?([^\n]+)/i)?.[1]?.trim();
+
+  return {
+    summary: summary || fallback.summary,
+    details: details || fallback.details,
+    creatorName: creatorName || fallback.creatorName,
+    latestVersion: fallback.latestVersion,
+  };
+}
+
+type YoutubeMetadata = YoutubeMetadataSnapshot;
 const localYoutubeSnapshots = youtubeSnapshots as Record<string, YoutubeMetadata>;
 
-async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata> {
+async function getYoutubeMetadata(youtubeId: string): Promise<YoutubeMetadata | undefined> {
   const snapshot = localYoutubeSnapshots[youtubeId];
-  if (snapshot?.description) return snapshot;
-
-  const response = await fetch(`https://www.youtube.com/watch?v=${youtubeId}&hl=en&gl=US`, {
-      cache: "no-store",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Referer": "https://www.youtube.com/",
-      },
-  });
-  const html = await response.text();
-  const titleMatch = html.match(/<meta\s+name="title"\s+content="([^"]*)"/i) || html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/i);
-  // YouTube embeds shortDescription as a JSON string in ytInitialPlayerResponse.
-  const fullDescriptionMatch = html.match(/"shortDescription"\s*:\s*("(?:\\.|[^"\\])*")/);
-  console.info("YouTube farm metadata response", {
-    youtubeId,
-    status: response.status,
-    responseBytes: Buffer.byteLength(html),
-    hasTitle: Boolean(titleMatch?.[1]),
-    hasFullDescription: Boolean(fullDescriptionMatch?.[1]),
-  });
-  const oembedResponse = titleMatch?.[1] ? undefined : await fetch(
-    `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${youtubeId}`)}&format=json`,
-    { cache: "no-store" }
-  ).catch(() => undefined);
-  const oembed = oembedResponse?.ok ? await oembedResponse.json().catch(() => undefined) : undefined;
-  const title = titleMatch?.[1] ? decodeHtml(titleMatch[1]) : oembed?.title;
-  const remoteDescription = fullDescriptionMatch?.[1]
-    ? JSON.parse(fullDescriptionMatch[1]) as string
-    : undefined;
-
-  // YouTube sometimes serves a reduced watch page to data-center requests. Use
-  // a checked-in snapshot for videos whose metadata has already been imported.
-  const description = remoteDescription?.trim() ? remoteDescription : snapshot?.description;
-  if (!response.ok && !snapshot && !title) throw new Error(`YouTube metadata request failed (${response.status})`);
-  if (!description?.trim()) throw new Error("YouTube full description was not present in the response or local metadata");
-  return { title: title || snapshot?.title, description };
+  // Metadata is refreshed by the importer, not while someone is opening a
+  // farm page. This avoids YouTube 429 responses and keeps page loads stable.
+  return snapshot?.description ? snapshot : undefined;
 }
 
 async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetadata> {
   if (!farm.youtubeUrl || !farm.youtubeId) return farm;
   try {
     const metadata = await getYoutubeMetadata(farm.youtubeId);
+    if (!metadata) return farm;
     if (!metadata.description) return { ...farm, title: metadata.title || farm.title };
-    const { summary, details, creatorName, latestVersion } = cleanYoutubeDescription(metadata.description);
+    const { summary, details, creatorName, latestVersion } = cleanSourcedYoutubeDescription(metadata.description);
     return {
       ...farm,
       title: metadata.title || farm.title,
@@ -110,6 +104,7 @@ async function enrichFromYoutube(farm: FarmWithMetadata): Promise<FarmWithMetada
       detailedDescription: details || farm.detailedDescription,
       creatorName,
       latestVersion,
+      youtubeViewCount: metadata.viewCount ?? farm.youtubeViewCount,
     };
   } catch (error) {
     console.error(`Unable to load full YouTube metadata for farm ${farm.dn}:`, error);
@@ -174,5 +169,9 @@ export default async function FarmDetailPage({ params }: DnPageProps) {
     )
     .slice(0, 3);
 
-  return <FarmDetailView farm={farm} relatedFarms={relatedFarms} />;
+  return <FarmDetailView
+    farm={farm}
+    relatedFarms={relatedFarms}
+    communityNotes={getApprovedYoutubeComments(farm.youtubeId)}
+  />;
 }

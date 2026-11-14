@@ -1,0 +1,97 @@
+[
+  {
+    "name": "stone",
+    "count": 1380,
+    "stacks": "21 stacks + 36"
+  },
+  {
+    "name": "diorite",
+    "count": 355,
+    "stacks": "5 stacks + 35"
+  },
+  {
+    "name": "dirt",
+    "count": 153,
+    "stacks": "2 stacks + 25"
+  },
+  {
+    "name": "grass block",
+    "count": 127,
+    "stacks": "1 stack + 63"
+  },
+  {
+    "name": "coal ore",
+    "count": 47,
+    "stacks": "47 items"
+  },
+  {
+    "name": "water",
+    "count": 20,
+    "stacks": "20 items"
+  },
+  {
+    "name": "cobblestone slab",
+    "count": 18,
+    "stacks": "18 items"
+  },
+  {
+    "name": "copper ore",
+    "count": 14,
+    "stacks": "14 items"
+  },
+  {
+    "name": "andesite",
+    "count": 11,
+    "stacks": "11 items"
+  },
+  {
+    "name": "white bed",
+    "count": 6,
+    "stacks": "6 items"
+  },
+  {
+    "name": "oak slab",
+    "count": 6,
+    "stacks": "6 items"
+  },
+  {
+    "name": "oak trapdoor",
+    "count": 3,
+    "stacks": "3 items"
+  },
+  {
+    "name": "chest",
+    "count": 2,
+    "stacks": "2 items"
+  },
+  {
+    "name": "oak wall sign",
+    "count": 2,
+    "stacks": "2 items"
+  },
+  {
+    "name": "hopper",
+    "count": 1,
+    "stacks": "1 items"
+  },
+  {
+    "name": "campfire",
+    "count": 1,
+    "stacks": "1 items"
+  },
+  {
+    "name": "oak sign",
+    "count": 1,
+    "stacks": "1 items"
+  },
+  {
+    "name": "dirt path",
+    "count": 1,
+    "stacks": "1 items"
+  },
+  {
+    "name": "iron chain",
+    "count": 1,
+    "stacks": "1 items"
+  }
+]

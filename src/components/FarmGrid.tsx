@@ -124,9 +124,6 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     // Sorting
     if (sortBy === "date_desc") {
       result.sort((a, b) => {
-        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
-        if (a.feedOrder !== undefined) return -1;
-        if (b.feedOrder !== undefined) return 1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateB !== dateA) return dateB - dateA;
@@ -134,9 +131,6 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
       });
     } else if (sortBy === "date_asc") {
       result.sort((a, b) => {
-        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return b.feedOrder - a.feedOrder;
-        if (a.feedOrder !== undefined) return 1;
-        if (b.feedOrder !== undefined) return -1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateA !== dateB) return dateA - dateB;
@@ -151,9 +145,6 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
       result.sort((a, b) => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        if (a.feedOrder !== undefined && b.feedOrder !== undefined) return a.feedOrder - b.feedOrder;
-        if (a.feedOrder !== undefined) return -1;
-        if (b.feedOrder !== undefined) return 1;
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         if (dateB !== dateA) return dateB - dateA;
@@ -258,7 +249,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
     setActiveVersions([]);
     setDraftDifficulties([]);
     setActiveDifficulties([]);
-    setSortBy("featured");
+    setSortBy("date_desc");
     setCurrentPage(1);
     internalQueryUpdateRef.current = searchParams.toString() ? "" : null;
     router.replace("/", { scroll: false });
@@ -278,7 +269,7 @@ export function FarmGrid({ initialFarms }: FarmGridProps) {
             <span className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#969e7d]">Sort</span>
             <span className="relative block"><SlidersHorizontal className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#969e7d]" />
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="h-11 w-full appearance-none rounded-[4px] border border-[#6e735b] bg-[#020202] px-3 pr-9 text-sm text-[#f1fec8] focus:border-[#99e1d9] focus:outline-none">
-                <option value="featured">Featured first</option><option value="date_desc">Newest uploaded</option><option value="date_asc">Oldest uploaded</option><option value="dn_asc">DN number (low to high)</option><option value="dn_desc">DN number (high to low)</option>
+                <option value="date_desc">Newest YouTube upload</option><option value="date_asc">Oldest YouTube upload</option><option value="featured">Featured first</option><option value="dn_asc">DN number (low to high)</option><option value="dn_desc">DN number (high to low)</option>
               </select>
             </span>
           </label>

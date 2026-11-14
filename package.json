@@ -9,6 +9,8 @@
     "lint": "next lint",
     "export:content": "tsx scripts/export-content.ts",
     "import:youtube-metadata": "tsx scripts/import-youtube-metadata.ts",
+    "sync:youtube-channels": "tsx scripts/sync-youtube-channel-index.ts",
+    "import:youtube-comments": "tsx scripts/import-youtube-comments.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
