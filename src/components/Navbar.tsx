@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BookOpen, CalendarDays, House, Info, Pause, Play, Scale, Share2, type LucideIcon } from "lucide-react";
 
 type Category = "wiki" | "events" | "about" | "main" | "socials" | "legal";
@@ -15,7 +15,7 @@ type Destination = {
 
 const destinations: Destination[] = [
   { id: "wiki", href: "https://wiki.theysix.tech", label: "Wiki", icon: BookOpen },
-  { id: "events", href: "https://theysix.tech", label: "Events", icon: CalendarDays },
+  { id: "events", href: "https://events-theysix.ro-mihaiu.xyz", label: "Events", icon: CalendarDays },
   { id: "about", href: "/about", label: "About", icon: Info },
   { id: "main", href: "/", label: "Main", icon: House },
   { id: "socials", href: "/socials", label: "Socials", icon: Share2 },
@@ -61,6 +61,21 @@ function Divider() {
 export function Navbar() {
   const pathname = usePathname();
   const [playing, setPlaying] = useState(false);
+  const audio = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => () => {
+    audio.current?.pause();
+    audio.current = null;
+  }, []);
+  const toggleAudio = () => {
+    if (!audio.current) {
+      audio.current = new Audio("/audio/vesper-hatamitsunami.mp3");
+      audio.current.loop = true;
+      audio.current.volume = 0.35;
+      audio.current.addEventListener("error", () => setPlaying(false));
+    }
+    if (audio.current.paused) void audio.current.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    else { audio.current.pause(); setPlaying(false); }
+  };
   const ordered = orderedDestinations(selectedCategory(pathname));
   const left = ordered.slice(0, 3);
   const center = ordered[3];
@@ -82,7 +97,7 @@ export function Navbar() {
           <Divider />
           {right.map((item) => <Slot key={item.id} item={item} />)}
           <li>
-            <button type="button" onClick={() => setPlaying((value) => !value)} aria-pressed={playing} aria-label={playing ? "Pause soundtrack" : "Play soundtrack"} className={slotClass}>
+            <button type="button" onClick={toggleAudio} aria-pressed={playing} aria-label={playing ? "Pause Vesper by HATAMITSUNAMI" : "Play Vesper by HATAMITSUNAMI"} className={slotClass}>
               {playing ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
               <span className={labelClass}>Audio</span>
             </button>

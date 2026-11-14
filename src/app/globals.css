@@ -20,7 +20,7 @@
   }
   * { min-width: 0; border-color: var(--rule); }
   html { background: var(--void); color-scheme: dark; scroll-behavior: smooth; scroll-padding-block: 6rem 7rem; }
-  body { min-height: 100vh; overflow-x: clip; background: var(--void); color: var(--ink); font-family: var(--font-body), ui-sans-serif, sans-serif; font-synthesis-weight: none; text-rendering: optimizeLegibility; }
+  body { min-height: 100vh; overflow-x: clip; background: var(--void); color: var(--ink); font-family: "Trebuchet MS", "Lucida Sans Unicode", sans-serif; font-synthesis-weight: none; text-rendering: optimizeLegibility; }
   a, button, input, select, textarea { touch-action: manipulation; }
   button, select { cursor: pointer; }
   ::selection { background: var(--portal); color: var(--void); }
@@ -31,21 +31,21 @@
 
 @layer components {
   .shell { width: min(100% - 3rem, 1200px); margin-inline: auto; }
-  .label-mono, .reference-index, .eyebrow { font: 700 .6875rem var(--font-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+  .label-mono, .reference-index, .eyebrow { font: 600 .6875rem "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: .18em; text-transform: uppercase; }
   .label-mono, .reference-index, .eyebrow { color: var(--portal); }
   .signal-opening { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; justify-content: center; padding: 6rem clamp(1.5rem, 8vw, 8rem) 8rem; }
   .signal-opening-bg { position: absolute; inset: 0; z-index: -3; background: var(--sky) url('/scene/signal-field-static.jpg') center bottom / cover no-repeat; }
   .signal-opening-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, rgba(2,2,2,.9), rgba(2,2,2,.35) 30%, transparent 62%), linear-gradient(to top, rgba(2,2,2,.9), rgba(2,2,2,.2) 32%, transparent 55%); }
   .signal-vignette { position: absolute; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(132% 104% at 50% 44%, transparent 50%, rgba(2,2,2,.54) 100%); }
   .signal-wordmark { position: relative; z-index: 1; width: fit-content; max-width: min(66vw, 800px); margin-top: 5vh; }
-  .signal-wordmark h1 { margin: 0; color: var(--ink-bright); font: 900 clamp(4rem, 12vw, 10.5rem)/.84 var(--font-body), sans-serif; letter-spacing: -.06em; }
-  .signal-wordmark p { margin: 1.2rem 0 0 .45rem; color: rgba(251,255,238,.9); font: 700 clamp(.7rem, 1.5vw, 1rem)/1 var(--font-body), sans-serif; letter-spacing: .34em; }
-  .signal-enter { display: inline-flex; align-items: center; gap: 1.2rem; position: absolute; z-index: 2; left: clamp(1.5rem, 8vw, 8rem); bottom: 8rem; color: var(--ink); font: 700 .85rem var(--font-body), sans-serif; letter-spacing: .34em; text-decoration: none; }
+  .signal-wordmark h1 { margin: 0; color: var(--ink-bright); font: 900 clamp(4rem, 12vw, 10.5rem)/.84 "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: -.06em; }
+  .signal-wordmark p { margin: 1.2rem 0 0 .45rem; color: rgba(251,255,238,.9); font: 700 clamp(.7rem, 1.5vw, 1rem)/1 "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: .34em; }
+  .signal-enter { display: inline-flex; align-items: center; gap: 1.2rem; position: absolute; z-index: 2; left: clamp(1.5rem, 8vw, 8rem); bottom: 8rem; color: var(--ink); font: 700 .85rem "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: .34em; text-decoration: none; }
   .signal-enter span { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 1px solid var(--portal); border-radius: 50%; color: var(--portal); transition: background .2s ease, transform .2s ease; }
   .signal-enter:hover span { background: rgba(153,225,217,.16); transform: translateX(3px); }
   .reference-dock-wrap { position: fixed; z-index: 30; right: 0; bottom: 2.4rem; left: 0; display: flex; justify-content: center; padding: 0 1rem; pointer-events: none; }
   .reference-dock { display: flex; align-items: center; gap: .15rem; min-height: 4.5rem; padding: .35rem .7rem; border: 1px solid rgba(241,254,200,.2); border-radius: 999px; background: rgba(2,2,2,.58); box-shadow: inset 0 1px rgba(241,254,200,.16), 0 28px 70px -24px rgba(2,2,2,.86); backdrop-filter: blur(26px) saturate(145%); pointer-events: auto; }
-  .reference-dock-link, .reference-audio { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-width: 6.3rem; min-height: 3.5rem; padding: .6rem .75rem; border: 0; color: var(--muted); background: transparent; font: 600 .62rem var(--font-body), sans-serif; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: color .15s ease, background .15s ease; }
+  .reference-dock-link, .reference-audio { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-width: 6.3rem; min-height: 3.5rem; padding: .6rem .75rem; border: 0; color: var(--muted); background: transparent; font: 600 .62rem "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: color .15s ease, background .15s ease; }
   .reference-dock-link:hover, .reference-dock-link:focus-visible, .reference-audio:hover { color: var(--ink); background: rgba(255,255,255,.05); }
   .reference-dock-center { color: var(--portal); }
   .reference-dock-center img { width: 1.55rem; height: 1.55rem; object-fit: contain; filter: drop-shadow(0 0 8px rgba(153,225,217,.8)); }
@@ -54,8 +54,9 @@
   .theysix-dock-home { border: 1px solid rgba(153,225,217,.48); background: rgba(35,33,44,.34); box-shadow: inset 0 1px rgba(241,254,200,.18), 0 0 36px rgba(153,225,217,.18); backdrop-filter: blur(24px) saturate(145%); -webkit-backdrop-filter: blur(24px) saturate(145%); }
   .theysix-dock a:focus-visible, .theysix-dock button:focus-visible { outline: 2px solid var(--portal); outline-offset: 3px; box-shadow: 0 0 0 3px var(--void); }
   @media (max-width: 639px) { .theysix-dock ul { gap: 0; } .theysix-dock li { min-width: 0; } .theysix-dock li > a:not(.theysix-dock-home), .theysix-dock li > button { min-width: 0; width: clamp(2.55rem, calc((100vw - 7rem) / 8), 3.4rem); padding-inline: .1rem; gap: .3rem; } .theysix-dock li > a:not(.theysix-dock-home) span, .theysix-dock li > button span { font-size: 7px; letter-spacing: .08em; } .theysix-dock li.-my-3 { padding-inline: .15rem; } }
+  @media (max-width: 359px) { .theysix-dock { padding-inline: .4rem; } .theysix-dock li > a:not(.theysix-dock-home), .theysix-dock li > button { width: 2rem; } .theysix-dock li .theysix-dock-home { width: 3.5rem; height: 3.5rem; } }
   .reference-chapter, .reference-archive { max-width: 1200px; margin: 0 auto; padding: 8rem 1.5rem; }
-  .reference-chapter h2, .reference-archive h2 { margin: 1.5rem 0 0; color: var(--ink); font: 900 clamp(2.8rem, 7vw, 6rem)/.9 var(--font-body), sans-serif; letter-spacing: -.055em; }
+  .reference-chapter h2, .reference-archive h2 { margin: 1.5rem 0 0; color: var(--ink); font: 900 clamp(2.8rem, 7vw, 6rem)/.9 "Trebuchet MS", "Lucida Sans Unicode", sans-serif; letter-spacing: -.055em; }
   .reference-chapter h2 em { color: var(--portal); font-style: normal; }
   .reference-lede, .reference-archive-heading > p { max-width: 38rem; margin-top: 2rem; color: var(--muted); font-size: 1rem; line-height: 1.7; }
   .reference-archive { width: min(calc(100% - 3rem), 68rem); max-width: none; border-top: 1px solid var(--rule); padding: 8rem 0; }
@@ -63,7 +64,7 @@
   .reference-archive-heading > p { max-width: 18rem; margin: 0; }
   .reference-loading { padding: 5rem 0; color: var(--portal); }
   .glass, .glass-panel { background: rgba(23,23,23,.72); border: 1px solid var(--rule); box-shadow: 0 28px 70px -24px rgba(2,2,2,.86); }
-  .footer-shell { border-top: 1px solid var(--rule); margin-top: 6rem; padding: 4rem 0 7rem; background: var(--void); }
+  .footer-shell { background: var(--void); }
   .footer-shell .text-ink-muted, .footer-shell .text-ink-dim { color: var(--muted); }
   .footer-shell .text-gradient { color: var(--ink); background: none; }
   .footer-shell .text-brand, .footer-shell .label-mono { color: var(--portal); }
