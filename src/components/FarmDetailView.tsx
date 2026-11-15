@@ -387,23 +387,17 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
                     </button>
                   </div>
                 ) : (
-                  /* Missing Schematic Error / Notice with Discord Ticket Button */
+                  /* Missing schematic notice */
                   <div className="p-4 rounded-2xl bg-[#9FFF99]/10 border border-[#9FFF99]/30 text-ink space-y-3">
                     <div className="flex items-start gap-2.5">
                       <AlertCircle className="w-5 h-5 text-[#9FFF99] shrink-0 mt-0.5" />
                       <p className="text-xs leading-relaxed">
-                        This farm doesn&apos;t have a schematic provided, create a ticket and ask nicely for the schematic to be provided.
+                        This farm doesn&apos;t have a schematic yet. Send its DN in{" "}
+                        <a href="https://discord.com/channels/985227944236568606/1559976502647590953" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#9FFF99]">#Top Schematics wanted</a>
+                        {" "}to request it, or upload the schematic in{" "}
+                        <a href="https://discord.com/channels/985227944236568606/1559942519482089492" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#9FFF99]">#📤╏submissions</a>.
                       </p>
                     </div>
-                    <a
-                      href="https://discord.gg/theysix"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-ink text-xs font-bold transition-all shadow-sm"
-                    >
-                      <MessageSquarePlus className="w-4 h-4" />
-                      <span>Open Discord Ticket</span>
-                    </a>
                   </div>
                 )
               ) : (

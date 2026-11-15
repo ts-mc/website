@@ -138,7 +138,7 @@ export function FarmCard({ farm }: FarmCardProps) {
               <Link
                 href={farmUrl}
                 className="px-2.5 py-2 rounded-control text-[11px] font-medium text-ink-dim bg-[#111726]/80 border border-hairline hover:text-lime hover:border-hairline-hover transition-colors"
-                title="No schematic provided - Click to request ticket"
+                title="No schematic provided - Click for request and submission links"
               >
                 <span>No Schem.</span>
               </Link>

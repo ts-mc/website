@@ -11,6 +11,11 @@ const nextConfig = {
   // so old links and search results keep working.
   async redirects() {
     return [
+      ...["terms", "cookies", "tos"].map((page) => ({
+        source: `/${page}`,
+        destination: `https://wiki.theysix.tech/${page}`,
+        permanent: true,
+      })),
       {
         source: "/farm",
         destination: "/",
