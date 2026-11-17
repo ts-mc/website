@@ -4,7 +4,7 @@ import { getAllWikiArticles } from "@/data/wiki/articles";
 const siteUrl = "https://theysix.tech";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
-    "", "/about", "/socials", "/staff", "/staff/retired",
+    "", "/about", "/socials", "/roles", "/staff", "/staff/retired",
     "/tricks/java", "/tricks/bedrock", "/wiki",
   ];
 

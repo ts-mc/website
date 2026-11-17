@@ -2,9 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { BookOpen, CalendarDays, House, Info, Pause, Play, Scale, Share2, type LucideIcon } from "lucide-react";
+import { BookOpen, CalendarDays, House, Info, Pause, Play, Scale, Share2, Tags, type LucideIcon } from "lucide-react";
 
-type Category = "wiki" | "events" | "about" | "main" | "socials" | "legal";
+type Category = "wiki" | "events" | "about" | "main" | "socials" | "roles" | "legal";
 
 type Destination = {
   id: Category;
@@ -19,6 +19,7 @@ const destinations: Destination[] = [
   { id: "about", href: "/about", label: "About", icon: Info },
   { id: "main", href: "/", label: "Main", icon: House },
   { id: "socials", href: "/socials", label: "Socials", icon: Share2 },
+  { id: "roles", href: "/roles", label: "Roles", icon: Tags },
   { id: "legal", href: "https://wiki.theysix.tech/legal/terms", label: "Legal", icon: Scale },
 ];
 
@@ -41,6 +42,7 @@ function Slot({ item, active }: { item: Destination; active?: boolean }) {
 function selectedCategory(pathname: string): Category {
   if (pathname.startsWith("/about")) return "about";
   if (pathname.startsWith("/socials")) return "socials";
+  if (pathname.startsWith("/roles")) return "roles";
   if (/^\/(privacy|terms|tos|cookies)/.test(pathname)) return "legal";
   return "main";
 }
