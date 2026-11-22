@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-18",
+  "type": "server",
+  "title": "Events maintenance and optional Discord linking",
+  "summary": "TheySix Events entered maintenance on November 18 to prepare for the next event. No reopening date was announced.",
+  "author": "Mihai, Manager",
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "Players can now join without linking Discord to Minecraft. Those who link their accounts can receive a special Discord role and additional chances to earn resources from minigames."
+    },
+    {
+      "type": "paragraph",
+      "text": "The announcement thread was opened for players to guess the next event."
+    }
+  ]
+}
+
+{
+  "date": "2026-11-18",
+  "type": "security",
+  "title": "Update the Java runtime used by Minecraft",
+  "summary": "Oracle issued fixes for CVE-2026-114938, a high-severity vulnerability that can allow remote code execution on affected systems.",
+  "author": "Mihai, Manager",
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "If you installed Java 17, 21, 25 or 27 separately for Minecraft or a server, install your Java vendor’s patched release for that version. Check the runtime selected in your launcher profile or server startup command."
+    },
+    {
+      "type": "list",
+      "items": [
+        "Windows and macOS: use the updater supplied with your Java distribution, or install the patched build from the same vendor.",
+        "Linux: update distribution-managed Java packages through your package manager. On Arch Linux use sudo pacman -Syu, on Ubuntu or Debian use sudo apt update && sudo apt upgrade, and on Fedora use sudo dnf upgrade.",
+        "For a manual installation or version manager, update through the same source. Run the selected Java executable with -version, compare the build with your vendor’s advisory, then restart Minecraft or the server."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "The official Minecraft Launcher manages its bundled runtime. If your profile specifies a custom Java executable, check that installation separately."
+    }
+  ],
+  "links": [
+    {
+      "label": "Oracle security advisory",
+      "href": "https://www.oracle.com/security-alerts/cspunov2026.html"
+    },
+    {
+      "label": "Aikido’s report",
+      "href": "https://www.aikido.dev/blog/java-17-rce-vulnerability-cve-2026-114938"
+    }
+  ]
+}

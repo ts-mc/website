@@ -30,7 +30,26 @@
     },
     {
       "type": "paragraph",
-      "text": "Use /dn or the farm archive to find a farm by Download Number. World files and Java schematics remain in their respective download channels."
+      "text": "Open the farm archive to find world and schematic downloads by design number."
     }
-  ]
+  ],
+  "links": [
+    {
+      "label": "TheySix Wiki",
+      "href": "https://wiki.theysix.tech/w"
+    },
+    {
+      "label": "Discord help channel",
+      "href": "https://discord.com/channels/985227944236568606/1569030451744608286"
+    },
+    {
+      "label": "Message Mihulish",
+      "href": "https://discord.com/users/1530248481481162824"
+    },
+    {
+      "label": "Farm downloads",
+      "href": "/#farms"
+    }
+  ],
+  "author": "Mihai, Manager"
 }

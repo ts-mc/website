@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-17",
+  "type": "partnership",
+  "title": "TheySix and Sparked Host GTA VI giveaway",
+  "summary": "TheySix partnered with Sparked Host on a giveaway for U.S. residents aged 18 and over. Entries closed on November 19, 2026.",
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "Prizes included a digital copy of GTA VI for PS5 or Xbox Series X|S, or web hosting credit. Thanks to Sparked Host for supporting the TheySix community."
+    }
+  ],
+  "image": {
+    "src": "/images/theysix-sparked-host.webp",
+    "alt": "TheySix and Sparked Host giveaway banner",
+    "width": 1536,
+    "height": 864
+  },
+  "links": [
+    {
+      "label": "Archived giveaway",
+      "href": "https://gleam.io/0czNx/sparked-host-gta-vi-giveaway-1x-copy-of-gta-vi-ps5-or-xbox-3x-10-web-hosting-credit"
+    },
+    {
+      "label": "Sparked Host",
+      "href": "https://www.sparkedhost.com/"
+    }
+  ]
+}

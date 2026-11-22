@@ -14,6 +14,9 @@ export type UpdateRecord = {
   description?: string;
   body?: UpdateBodyBlock[];
   href?: string;
+  author?: string;
+  links?: { label: string; href: string }[];
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 function readServerNews(): UpdateRecord[] {

@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-21",
+  "type": "community",
+  "title": "A quick guide to the farm archive on Instagram",
+  "summary": "Mihai shared a short walkthrough of the TheySix website and highlighted some of the top farms as of November 21.",
+  "author": "Mihai, Manager",
+  "links": [
+    {
+      "label": "View the Instagram guide",
+      "href": "https://www.instagram.com/p/DgAYJy4kQCY"
+    }
+  ]
+}
+
+{
+  "date": "2026-11-21",
+  "type": "community",
+  "title": "Earn a contributor role by sharing a schematic",
+  "summary": "Members who submit at least one approved schematic of a TheySix farm or build can receive the contributor role.",
+  "author": "Mihai, Manager",
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "Check the wanted list to find a missing schematic. Read the submission rules, then upload the file in the submissions channel. Staff verify each file before publishing it in the farm archive."
+    }
+  ],
+  "links": [
+    {
+      "label": "Wanted schematics",
+      "href": "https://discord.com/channels/985227944236568606/1559976502647590953"
+    },
+    {
+      "label": "Submission rules",
+      "href": "https://discord.com/channels/985227944236568606/1559953006009647164"
+    },
+    {
+      "label": "Submit a schematic",
+      "href": "https://discord.com/channels/985227944236568606/1559942519482089492"
+    },
+    {
+      "label": "Farm archive",
+      "href": "/#farms"
+    }
+  ]
+}

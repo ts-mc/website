@@ -29,8 +29,30 @@
       "text": "Join the server"
     },
     {
+      "type": "list",
+      "items": [
+        "Java Edition: play.theysix.tech",
+        "Bedrock Edition: bedrock.theysix.tech, port 25832"
+      ]
+    },
+    {
       "type": "paragraph",
-      "text": "TheySix Events supports Java and Bedrock players. Connect using play.theysix.tech and visit events.theysix.tech for the full game list and server information."
+      "text": "At launch, players were asked to verify their accounts. On November 18, Discord linking became optional. For help joining, mention Mihai once in the server support channel."
     }
-  ]
+  ],
+  "links": [
+    {
+      "label": "How to play",
+      "href": "https://events.theysix.tech/how-to-play"
+    },
+    {
+      "label": "Server support",
+      "href": "https://discord.com/channels/985227944236568606/1107501760064536637"
+    },
+    {
+      "label": "November 18 linking update",
+      "href": "/news/2026-11-18"
+    }
+  ],
+  "author": "Mihai, Manager"
 }
