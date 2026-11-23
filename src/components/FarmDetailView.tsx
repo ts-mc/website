@@ -36,6 +36,13 @@ import { JavaBrandIcon } from "@/components/JavaBrandIcon";
 import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
 import type { ApprovedYoutubeComment } from "@/types/youtube";
 
+const wikiGuides = [
+  { edition: "java", topic: /\bshulkers?\b/i, slug: "shulker-farm-troubleshooting", title: "Troubleshoot a shulker farm" },
+  { edition: "bedrock", topic: /\bsugar[ -]?cane\b/i, slug: "sugar-cane-farm-troubleshooting", title: "Troubleshoot a sugar cane farm" },
+  { edition: "bedrock", topic: /\b(?:iron|villager) farms?\b/i, slug: "villager-mechanics-on-bedrock", title: "Understand Bedrock villager mechanics" },
+  { edition: "java", topic: /\b(?:creeper|mob) farms?\b/i, slug: "mob-spawning-mechanics", title: "Check Java mob spawning mechanics" },
+];
+
 interface FarmDetailViewProps {
   farm: FarmWithMetadata;
   relatedFarms: FarmWithMetadata[];
@@ -49,6 +56,11 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
 
   const isJava = farm.category === "java";
   const isBuild = farm.category === "build";
+  const topic = [farm.farmType, farm.title, ...(farm.tags ?? [])].join(" ");
+  const guides = wikiGuides.filter(guide =>
+    guide.edition === farm.category && (guide.topic.test(topic) ||
+      (farm.normalizedDn === "491" && guide.slug === "shulker-farm-troubleshooting"))
+  );
   const ytId = farm.youtubeId;
   const displayFarm = extractedMaterials.length > 0 ? { ...farm, materials: extractedMaterials, hasMaterials: true } : farm;
   const displayDate = farm.date?.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? farm.date;
@@ -518,6 +530,17 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
           </div>
         </div>
       </div>
+
+      {guides.length > 0 && (
+        <section className="space-y-3 border-t border-hairline pt-6">
+          <h2 className="text-xl font-bold text-ink">Related wiki guides</h2>
+          {guides.map(guide => (
+            <a key={guide.slug} className="block text-ink underline" href={`https://wiki.theysix.tech/w/${guide.edition}/${guide.slug}`}>
+              {guide.title}
+            </a>
+          ))}
+        </section>
+      )}
 
       {/* Related Farms */}
       {relatedFarms.length > 0 && (
