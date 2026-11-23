@@ -9,7 +9,6 @@ import {
   Power,
   RotateCcw,
   Shrink,
-  Sparkles,
   TriangleAlert,
 } from "lucide-react";
 import type { SchematicRenderer } from "schematic-renderer";
@@ -28,9 +27,9 @@ export interface SchematicViewer3DProps {
 
 const CONTEXT_KEY = "theysix-schematic-renderer";
 
-function extractMaterials(schematic: unknown): FarmMaterialItem[] {
+function extractMaterials(blocks: ReturnType<typeof normalizeSchematic>["blocks"]): FarmMaterialItem[] {
   const counts = new Map<string, number>();
-  normalizeSchematic(schematic).blocks.forEach((block) => {
+  blocks.forEach((block) => {
     counts.set(block.id, (counts.get(block.id) || 0) + 1);
   });
   return Array.from(counts, ([name, count]) => ({
@@ -79,6 +78,8 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    const mobile = window.matchMedia("(pointer: coarse)").matches;
     let renderer: SchematicRenderer | null = null;
     let releaseContext: (() => void) | undefined;
     async function load() {
@@ -104,7 +105,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         if (cancelled) return;
         const context = await SchematicRendererContext.acquire(CONTEXT_KEY, () => SchematicRendererContext.create({
           vanillaPack: async () => {
-            const packResponse = await fetch("/minecraft-pack.zip", { cache: "force-cache" });
+            const packResponse = await fetch("/minecraft-pack.zip?v=fluid-levels-1", { cache: "force-cache" });
             if (!packResponse.ok) throw new Error(`Minecraft resource pack failed to load (${packResponse.status})`);
             return packResponse.blob();
           },
@@ -117,16 +118,18 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           showGrid: false,
           showAxes: false,
           showRenderingBoundsHelper: false,
-          enableDragAndDrop: true,
+          enableDragAndDrop: false,
           enableGizmos: false,
           enableProgressBar: true,
           enableAdaptiveFPS: true,
-          targetFPS: 60,
-          idleFPS: 8,
-          maxPixelRatio: 2,
+          // Texture frames advance independently of redstone simulation.
+          enableAnimatedTextures: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+          targetFPS: mobile ? 30 : 60,
+          idleFPS: 1,
+          maxPixelRatio: mobile ? 1.25 : 2,
           meshBuildingMode: "instanced",
           wasmMeshBuilderOptions: { enabled: true, maxWorkers: 0 },
-          postProcessingOptions: { enabled: true, enableSSAO: true, enableSMAA: true, enableGamma: true, ssaoPresets: { isometric: { aoRadius: 0.3, distanceFalloff: 0.1, intensity: 0.8 }, perspective: { aoRadius: 1, distanceFalloff: 0.4, intensity: 2 } } },
+          postProcessingOptions: { enabled: !mobile, enableSSAO: !mobile, enableSMAA: !mobile, enableGamma: true, ssaoPresets: { isometric: { aoRadius: 0.3, distanceFalloff: 0.1, intensity: 0.8 }, perspective: { aoRadius: 1, distanceFalloff: 0.4, intensity: 2 } } },
           cameraOptions: { defaultCameraPreset: "isometric", useTightBounds: true, enableZoomInOnLoad: false },
           showSlicerOverlay: false,
           callbacks: {
@@ -144,7 +147,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
             if (!cancelled && renderer?.cameraManager?.activeCamera && canvas.parentElement?.clientHeight) resize();
           };
         }
-        const response = await fetch(schematicUrl, { cache: "no-store" });
+        const response = await fetch(schematicUrl, { signal: controller.signal });
         if (cancelled) return;
         if (!response.ok) throw new Error(`Schematic download failed (${response.status})`);
         const bytes = await response.arrayBuffer();
@@ -156,9 +159,10 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         if (cancelled) return;
         const loaded = renderer.schematicManager?.getSchematic(farm.dn)?.schematicWrapper;
         const normalized = normalizeSchematic(loaded);
-        setMaterials(extractMaterials(loaded));
+        const extracted = extractMaterials(normalized.blocks);
+        setMaterials(extracted);
         if (shouldExtractMaterialsRef.current) {
-          const materials = extractMaterials(loaded);
+          const materials = extracted;
           if (materials.length) void persistMaterials(materials);
         }
         if (normalized.bounds) {
@@ -179,6 +183,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     void load();
     return () => {
       cancelled = true;
+      controller.abort();
       renderer?.stopAutoTick();
       renderer?.suspend();
       renderer?.dispose();
@@ -192,6 +197,22 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     document.addEventListener("fullscreenchange", onFullscreen);
     return () => document.removeEventListener("fullscreenchange", onFullscreen);
   }, []);
+
+  useEffect(() => {
+    const updateVisibility = () => {
+      const renderer = rendererRef.current;
+      if (document.hidden) {
+        renderer?.stopAutoTick();
+        renderer?.suspend();
+      } else if (status === "ready") {
+        renderer?.resume();
+        if (activation === "active") renderer?.startAutoTick();
+      }
+    };
+    document.addEventListener("visibilitychange", updateVisibility);
+    updateVisibility();
+    return () => document.removeEventListener("visibilitychange", updateVisibility);
+  }, [status, activation]);
 
   const resetCamera = () => {
     if (!rendererRef.current || !bounds) return;
@@ -210,8 +231,13 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   };
   const toggleFullscreen = async () => {
     if (!containerRef.current) return;
-    if (document.fullscreenElement) await document.exitFullscreen();
-    else await containerRef.current.requestFullscreen();
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (containerRef.current.requestFullscreen) await containerRef.current.requestFullscreen();
+      else setIsFullscreen(value => !value);
+    } catch {
+      setIsFullscreen(value => !value);
+    }
   };
   const toggleBlockControls = () => {
     const renderer = rendererRef.current;
@@ -259,7 +285,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     void activateFarm();
   };
   return (
-    <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "h-[100dvh] rounded-none" : "h-full min-h-0"}`}>
+    <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "fixed inset-0 z-[60] h-[100dvh] rounded-none" : "h-full min-h-0"}`}>
       {activationPrompt && <div className="absolute inset-0 z-50 grid place-items-center bg-black/70 p-5"><section role="dialog" aria-modal="true" aria-labelledby="activate-title" className="max-w-md space-y-4 rounded-xl border border-white/15 bg-[#181818] p-6 text-white"><h3 id="activate-title" className="text-lg font-semibold">Run schematic in browser</h3><p className="text-sm text-white/70">Save a copy to your browser’s download location and start the supported redstone simulation. The preview uses the same file already loaded here. Mob spawning and full Minecraft world physics are not simulated.</p><div className="flex flex-wrap gap-3"><button autoFocus onClick={downloadAndActivate} className="rounded bg-emerald-600 px-4 py-2">Download & run</button><button onClick={() => void activateFarm()} className="rounded border border-white/20 px-4 py-2">Run without saving</button><button onClick={() => setActivationPrompt(false)} className="px-4 py-2">Cancel</button></div></section></div>}
       <p id="schematic-gestures" className="hidden [@media(any-pointer:coarse)]:block shrink-0 border-b border-white/10 px-3 py-2 text-center text-xs leading-snug text-white/80">
         Drag with one finger to rotate. Drag with two to pan, or pinch to zoom.
@@ -282,12 +308,13 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           </div>
 
 
+          <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">Drag to rotate · Scroll to zoom · Right drag to pan</span></p>
           <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border border-white/10 bg-[#17181b]/90 p-1.5 text-white shadow-lg backdrop-blur sm:bottom-4 sm:gap-2 sm:px-2">
-            <button onClick={() => { if (activation === "active") { rendererRef.current?.stopAutoTick(); setActivation("idle"); } else setActivationPrompt(true); }} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : "Activate farm"}</span></button>
-            {isFullscreen && <button onClick={toggleBlockControls} aria-label={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} title={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} className={`grid size-8 place-items-center rounded-full transition sm:size-9 ${showBlockControls ? "bg-emerald-500/15 text-emerald-400" : "text-white/50 hover:bg-white/5 hover:text-white"}`}><Layers3 className="size-4" /></button>}
-            <button onClick={resetCamera} aria-label="Reset camera" title="Reset camera" className="grid size-8 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-9"><RotateCcw className="size-4" /></button>
-            <button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="grid size-8 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-9"><Download className="size-4" /></button>
-            <button onClick={toggleFullscreen} aria-label="Toggle fullscreen" title="Toggle fullscreen" className="grid size-8 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-9">{isFullscreen ? <Shrink className="size-4" /> : <Expand className="size-4" />}</button>
+            <button onClick={() => { if (activation === "active") { rendererRef.current?.stopAutoTick(); setActivation("idle"); } else setActivationPrompt(true); }} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : "Activate farm"}</span></button>
+            {<button onClick={toggleBlockControls} aria-label={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} title={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} className={`grid size-11 place-items-center rounded-full transition sm:size-11 ${showBlockControls ? "bg-emerald-500/15 text-emerald-400" : "text-white/50 hover:bg-white/5 hover:text-white"}`}><Layers3 className="size-4" /></button>}
+            <button onClick={resetCamera} aria-label="Reset camera" title="Reset camera" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><RotateCcw className="size-4" /></button>
+            <button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><Download className="size-4" /></button>
+            <button onClick={toggleFullscreen} aria-label="Toggle fullscreen" title="Toggle fullscreen" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11">{isFullscreen ? <Shrink className="size-4" /> : <Expand className="size-4" />}</button>
           </div>
         </>}
       </div>

@@ -15,7 +15,8 @@ import {
   MousePointer2,
   Save,
 } from "lucide-react";
-import { SchematicViewer3D } from "@/components/SchematicViewer3D";
+import dynamic from "next/dynamic";
+const SchematicViewer3D = dynamic(() => import("@/components/SchematicViewer3D").then(module => module.SchematicViewer3D), { ssr: false });
 import { MaterialListChecklist } from "@/components/MaterialListChecklist";
 import type { FarmMaterialItem, FarmWithMetadata } from "@/types/farm";
 
@@ -27,12 +28,10 @@ interface SchematicPreviewModalProps {
 }
 
 export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtracted }: SchematicPreviewModalProps) {
-  const [hasOpened, setHasOpened] = useState(isOpen);
   const [activeTab, setActiveTab] = useState<"viewer" | "materials" | "guide">("viewer");
   const [selectedFormat, setSelectedFormat] = useState<"litematic" | "schematic" | "schem" | "nbt">("litematic");
 
   useEffect(() => {
-    if (isOpen) setHasOpened(true);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -46,7 +45,7 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
     };
   }, [isOpen, onClose]);
 
-  if (!hasOpened) return null;
+  if (!isOpen) return null;
 
   const farmFormats = {
     litematic: `${farm.dn}.litematic`,

@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-23",
+  "type": "release",
+  "title": "Schematic viewer performance and fluid improvements",
+  "summary": "Improved desktop and phone preview controls, reduced resource-pack size, and added animated water and lava with distinct flow levels.",
+  "description": "Schematic previews now use lighter rendering settings on phones and release resources when closed. The Minecraft resource pack is smaller while preserving its models and textures, and water and lava previews show flowing levels with animated textures.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Desktop and phone previews"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Added larger touch targets, gesture hints, layer controls at every screen size, and a fullscreen fallback.",
+        "The viewer loads on demand and releases rendering resources when closed.",
+        "Phones use a lower pixel ratio and frame-rate target with expensive post-processing disabled.",
+        "Rendering and supported redstone simulation pause while the browser tab is hidden."
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Resource pack and fluids"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Reduced the resource pack from 6.9 MB to 4.7 MB through compression and removal of its preview image, preserving model and texture files.",
+        "Added distinct water and lava flow-level models, with falling levels mapped to the base fluid model.",
+        "Enabled frame-driven texture animation while respecting reduced-motion preferences; water flow advances at up to ten texture frames per second.",
+        "Fluid animation displays the saved schematic and does not simulate Minecraft fluid physics.",
+        "The wiki remains focused on articles, without an item catalog."
+      ]
+    }
+  ]
+}
