@@ -1,14 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import Link from "next/link";
 import { Cookie, X, Check, Shield } from "lucide-react";
 
 export function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
+  const [measurement, setMeasurement] = useState(false);
+
   useEffect(() => {
     const consent = localStorage.getItem("theysix_cookie_consent");
+    setMeasurement(consent === "accepted");
     if (!consent) {
       // Small delay for natural presentation
       const timer = setTimeout(() => setIsVisible(true), 1200);
@@ -18,6 +24,7 @@ export function CookieBanner() {
 
   const handleAccept = () => {
     localStorage.setItem("theysix_cookie_consent", "accepted");
+    setMeasurement(true);
     setIsVisible(false);
   };
 
@@ -25,6 +32,22 @@ export function CookieBanner() {
     localStorage.setItem("theysix_cookie_consent", "essential_only");
     setIsVisible(false);
   };
+
+  if (measurement) return (
+      <>
+        <Script id="google-tag-manager-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`}
+        </Script>
+        <Script
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-WBH6GJVS"
+          strategy="afterInteractive"
+        />
+        <Analytics />
+        <SpeedInsights />
+      </>
+  );
 
   if (!isVisible) return null;
 
@@ -40,7 +63,7 @@ export function CookieBanner() {
               Cookie Preferences
             </h4>
             <p className="text-xs text-ink mt-1 leading-relaxed">
-              We use cookies and local storage to enhance your browsing experience, remember your download preferences, and analyze site traffic.
+              Choose whether to allow traffic and performance measurement. Your material checklists are saved on this device.
             </p>
             <div className="mt-2 text-xs">
               <Link href="/cookies" className="text-[#4CADD0] hover:text-[#9FEBF6] underline font-medium">

@@ -1,7 +1,7 @@
 const groups = [
   { label: "Explore", links: [["Wiki home", "https://wiki.theysix.tech"], ["Java articles", "https://wiki.theysix.tech/w/java"], ["Bedrock articles", "https://wiki.theysix.tech/w/bedrock"], ["Discord articles", "https://wiki.theysix.tech/w/discord"]] },
-  { label: "Community", links: [["Main", "https://theysix.tech"], ["Events", "https://events-theysix.ro-mihaiu.xyz"], ["About", "https://theysix.tech/about"], ["Socials", "https://theysix.tech/socials"], ["Support ro_mihaiu on Ko-fi", "https://ko-fi.com/ro_mihaiu"]] },
-  { label: "Legal", links: [["Terms of service", "https://wiki.theysix.tech/legal/terms"], ["Privacy", "https://wiki.theysix.tech/legal/privacy"], ["Cookies", "https://wiki.theysix.tech/legal/cookies"], ["Open-source licences", "https://wiki.theysix.tech/legal/open-source"]] },
+  { label: "Community", links: [["Main", "https://theysix.tech"], ["Events", "https://events.theysix.tech"], ["About", "https://theysix.tech/about"], ["Socials", "https://theysix.tech/socials"], ["Support ro_mihaiu on Ko-fi", "https://ko-fi.com/ro_mihaiu"]] },
+  { label: "Legal", links: [["Terms of service", "https://wiki.theysix.tech/tos"], ["Privacy", "https://wiki.theysix.tech/privacy"], ["Cookies", "https://wiki.theysix.tech/cookies"], ["Open-source licences", "https://wiki.theysix.tech/legal/open-source"]] },
 ] as const;
 
 export function Footer() {
@@ -10,7 +10,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.3fr]">
         <div>
           <p className="text-4xl font-black leading-[.84] tracking-[-.045em] text-ink sm:text-5xl">THEYSIX</p>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">Practical Java, Bedrock, and TheySix Discord guides for Minecraft players and farm builders.</p>
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">Minecraft farm designs, player guides and community events from TheySix.</p>
         </div>
         <nav aria-label="Footer" className="grid gap-8 sm:grid-cols-3">
           {groups.map((group) => (

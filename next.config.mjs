@@ -11,11 +11,14 @@ const nextConfig = {
   // so old links and search results keep working.
   async redirects() {
     return [
-      ...["terms", "cookies", "tos"].map((page) => ({
-        source: `/${page}`,
-        destination: `https://wiki.theysix.tech/${page}`,
-        permanent: true,
-      })),
+      { source: "/terms", destination: "https://wiki.theysix.tech/tos", permanent: true },
+      { source: "/legal/terms", destination: "https://wiki.theysix.tech/tos", permanent: true },
+      { source: "/legal/tos", destination: "https://wiki.theysix.tech/tos", permanent: true },
+      { source: "/legal/privacy", destination: "https://wiki.theysix.tech/privacy", permanent: true },
+      { source: "/legal/cookies", destination: "https://wiki.theysix.tech/cookies", permanent: true },
+      { source: "/tos", destination: "https://wiki.theysix.tech/tos", permanent: true },
+      { source: "/cookies", destination: "https://wiki.theysix.tech/cookies", permanent: true },
+      { source: "/privacy", destination: "https://wiki.theysix.tech/privacy", permanent: true },
       {
         source: "/farm",
         destination: "/",

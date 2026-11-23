@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import Script from "next/script";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
@@ -73,17 +70,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${bodyFont.variable} ${jetbrainsMono.variable}`}>
-      <head>
-        <Script id="google-tag-manager-init" strategy="beforeInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());`}
-        </Script>
-        <Script
-          src="https://www.googletagmanager.com/gtm.js?id=GTM-WBH6GJVS"
-          strategy="afterInteractive"
-        />
-      </head>
       <body className="min-h-screen flex flex-col antialiased">
         <a
           href="#main"
@@ -97,8 +83,6 @@ gtag('js', new Date());`}
         <Navbar />
         <Footer />
         <CookieBanner />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

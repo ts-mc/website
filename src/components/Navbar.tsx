@@ -15,12 +15,12 @@ type Destination = {
 
 const destinations: Destination[] = [
   { id: "wiki", href: "https://wiki.theysix.tech", label: "Wiki", icon: BookOpen },
-  { id: "events", href: "https://events-theysix.ro-mihaiu.xyz", label: "Events", icon: CalendarDays },
-  { id: "about", href: "/about", label: "About", icon: Info },
-  { id: "main", href: "/", label: "Main", icon: House },
-  { id: "socials", href: "/socials", label: "Socials", icon: Share2 },
-  { id: "roles", href: "/roles", label: "Roles", icon: Tags },
-  { id: "legal", href: "https://wiki.theysix.tech/legal/terms", label: "Legal", icon: Scale },
+  { id: "events", href: "https://events.theysix.tech", label: "Events", icon: CalendarDays },
+  { id: "about", href: "https://theysix.tech/about", label: "About", icon: Info },
+  { id: "main", href: "https://theysix.tech", label: "Main", icon: House },
+  { id: "socials", href: "https://theysix.tech/socials", label: "Socials", icon: Share2 },
+  { id: "roles", href: "https://theysix.tech/roles", label: "Roles", icon: Tags },
+  { id: "legal", href: "https://wiki.theysix.tech/tos", label: "Legal", icon: Scale },
 ];
 
 const slotClass = "flex min-h-12 min-w-14 shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-[var(--muted)] transition-colors duration-150 hover:bg-white/5 hover:text-[var(--ink)] sm:min-w-24";
