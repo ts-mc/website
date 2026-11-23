@@ -18,7 +18,7 @@ function RoleDetails({ role, icons }: { role: RoleEntry; icons: string[] }) {
       : [];
 
   return (
-    <details id={role.discordId ? `role-${role.discordId}` : undefined} className="group border-b border-[var(--rule)] last:border-b-0">
+    <details id={`role-${role.discordId ?? "everyone"}`} className="group border-b border-[var(--rule)] last:border-b-0">
       <summary className="flex min-h-[3.65rem] cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 marker:hidden hover:bg-white/[0.025] sm:px-5 [&::-webkit-details-marker]:hidden">
         <span className="flex min-w-0 items-center gap-3">
           <span aria-hidden="true" className="h-5 w-[3px] shrink-0 rounded-full" style={{ background: `linear-gradient(${role.gradient[0]}, ${role.gradient[1]})` }} />
@@ -51,18 +51,49 @@ function RoleDetails({ role, icons }: { role: RoleEntry; icons: string[] }) {
   );
 }
 
+const teamNames = new Set(["SinFul Tech", "Developer", "Retired", "Partner", "HELP", "Staff", "Trial Staff", "Designer", "Farm Designer", "YouTuber", "Content Creator"]);
+const groups = [
+  { name: "Level Roles", roles: LEVEL_ROLES },
+  { name: "Teams", roles: NON_LEVEL_ROLES.filter(role => teamNames.has(role.name)) },
+  { name: "Custom Event Roles", roles: EVENT_ROLES },
+  { name: "Other Discord Roles", roles: NON_LEVEL_ROLES.filter(role => !teamNames.has(role.name)) },
+];
+
+function openRole(id: string) {
+  const row = document.getElementById(`role-${id}`);
+  if (!(row instanceof HTMLDetailsElement)) return;
+  const category = row.parentElement?.closest("details");
+  if (category) category.open = true;
+  row.open = true;
+  row.querySelector("summary")?.focus({ preventScroll: true });
+  row.scrollIntoView({ block: "center" });
+}
+
 export function RolesDirectory({ icons }: { icons: string[] }) {
   return (
     <section aria-label="Community roles" className="space-y-4">
       <p className="text-sm text-ink-muted">VIP and level roles have too many members to list here. You can check your level on the <a href={leaderboardUrl} className="text-[var(--portal)] underline">Arcane leaderboard</a>.</p>
       <div className="overflow-hidden rounded-2xl border border-hairline bg-black/40">
-        {NON_LEVEL_ROLES.map((role) => <RoleDetails key={role.name} role={role} icons={icons} />)}
-        {[
-          { name: "Level Roles", roles: LEVEL_ROLES },
-          { name: "Custom Event Roles", roles: EVENT_ROLES },
-        ].map(({ name, roles }) => (
+        {groups.map(({ name, roles }) => (
           <details key={name} className="border-t border-[var(--rule)]">
             <summary className="cursor-pointer px-5 py-4 font-bold text-[var(--portal)]">{name} ({roles.length})</summary>
+            {name === "Level Roles" && (
+              <label className="block px-5 py-3 text-sm">
+                Jump to a Discord role
+                <select defaultValue="" onChange={(event) => {
+                  const id = event.currentTarget.value;
+                  event.currentTarget.value = "";
+                  openRole(id);
+                }} className="mt-2 block min-h-11 w-full rounded-lg border border-hairline bg-zinc-950 px-3 text-ink">
+                  <option value="" disabled>Choose a role</option>
+                  {groups.map(group => (
+                    <optgroup key={group.name} label={group.name}>
+                      {group.roles.map(role => <option key={role.name} value={role.discordId ?? "everyone"}>{role.name}</option>)}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+            )}
             <div className="pl-3 sm:pl-5">
               {roles.map((role) => <RoleDetails key={role.name} role={role} icons={icons} />)}
             </div>
