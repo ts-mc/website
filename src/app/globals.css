@@ -70,5 +70,24 @@
   .footer-shell .text-brand, .footer-shell .label-mono { color: var(--portal); }
   .footer-shell a { color: var(--muted); }
   .footer-shell a:hover { color: var(--portal); }
-  @media (max-width: 760px) { .shell { width: min(100% - 2rem, 1200px); } .signal-opening { min-height: 92svh; padding: 5rem 1.25rem 8rem; justify-content: flex-start; } .signal-wordmark { max-width: 100%; margin-top: 19vh; } .signal-wordmark h1 { font-size: clamp(3.4rem, 17vw, 6rem); } .signal-wordmark p { font-size: .55rem; letter-spacing: .2em; } .signal-enter { left: 1.25rem; bottom: 8rem; } .reference-dock { width: 100%; justify-content: space-between; padding-inline: .3rem; } .reference-dock-link { min-width: 0; flex: 1 1 0; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-dock-link svg { width: 15px; } .reference-dock-center img { width: 1.35rem; height: 1.35rem; } .reference-audio { min-width: 2.6rem; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-archive { width: calc(100% - 2.5rem); padding-block: 6rem; } .reference-archive-heading { display: block; } .reference-archive-heading > p { margin-top: 1.2rem; } }
+  @media (max-width: 760px) { .shell { width: min(100% - 2rem, 1200px); } .reference-dock { width: 100%; justify-content: space-between; padding-inline: .3rem; } .reference-dock-link { min-width: 0; flex: 1 1 0; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-dock-link svg { width: 15px; } .reference-dock-center img { width: 1.35rem; height: 1.35rem; } .reference-audio { min-width: 2.6rem; padding-inline: .2rem; font-size: .42rem; letter-spacing: .06em; } .reference-archive { width: calc(100% - 2.5rem); padding-block: 6rem; } .reference-archive-heading { display: block; } .reference-archive-heading > p { margin-top: 1.2rem; } }
+
+  @media (max-width: 1024px) {
+    .signal-opening {
+      min-height: 92svh;
+      justify-content: center;
+      align-items: flex-start;
+      gap: clamp(1.5rem, 4svh, 3rem);
+      padding: clamp(2rem, 8svh, 6rem) clamp(1.25rem, 6vw, 4rem) calc(6rem + env(safe-area-inset-bottom));
+    }
+    .signal-wordmark { max-width: 100%; margin: 0; }
+    .signal-wordmark h1 { font-size: clamp(3.25rem, 16vw, 8.5rem); }
+    .signal-wordmark p { margin: .85rem 0 0 .15rem; font-size: clamp(.68rem, 2vw, .9rem); line-height: 1.5; letter-spacing: .18em; }
+    .signal-enter { position: static; min-height: 44px; gap: .8rem; }
+    .signal-enter span { width: 2.8rem; height: 2.8rem; }
+    .signal-opening-bg::after { background: linear-gradient(90deg, rgba(2,2,2,.78), rgba(2,2,2,.12) 90%), linear-gradient(to top, var(--void), transparent 28%); }
+  }
+  @media (min-width: 640px) and (max-width: 1024px) {
+    .theysix-dock li > a:not(.theysix-dock-home), .theysix-dock li > button { min-width: clamp(3.5rem, 8vw, 5.5rem); }
+  }
 }

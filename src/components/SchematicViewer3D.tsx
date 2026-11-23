@@ -259,11 +259,14 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     void activateFarm();
   };
   return (
-    <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "h-screen rounded-none" : "h-full min-h-[420px] sm:min-h-[560px]"}`}>
+    <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "h-[100dvh] rounded-none" : "h-full min-h-0"}`}>
       {activationPrompt && <div className="absolute inset-0 z-50 grid place-items-center bg-black/70 p-5"><section role="dialog" aria-modal="true" aria-labelledby="activate-title" className="max-w-md space-y-4 rounded-xl border border-white/15 bg-[#181818] p-6 text-white"><h3 id="activate-title" className="text-lg font-semibold">Run schematic in browser</h3><p className="text-sm text-white/70">Save a copy to your browser’s download location and start the supported redstone simulation. The preview uses the same file already loaded here. Mob spawning and full Minecraft world physics are not simulated.</p><div className="flex flex-wrap gap-3"><button autoFocus onClick={downloadAndActivate} className="rounded bg-emerald-600 px-4 py-2">Download & run</button><button onClick={() => void activateFarm()} className="rounded border border-white/20 px-4 py-2">Run without saving</button><button onClick={() => setActivationPrompt(false)} className="px-4 py-2">Cancel</button></div></section></div>}
+      <p id="schematic-gestures" className="hidden [@media(any-pointer:coarse)]:block shrink-0 border-b border-white/10 px-3 py-2 text-center text-xs leading-snug text-white/80">
+        Drag with one finger to rotate. Drag with two to pan, or pinch to zoom.
+      </p>
       <div className="flex min-h-0 flex-1">
       <div className="relative min-w-0 flex-1">
-        <canvas ref={canvasRef} className="h-full w-full touch-none" aria-label={`Interactive 3D schematic for ${farm.title}`} />
+        <canvas ref={canvasRef} className="block h-full w-full touch-none" aria-describedby="schematic-gestures" aria-label={`Interactive 3D schematic for ${farm.title}`} />
         {status === "loading" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-xs space-y-3"><LoaderCircle className="mx-auto h-8 w-8 animate-spin text-[#4CADD0]" /><p className="text-sm font-semibold text-ink">Preparing farm preview</p><div className="h-1.5 overflow-hidden rounded-full bg-bg-elev"><div className="h-full bg-[#4CADD0] transition-all" style={{ width: `${progress}%` }} /></div><p className="font-mono text-[11px] text-ink-dim">{progress ? `${progress}%` : "Loading Minecraft textures"}</p></div></div>}
         {status === "error" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-md space-y-3"><TriangleAlert className="mx-auto h-8 w-8 text-[#FBBF24]" /><p className="text-sm font-semibold text-ink">Schematic preview unavailable</p><p className="text-xs leading-relaxed text-ink-muted">{error}</p></div></div>}
         {status === "ready" && <>
@@ -288,7 +291,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           </div>
         </>}
       </div>
-      {status === "ready" && <aside className="hidden w-72 shrink-0 flex-col border-l border-white/10 bg-[#181818] text-white/70 md:flex">
+      {status === "ready" && <aside className="hidden w-72 shrink-0 flex-col border-l border-white/10 bg-[#181818] text-white/70 lg:flex">
         <div className="space-y-4 border-b border-white/10 p-4">
           <h3 className="font-mono text-xs uppercase tracking-widest text-emerald-400">Build · {materials.length} materials</h3>
           <button onClick={toggleBlockControls} aria-pressed={showBlockControls} className="flex w-full items-center justify-center gap-2 rounded-lg bg-white/5 p-3 text-xs hover:bg-white/10"><Layers3 className="size-4" />{showBlockControls ? "Hide layers" : "Show layer controls"}</button>

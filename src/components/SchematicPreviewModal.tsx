@@ -131,7 +131,7 @@ export function SchematicPreviewModal({ farm, isOpen, onClose, onMaterialsExtrac
         </div>
 
         {/* Modal Body */}
-        <div className={`${activeTab === "viewer" ? "overflow-hidden p-0" : "overflow-y-auto bg-[#0b0c11] p-4 sm:p-6"} flex-1 text-sm text-ink`}>
+        <div className={`${activeTab === "viewer" ? "overflow-hidden p-0" : "overflow-y-auto bg-[#0b0c11] p-4 sm:p-6"} min-h-0 flex-1 text-sm text-ink`}>
           {/* TAB 1: 3D SCHEMAT.IO VIEWER */}
           {activeTab === "viewer" && (
             <div className="h-full min-h-0">
