@@ -1,3 +1,5 @@
+import { readdirSync } from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import { RolesDirectory } from "@/components/RolesDirectory";
 
@@ -18,7 +20,7 @@ export default function RolesPage() {
         </p>
       </header>
 
-      <RolesDirectory />
+      <RolesDirectory icons={readdirSync(path.join(process.cwd(), "public", "roles")).filter((file) => file.endsWith(".png"))} />
     </div>
   );
 }

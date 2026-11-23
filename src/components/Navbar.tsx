@@ -62,22 +62,6 @@ function Divider() {
 
 export function Navbar() {
   const pathname = usePathname();
-  const [playing, setPlaying] = useState(false);
-  const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => () => {
-    audio.current?.pause();
-    audio.current = null;
-  }, []);
-  const toggleAudio = () => {
-    if (!audio.current) {
-      audio.current = new Audio("/audio/vesper-hatamitsunami.mp3");
-      audio.current.loop = true;
-      audio.current.volume = 0.35;
-      audio.current.addEventListener("error", () => setPlaying(false));
-    }
-    if (audio.current.paused) void audio.current.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
-    else { audio.current.pause(); setPlaying(false); }
-  };
   const ordered = orderedDestinations(selectedCategory(pathname));
   const left = ordered.slice(0, 3);
   const center = ordered[3];
@@ -98,14 +82,33 @@ export function Navbar() {
           </li>
           <Divider />
           {right.map((item) => <Slot key={item.id} item={item} />)}
-          <li>
-            <button type="button" onClick={toggleAudio} aria-pressed={playing} aria-label={playing ? "Pause Vesper by HATAMITSUNAMI" : "Play Vesper by HATAMITSUNAMI"} className={slotClass}>
-              {playing ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
-              <span className={labelClass}>Audio</span>
-            </button>
-          </li>
         </ul>
       </nav>
     </div>
+  );
+}
+
+export function SoundtrackControl() {
+  const [playing, setPlaying] = useState(false);
+  const audio = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => () => {
+    audio.current?.pause();
+    audio.current = null;
+  }, []);
+  const toggleAudio = () => {
+    if (!audio.current) {
+      audio.current = new Audio("/audio/vesper-hatamitsunami.mp3");
+      audio.current.loop = true;
+      audio.current.volume = 0.35;
+      audio.current.addEventListener("error", () => setPlaying(false));
+    }
+    if (audio.current.paused) void audio.current.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    else { audio.current.pause(); setPlaying(false); }
+  };
+  return (
+    <button type="button" onClick={toggleAudio} aria-pressed={playing} className="inline-flex min-h-11 items-center gap-2 text-ink">
+      {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
+      {playing ? "Pause" : "Play"} Vesper by HATAMITSUNAMI
+    </button>
   );
 }
