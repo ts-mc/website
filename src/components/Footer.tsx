@@ -24,7 +24,10 @@ export function Footer() {
         </nav>
       </div>
       <div className="mx-auto mt-12 grid max-w-6xl gap-3 border-t border-[var(--rule)] pt-6 text-xs leading-relaxed text-ink-muted lg:grid-cols-2">
-        <p>THEYSIX is not affiliated with Mojang Studios or Microsoft. Minecraft is a trademark of Mojang Studios.</p>
+        <div className="space-y-2">
+          <p>made by <a href="https://discord.ro-mihaiu.xyz" className="text-ink underline hover:text-[var(--portal)]">ro_mihaiu</a></p>
+          <p>THEYSIX is not affiliated with Mojang Studios or Microsoft. Minecraft is a trademark of Mojang Studios.</p>
+        </div>
         <p className="lg:text-right">Soundtrack: <span className="text-ink">Vesper - HATAMITSUNAMI</span>. Playback begins only after you choose sound.</p>
       </div>
     </footer>
