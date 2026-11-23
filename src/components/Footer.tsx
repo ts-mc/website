@@ -1,6 +1,6 @@
 const groups = [
   { label: "Explore", links: [["Wiki home", "https://wiki.theysix.tech"], ["Java articles", "https://wiki.theysix.tech/w/java"], ["Bedrock articles", "https://wiki.theysix.tech/w/bedrock"], ["Discord articles", "https://wiki.theysix.tech/w/discord"]] },
-  { label: "Community", links: [["Main", "https://theysix.tech"], ["Events", "https://events-theysix.ro-mihaiu.xyz"], ["About", "https://theysix.tech/about"], ["Socials", "https://theysix.tech/socials"]] },
+  { label: "Community", links: [["Main", "https://theysix.tech"], ["Events", "https://events-theysix.ro-mihaiu.xyz"], ["About", "https://theysix.tech/about"], ["Socials", "https://theysix.tech/socials"], ["Support ro_mihaiu on Ko-fi", "https://ko-fi.com/ro_mihaiu"]] },
   { label: "Legal", links: [["Terms of service", "https://wiki.theysix.tech/legal/terms"], ["Privacy", "https://wiki.theysix.tech/legal/privacy"], ["Cookies", "https://wiki.theysix.tech/legal/cookies"], ["Open-source licences", "https://wiki.theysix.tech/legal/open-source"]] },
 ] as const;
 

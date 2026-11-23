@@ -30,6 +30,14 @@ export default async function HomePage() {
         <div className="reference-archive-heading"><div><p className="reference-index">LIBRARY</p><h2 id="archive-title">every file in<br className="sm:hidden" /> the archive</h2></div><p>{farms.length} indexed entries across Java, Bedrock, and builds.</p></div>
         <Suspense fallback={<div className="reference-loading">Loading archive...</div>}><FarmGrid initialFarms={farms} /></Suspense>
       </section>
+
+      <section id="support" className="reference-archive" aria-labelledby="support-title">
+        <h2 id="support-title">Support Mihai’s work</h2>
+        <p className="reference-lede">If the farm archive helped you build something, you can leave Mihai a tip.</p>
+        <a href="https://ko-fi.com/ro_mihaiu" className="mt-6 inline-flex min-h-11 items-center gap-3 rounded-md bg-[var(--portal)] px-5 py-2 font-bold text-[var(--void)] hover:bg-[var(--portal-hover)]">
+          Support ro_mihaiu on Ko-fi <ArrowRight size={16} aria-hidden="true" />
+        </a>
+      </section>
     </div>
   );
 }
