@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-24",
+  "type": "release",
+  "title": "Farm pages list every schematic download",
+  "summary": "Ten farms now offer multiple schematic downloads. Open a farm marked “Schematics” to see all its files.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Farm archive data"
+    },
+    {
+      "type": "paragraph",
+      "text": "Each of the 569 farm records now has its own file in public/farms/<DN>.json. Contributors can update the title, description, About section, video, world and schematic links, approved viewer notes, and material list together."
+    }
+  ],
+  "links": [
+    {
+      "label": "See the downloads for DN 533",
+      "href": "/dn/533"
+    }
+  ]
+}
