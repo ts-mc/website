@@ -28,7 +28,7 @@ type YoutubeCommentThread = {
 
 /**
  * Download public comment candidates for staff review. This never publishes a
- * comment: copy only useful, accurate fixes into youtube-helpful-comments.json.
+ * comment: copy only useful, accurate fixes into communityNotes in the matching public/farms/<DN>.json.
  *
  * Requires a server-side YOUTUBE_API_KEY with YouTube Data API v3 enabled.
  * Usage: YOUTUBE_API_KEY=... npm run import:youtube-comments -- VIDEO_ID

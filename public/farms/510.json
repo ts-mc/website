@@ -1,0 +1,113 @@
+{
+  "dn": "510",
+  "title": "1,530 In 5 Minutes! BEST New RAID Farm in Minecraft 1.21+",
+  "farmType": "Raid",
+  "description": "In this tutorial, I will show you how to build the new generation of raid farming in Minecraft! This type of raid farming that is totally using a new path-finding mechanic, besides having a dual core chamber which makes mobs instantly fall down, resulting in end raids about 33% faster,g iving you a 125% higher efficiency in general, BUT THE BEST PART IS THAT YOU CAN FARM OMINOUS POTIONS WITHOUT AN OUTPOST which makes this farm sustainable and make it the fastest, easiest and cheapest raid farm ever made in Minecraft!",
+  "detailedDescription": "🧱 Farm Performance : ~+1,030 to 4,730 Per Hour! (The rate depends on the level of looting enchantment you are using and the difficulty of your game )\n\n🔨 Farm Mode : Fully Automatic\n\n✨ Versions : 1.15 - 1.15.1 - 1.15.2 - 1.16 - 1.16.1 - 1.16.2 - 1.16.3 - 1.16.4 - 1.16.5 - 1.17 - 1.17.1 - 1.18 - 1.18.1 - 1.18.2 - 1.19 - 1.19.1 - 1.19.2 - 1.19.3 - 1.19.4 - 1.20 - 1.20.1 - 1.20.2 - 1.20.3 - 1.20.4 - 1.20.5 - 1.20.6 - 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11 -1.26\n\n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Design By :  @TheySix\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "worldDownloadUrl": "https://www.mediafire.com/file/0iq9dkm0jsyrw6z/TheySix+-+RXP+RF+V2.rar/file",
+  "youtubeUrl": "https://youtu.be/pfVYmMo1dk4",
+  "version": "1.21++",
+  "rates": "1.5k In 5 Min",
+  "difficulty": "Easy",
+  "author": "TheySix",
+  "date": "2026-02-19",
+  "thumbnailUrl": "",
+  "category": "java",
+  "tags": [
+    "Java",
+    "Raid",
+    "Easy"
+  ],
+  "featured": false,
+  "views": 115535,
+  "materials": [
+    {
+      "name": "cobblestone",
+      "count": 1107,
+      "stacks": "17 stacks + 19"
+    },
+    {
+      "name": "water",
+      "count": 399,
+      "stacks": "6 stacks + 15"
+    },
+    {
+      "name": "cobblestone slab",
+      "count": 99,
+      "stacks": "1 stack + 35"
+    },
+    {
+      "name": "cobblestone wall",
+      "count": 15,
+      "stacks": "15 items"
+    },
+    {
+      "name": "cobblestone stairs",
+      "count": 15,
+      "stacks": "15 items"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 12,
+      "stacks": "12 items"
+    },
+    {
+      "name": "stone button",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "lava",
+      "count": 6,
+      "stacks": "6 items"
+    },
+    {
+      "name": "hopper",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "mud",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "oak wall sign",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "oak fence gate",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "chest",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "white bed",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "oak sign",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "weathered lightning rod",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "id": "510",
+  "feedOrder": 56,
+  "creatorName": "TheySix",
+  "latestVersion": "1.26",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/fswe1dkxby1sr92/RXP+RF+V2.litematic/file"
+  ],
+  "communityNotes": []
+}

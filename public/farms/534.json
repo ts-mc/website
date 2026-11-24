@@ -1,0 +1,99 @@
+{
+  "id": "534",
+  "dn": "534",
+  "category": "java",
+  "title": "+1200 in 180 Seconds! BEST IRON Farm in Minecraft 1.21/26.3+",
+  "farmType": "Iron",
+  "description": "In this tutorial, I’ll show you the easiest and simplest iron farm ever made for Minecraft. This iron farm can be made in just 3 minutes, and it costs almost nothing; it can produce up to 1,200 per hour, which makes this farm unique and easy to build for Minecraft!",
+  "worldDownloadUrl": "https://www.mediafire.com/file/c5y2qwgu1584hzk/TheySix+-+MRC+IF+V1.zip/file",
+  "youtubeUrl": "https://youtu.be/APCrCMYd294",
+  "version": "1.21+",
+  "rates": "",
+  "tags": [
+    "Java"
+  ],
+  "author": "TheySix",
+  "date": "2026-10-23T11:44:04+00:00",
+  "featured": false,
+  "views": 0,
+  "materials": [
+    {
+      "name": "stone",
+      "count": 974,
+      "stacks": "15 stacks + 14"
+    },
+    {
+      "name": "grass block",
+      "count": 586,
+      "stacks": "9 stacks + 10"
+    },
+    {
+      "name": "dirt",
+      "count": 551,
+      "stacks": "8 stacks + 39"
+    },
+    {
+      "name": "water",
+      "count": 81,
+      "stacks": "1 stack + 17"
+    },
+    {
+      "name": "ladder",
+      "count": 32,
+      "stacks": "32 items"
+    },
+    {
+      "name": "red bed",
+      "count": 24,
+      "stacks": "24 items"
+    },
+    {
+      "name": "oak wall sign",
+      "count": 9,
+      "stacks": "9 items"
+    },
+    {
+      "name": "lava",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "oak slab",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "oak fence gate",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 7,
+      "stacks": "7 items"
+    },
+    {
+      "name": "wall torch",
+      "count": 4,
+      "stacks": "4 items"
+    },
+    {
+      "name": "chest",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "hopper",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "feedOrder": 4,
+  "detailedDescription": "🧱 Farm Performance: 1200 Iron Ingots an hour ( rate is accurate for 'iron ingot only' )\n\n🔨 Farm Mode: Fully Automatic\n\n✨ Versions : 1.15 - 1.15.1 - 1.15.2 - 1.16 - 1.16.1 - 1.16.2 - 1.16.3 - 1.16.4 - 1.16.5 - 1.17 - 1.17.1 - 1.18 - 1.18.1 - 1.18.2 - 1.19 - 1.19.1 - 1.19.2 - 1.19.3 - 1.19.4 - 1.20 - 1.20.1 - 1.20.2 - 1.20.3 - 1.20.4 - 1.20.5 - 1.20.6 - 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11 - 26.1 - 26.2 - 26.3 - 26.4 - and latest versions ( all of them )\n\n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Design By : @ianxofour\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "creatorName": "ianxofour",
+  "latestVersion": "26.4",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/6l2trlvqu8cc4mx/MRC_IF_V1.litematic/file"
+  ],
+  "communityNotes": []
+}

@@ -4,7 +4,7 @@ The site uses Next.js 14 App Router, React 18, TypeScript and Tailwind 3. Routes
 
 ## From record to download
 
-1. Catalog inputs include [farms.jsonl](farms.jsonl) and farm modules under `src/data/farms`. The shared catalog interface is `getAllFarms()` in [farms.ts](src/lib/farms.ts).
+1. The catalog reads one JSON record per DN from [public/farms](public/farms). The shared catalog interface is `getAllFarms()` in [farms.ts](src/lib/farms.ts).
 2. The DN route selects a record for the detail view. Shared types in `src/types/farm.ts` describe farm data. Video enrichment lives alongside the catalog in `src/data/youtube-*.json`.
 3. World and schematic actions use the record and available assets. The handlers under `src/app/api` cover local worlds, local schematics, material lists and the schematic proxy.
 

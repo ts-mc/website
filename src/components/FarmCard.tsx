@@ -125,14 +125,14 @@ export function FarmCard({ farm }: FarmCardProps) {
           {(isJava || isBuild) && (
             farm.hasSchematic && farm.schematicUrl ? (
               <a
-                href={farm.schematicUrl}
+                href={(farm.schematicUrls?.length ?? 0) > 1 ? farmUrl : farm.schematicUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-control text-xs font-semibold text-ink bg-bg-elev hover:bg-surface-hover border border-hairline hover:border-hairline-hover transition-all"
                 title="Download .litematic Schematic"
               >
                 <FileCode className="w-3.5 h-3.5 text-lime" />
-                <span>Schematic</span>
+                <span>{(farm.schematicUrls?.length ?? 0) > 1 ? `Schematics (${farm.schematicUrls?.length})` : "Schematic"}</span>
               </a>
             ) : (
               <Link

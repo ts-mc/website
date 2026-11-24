@@ -4,19 +4,14 @@ import type { YoutubeMetadataSnapshot } from "../src/types/youtube";
 
 async function main() {
 const root = process.cwd();
-const farmLines = (await fs.readFile(path.join(root, "farms.jsonl"), "utf8")).split(/\r?\n/);
+const directory = path.join(root, "public", "farms");
 const videos = new Map<string, string>();
-for (const line of farmLines) {
-  try {
-    const record = JSON.parse(line) as { type?: string; video?: string };
-    if (record.type !== "farm" || !record.video) continue;
-    const id = record.video.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/i)?.[1];
-    if (id) videos.set(id, record.video);
-  } catch {
-    // Skip malformed JSONL lines.
-  }
+for (const file of await fs.readdir(directory)) {
+  if (!file.endsWith(".json")) continue;
+  const { youtubeUrl } = JSON.parse(await fs.readFile(path.join(directory, file), "utf8"));
+  const id = youtubeUrl?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/i)?.[1];
+  if (id) videos.set(id, youtubeUrl);
 }
-
 const existingPath = path.join(root, "src/data/youtube-metadata.json");
 let existing: Record<string, YoutubeMetadataSnapshot> = {};
 try {

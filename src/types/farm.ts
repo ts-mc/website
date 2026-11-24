@@ -35,6 +35,8 @@ export interface FarmData {
   detailedDescription?: string;
   worldDownloadUrl: string;
   schematicUrl?: string;
+  schematicUrls?: string[];
+  communityNotes?: import("./youtube").ApprovedYoutubeComment[];
   youtubeUrl: string;
   version?: string;
   gameMode?: "Survival" | "Creative" | "Adventure" | "Spectator";
