@@ -32,28 +32,7 @@ A modern, lightning-fast Next.js 14 website for **TheySix** to share Minecraft J
 
 ## 📁 File & Folder Structure
 
-All farm blueprints are located directly in `src/data/farms/`:
-
-```
-src/
-├── app/                  # Next.js App Router pages
-│   ├── farm/[category]/[dn]/page.tsx   # Dynamic farm detail view
-│   ├── server/           # Minecraft SMP pages (about, events, rules, staff)
-│   └── socials/          # Social media directory
-├── components/           # React UI components
-│   ├── SchematicViewer3D.tsx     # 3D voxel canvas renderer
-│   ├── SchematicPreviewModal.tsx # Interactive modal & Material List
-│   ├── FarmCard.tsx              # Grid card with view count bottom-left
-│   └── Navbar.tsx & Footer.tsx   # Navigation & footer links
-├── data/
-│   └── farms/            # Farm blueprint files (*-dn.tsx)
-│       ├── 111-dn.tsx    # Java farm blueprint
-│       ├── 112-dn.tsx    # Java farm blueprint
-│       ├── b111-dn.tsx   # Bedrock farm blueprint
-│       └── b112-dn.tsx   # Bedrock farm blueprint
-└── types/
-    └── farm.ts           # FarmData, FarmWithMetadata & FarmMaterialItem
-```
+The archive reads one JSON record per DN from [public/farms](public/farms). Detail pages use `/dn/<dn>`.
 
 ---
 
@@ -75,69 +54,11 @@ The system will automatically find and display the matching icon for items in th
 
 ---
 
-## 🛠️ How to Add a New Java Farm (with Schematic & Material List)
+## Adding a farm
 
-Create a new file in `src/data/farms/<dn>-dn.tsx` (e.g. `src/data/farms/118-dn.tsx`):
+Copy an existing record such as [533.json](public/farms/533.json) to `public/farms/<DN>.json` and update its DN, ID, category, and content. Use an uppercase prefix for Bedrock and build filenames. The site discovers JSON files automatically.
 
-```tsx
-import type { FarmData } from "@/types/farm";
-
-export const farm: FarmData = {
-  title: "Simple 1.21 Iron Golem Farm",
-  farmType: "Iron",
-  description: "Compact single-chunk iron farm producing over 350 ingots per hour.",
-  worldDownloadUrl: "https://theysix.tech/downloads/java-118-iron-world.zip",
-  schematicUrl: "https://theysix.tech/downloads/java-118-iron.litematic",
-  youtubeUrl: "https://www.youtube.com/watch?v=VIDEO_ID",
-  version: "1.21+",
-  rates: "350+ Iron Ingots/hr",
-  difficulty: "Easy",
-  tags: ["Iron", "Villager", "Early-Game", "AFK"],
-  author: "TheySix",
-  date: "2026-08-20",
-  featured: true,
-  // Custom Material List (BOM) for the farm
-  materials: [
-    { name: "Smooth Stone", count: 256 },
-    { name: "Water Bucket", count: 4 },
-    { name: "Lava Bucket", count: 2 },
-    { name: "Hopper", count: 18 },
-    { name: "Chest", count: 10 },
-    { name: "Villager Bed", count: 3 },
-    { name: "Glass", count: 64 },
-  ],
-};
-
-export default farm;
-```
-
----
-
-## 🛠️ How to Add a New Bedrock Farm
-
-Create a new file in `src/data/farms/b<dn>-dn.tsx` (e.g. `src/data/farms/b114-dn.tsx`).
-> ⚠️ **Note:** Bedrock Edition does not use `.litematic` schematics, so **do not include `schematicUrl`**.
-
-```tsx
-import type { FarmData } from "@/types/farm";
-
-export const farm: FarmData = {
-  title: "Bedrock 1.21 Trident Killer Mob Farm",
-  farmType: "Mob / Drop",
-  description: "High-yield general mob drop farm with automated piston trident killer.",
-  worldDownloadUrl: "https://theysix.tech/downloads/bedrock-b114-mob.mcworld",
-  youtubeUrl: "https://www.youtube.com/watch?v=VIDEO_ID",
-  version: "1.21 Bedrock",
-  rates: "2,200 Drops/hr",
-  difficulty: "Medium",
-  tags: ["Bedrock", "Trident Killer", "Mob Drop", "AFK"],
-  author: "TheySix",
-  date: "2026-08-22",
-  featured: false,
-};
-
-export default farm;
-```
+Use `description` for the summary and `detailedDescription` for the About section. Set `youtubeUrl` and `worldDownloadUrl` to the available links. List every schematic download in `schematicUrls`. The first link is the default for the preview. Store staff-approved viewer tips in `communityNotes` using the `ApprovedYoutubeComment` shape and checklist items in `materials` with a name and count. Empty lists are supported.
 
 ---
 

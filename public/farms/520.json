@@ -1,0 +1,94 @@
+{
+  "dn": "520",
+  "title": "15,000 in 15 Minutes! BEST New MOB Farm for Minecraft 1.21/26.1+!",
+  "farmType": "Mob",
+  "description": "In this tutorial, I’ll show you how to build a new mob farm that takes advantage of game mechanics to use water as both a clock and a pushing system over all floors for the farm, making this farm an absolute monster, while it doesn't use a single redstone, making this farm the easiest, cheapest, but fastest mob farm you can make for Minecraft!",
+  "detailedDescription": "🧱 Farm Performance : ~+700 to 22,000 Per Hour! (The rate depends on the level of looting enchantment you are using and the difficulty of your game.)\n\n🔨 Farm Mode : Fully Automatic\n\n✨ Versions : 1.15 - 1.15.1 - 1.15.2 - 1.16 - 1.16.1 - 1.16.2 - 1.16.3 - 1.16.4 - 1.16.5 - 1.17 - 1.17.1 - 1.18 - 1.18.1 - 1.18.2 - 1.19 - 1.19.1 - 1.19.2 - 1.19.3 - 1.19.4 - 1.20 - 1.20.1 - 1.20.2 - 1.20.3 - 1.20.4 - 1.20.5 - 1.20.6 - 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11 - 26.1 - 26.2 and latest versions ( all of them )\n\n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Design By :  @TheySix\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "worldDownloadUrl": "https://www.mediafire.com/file/bibwuvpe8hj3ien/TheySix+-+MBFX+V1C.rar/file",
+  "youtubeUrl": "https://youtu.be/s0SYdMsBO5g",
+  "version": "1.21/26.1++",
+  "rates": "15k in 15 Min",
+  "difficulty": "Easy",
+  "author": "TheySix",
+  "date": "2026-07-18",
+  "thumbnailUrl": "",
+  "category": "java",
+  "tags": [
+    "Java",
+    "Mob",
+    "AFK",
+    "Easy"
+  ],
+  "featured": false,
+  "views": 80022,
+  "materials": [
+    {
+      "name": "water",
+      "count": 3475,
+      "stacks": "54 stacks + 19"
+    },
+    {
+      "name": "cobblestone slab",
+      "count": 2853,
+      "stacks": "44 stacks + 37"
+    },
+    {
+      "name": "cobblestone",
+      "count": 1200,
+      "stacks": "18 stacks + 48"
+    },
+    {
+      "name": "oak fence",
+      "count": 68,
+      "stacks": "1 stack + 4"
+    },
+    {
+      "name": "oak pressure plate",
+      "count": 36,
+      "stacks": "36 items"
+    },
+    {
+      "name": "hopper",
+      "count": 25,
+      "stacks": "25 items"
+    },
+    {
+      "name": "glass",
+      "count": 9,
+      "stacks": "9 items"
+    },
+    {
+      "name": "chest",
+      "count": 6,
+      "stacks": "6 items"
+    },
+    {
+      "name": "kelp",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "torch",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "oak sign",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "id": "520",
+  "feedOrder": 31,
+  "creatorName": "TheySix",
+  "latestVersion": "26.2",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/n1b3hmrdmifl8ft/MBFX+V1C.litematic/file"
+  ],
+  "communityNotes": []
+}

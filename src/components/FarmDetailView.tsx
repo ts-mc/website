@@ -367,12 +367,13 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
               )}
 
               {/* Java Schematic Handling */}
-              {isJava || isBuild ? (
+              {isJava || isBuild || farm.hasSchematic ? (
                 farm.hasSchematic && farm.schematicUrl ? (
                   <div className="space-y-2">
-                    {/* Schematic Download Button */}
+                    {(farm.schematicUrls ?? [farm.schematicUrl]).map((url, index, urls) => (
                     <a
-                      href={farm.schematicUrl}
+                      key={url}
+                      href={url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-between w-full p-4 rounded-2xl bg-[#9FFF99] hover:bg-[#9FFF99]/80 text-slate-950 font-bold transition-all shadow-lg shadow-[#9FFF99]/20 group"
@@ -380,14 +381,16 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
                       <div className="flex items-center gap-3">
                         <FileCode className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         <div className="text-left">
-                          <div className="text-sm">Schematic File</div>
+                          <div className="text-sm">Schematic File{urls.length > 1 ? ` ${index + 1}` : ""}</div>
                           <div className="text-[11px] font-normal text-[#0B0E14]/80 font-mono">
-                            .litematic file (Fabric)
+                            Download schematic
                           </div>
                         </div>
                       </div>
                       <ExternalLink className="w-4 h-4 opacity-80" />
                     </a>
+
+                    ))}
 
                     {/* Preview Schematic Option */}
                     <button

@@ -8,7 +8,7 @@ TheySix is a Next.js 14 website for a Minecraft community and its farm archive. 
 
 - `src/app/` — Next.js App Router routes, layouts, and API handlers.
 - `src/components/` — shared UI, including farm cards, farm detail views, filters, and schematic viewers.
-- `src/data/farms/` — farm records. Filenames commonly use `<dn>-dn.tsx`; a `b` prefix identifies Bedrock records.
+- `public/farms/` — one JSON record per DN, such as `533.json` or `B172.json`.
 - `src/data/schematics/` and `src/data/worlds/` — local schematic and world assets.
 - `src/data/materials/` — material data used by farm pages and schematic previews.
 - `src/data/wiki/` — wiki content.

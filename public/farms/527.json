@@ -1,0 +1,98 @@
+{
+  "id": "527",
+  "dn": "527",
+  "category": "java",
+  "title": "70 Levels in 30 Seconds! INSANE XP Farm for Minecraft 1.21/26.2+!",
+  "farmType": "Other",
+  "description": "In this Tutorial, I Will Show you how to build this new XP farm in just 5 minutes. This XP farm can produce 31-70 levels per minute, depending on your setup, making it the best XP farm. This farm uses a new tech that relies on only a single sand block and water, which makes this farm unique. It is cheap and simple to build, and it almost costs nothing to build in Minecraft!",
+  "worldDownloadUrl": "",
+  "youtubeUrl": "https://youtu.be/00aiRjbKZ_8",
+  "version": "1.21+",
+  "rates": "",
+  "tags": [
+    "Java"
+  ],
+  "author": "TheySix",
+  "date": "2026-09-05T12:16:12+00:00",
+  "featured": false,
+  "views": 0,
+  "materials": [
+    {
+      "name": "diorite",
+      "count": 185,
+      "stacks": "2 stacks + 57"
+    },
+    {
+      "name": "dirt",
+      "count": 156,
+      "stacks": "2 stacks + 28"
+    },
+    {
+      "name": "grass block",
+      "count": 99,
+      "stacks": "1 stack + 35"
+    },
+    {
+      "name": "stone",
+      "count": 94,
+      "stacks": "1 stack + 30"
+    },
+    {
+      "name": "gravel",
+      "count": 44,
+      "stacks": "44 items"
+    },
+    {
+      "name": "water",
+      "count": 22,
+      "stacks": "22 items"
+    },
+    {
+      "name": "copper ore",
+      "count": 7,
+      "stacks": "7 items"
+    },
+    {
+      "name": "glass",
+      "count": 7,
+      "stacks": "7 items"
+    },
+    {
+      "name": "sand",
+      "count": 5,
+      "stacks": "5 items"
+    },
+    {
+      "name": "oak fence",
+      "count": 5,
+      "stacks": "5 items"
+    },
+    {
+      "name": "oak stairs",
+      "count": 4,
+      "stacks": "4 items"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "composter",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "oak sign",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "feedOrder": 17,
+  "detailedDescription": "🧱 Farm Performance : XP LEVELS 31 / 70 (TESTED RATE) Depending on your farm size!\n\n🔨 Farm Mode : Fully Automatic\n\n✨ Versions : 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11 - 26.* (ALL Sub Versions are supported )\n\n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Farm BY : @TheySix\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "latestVersion": "1.21.11",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/s5ashux7y48dm99/XP+MXP+V1_5+(MAX+CORES).litematic/file"
+  ],
+  "communityNotes": []
+}

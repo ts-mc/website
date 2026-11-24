@@ -1,0 +1,157 @@
+{
+  "dn": "502",
+  "title": "30,000 Logs in 5 Minutes! INSANE All Wood Farm for Minecraft 1.21+",
+  "farmType": "Wood",
+  "description": "In this Tutorial, I Will Show you how to build the next generation of All Wood Tree farming using the new tech, giving you a 100% efficiency rate, besides getting 30% more efficiency using new tnt chamber including a new pattern and a lot more making this tree farm the easiest, fastest and cheapest tree farm ever made in Minecraft! \n\nI hope to Enjoy My Video !!🙏🥰",
+  "detailedDescription": "🧱 Farm Performance : 15,000 Up to 42,300 Depending on the wood type you are going to use in your farm!\n\n🔨 Farm Mode : Fully Automatic\n\n✨ Versions : 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11\n \n⚡ Get a Fast, affordable hosting with Sparked Host\n🖥️ Exclusive Apollo Control Panel + 🌍 10 global locations for reliable servers\n💬 Quality support backed by ⭐ 2,000+ positive reviews \n🎁 Use code TheySix for 25% OFF → https://billing.sparkedhost.com/aff.php?aff=3021 \n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Farm BY : @TheySix\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "worldDownloadUrl": "https://www.mediafire.com/file/zomqfhiyyctks7k/TheySix+-+TLM+TF+V1.rar/file",
+  "youtubeUrl": "https://youtu.be/M9VICb_EKn8",
+  "version": "1.21++",
+  "rates": "30k Logs",
+  "difficulty": "Easy",
+  "author": "TheySix",
+  "date": "2025-12-14",
+  "thumbnailUrl": "",
+  "category": "java",
+  "tags": [
+    "Java",
+    "Wood",
+    "Easy"
+  ],
+  "featured": false,
+  "views": 446217,
+  "materials": [
+    {
+      "name": "stone",
+      "count": 856,
+      "stacks": "13 stacks + 24"
+    },
+    {
+      "name": "dirt",
+      "count": 502,
+      "stacks": "7 stacks + 54"
+    },
+    {
+      "name": "grass block",
+      "count": 369,
+      "stacks": "5 stacks + 49"
+    },
+    {
+      "name": "water",
+      "count": 122,
+      "stacks": "1 stack + 58"
+    },
+    {
+      "name": "smooth stone slab",
+      "count": 36,
+      "stacks": "36 items"
+    },
+    {
+      "name": "smooth stone",
+      "count": 29,
+      "stacks": "29 items"
+    },
+    {
+      "name": "coal ore",
+      "count": 19,
+      "stacks": "19 items"
+    },
+    {
+      "name": "short grass",
+      "count": 15,
+      "stacks": "15 items"
+    },
+    {
+      "name": "chest",
+      "count": 10,
+      "stacks": "10 items"
+    },
+    {
+      "name": "oak log",
+      "count": 10,
+      "stacks": "10 items"
+    },
+    {
+      "name": "jungle leaves",
+      "count": 7,
+      "stacks": "7 items"
+    },
+    {
+      "name": "redstone wire",
+      "count": 7,
+      "stacks": "7 items"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 6,
+      "stacks": "6 items"
+    },
+    {
+      "name": "hopper",
+      "count": 5,
+      "stacks": "5 items"
+    },
+    {
+      "name": "dirt path",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "lever",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "observer",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "piston",
+      "count": 3,
+      "stacks": "3 items"
+    },
+    {
+      "name": "tall grass",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "oak pressure plate",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "dropper",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "oak fence",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "cobblestone stairs",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "piston head",
+      "count": 1,
+      "stacks": "1 items"
+    },
+    {
+      "name": "tnt",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "id": "502",
+  "feedOrder": 54,
+  "latestVersion": "1.21.11",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/jb4wm82839agn67/TheySix_-_TLM_TF_V1.litematic/file"
+  ],
+  "communityNotes": []
+}

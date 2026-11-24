@@ -1,0 +1,79 @@
+{
+  "id": "533",
+  "dn": "533",
+  "category": "java",
+  "title": "70 Mobs in 60 Seconds! INSANE Mob XP Farm for Minecraft 1.21/26.3+!",
+  "farmType": "Mob",
+  "description": "In this tutorial, I will show you how to build a new XP Mob Farm that uses the game's pathfinding mechanics and uses Mob Behaviors, resulting in a crazy fast XP Mob Farm that works at a crazy pace, even faster than water-based XP Mob Farms, making this farm an absolute monster, while not using a single redstone, making this the easiest, cheapest, yet fastest XP Mob Farm you can build for Minecraft!",
+  "worldDownloadUrl": "https://www.mediafire.com/file/x29xsu810eyq9z0/TheySix+-+MBF+XC+V1.zip/file",
+  "youtubeUrl": "https://youtu.be/IC89ISNOqdM",
+  "version": "1.21+",
+  "rates": "",
+  "tags": [
+    "Java"
+  ],
+  "author": "TheySix",
+  "date": "2026-10-16T11:50:15+00:00",
+  "featured": false,
+  "views": 0,
+  "materials": [
+    {
+      "name": "cobblestone",
+      "count": 3642,
+      "stacks": "56 stacks + 58"
+    },
+    {
+      "name": "oak trapdoor",
+      "count": 208,
+      "stacks": "3 stacks + 16"
+    },
+    {
+      "name": "torch",
+      "count": 148,
+      "stacks": "2 stacks + 20"
+    },
+    {
+      "name": "spruce fence",
+      "count": 144,
+      "stacks": "2 stacks + 16"
+    },
+    {
+      "name": "water",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "cobblestone slab",
+      "count": 8,
+      "stacks": "8 items"
+    },
+    {
+      "name": "hopper",
+      "count": 4,
+      "stacks": "4 items"
+    },
+    {
+      "name": "oak fence gate",
+      "count": 4,
+      "stacks": "4 items"
+    },
+    {
+      "name": "chest",
+      "count": 2,
+      "stacks": "2 items"
+    },
+    {
+      "name": "oak sign",
+      "count": 1,
+      "stacks": "1 items"
+    }
+  ],
+  "feedOrder": 6,
+  "detailedDescription": "🧱 Farm Performance : ~+730 to 32,000 Per Hour! (The rate depends on the level of looting enchantment you are using and the difficulty of your game.)\n\n🔨 Farm Mode : Fully Automatic\n\n✨ Versions : 1.15 - 1.15.1 - 1.15.2 - 1.16 - 1.16.1 - 1.16.2 - 1.16.3 - 1.16.4 - 1.16.5 - 1.17 - 1.17.1 - 1.18 - 1.18.1 - 1.18.2 - 1.19 - 1.19.1 - 1.19.2 - 1.19.3 - 1.19.4 - 1.20 - 1.20.1 - 1.20.2 - 1.20.3 - 1.20.4 - 1.20.5 - 1.20.6 - 1.21 - 1.21.1 - 1.21.2 - 1.21.3 - 1.21.4 - 1.21.5 - 1.21.6 - 1.21.7 - 1.21.8 - 1.21.9 - 1.21.10 - 1.21.11 - 26.0 - 26.1 - 26.2 - 26.3 (ALL Sub Versions are supported )\n\n💻 Platforms : Java Edition ✅ | Bedrock Edition ❌\n\n\n💌 Farm BY :  @TheySixMinecraftJava  @TheySix\n[[FARM_SECTION_DIVIDER]]\n✨ Shaders : Complementary \n✨ Resource Pack : Default\n✨ Mods : \n      ◉ Replay Mod : https://www.replaymod.com​​ \n      ◉ Optifine : https://www.optifine.net​​\n      ◉ Camera Mod : https://foxynotail.com/add-ons/camera-mode/",
+  "latestVersion": "26.3",
+  "schematicUrls": [
+    "https://www.mediafire.com/file/u29v7bep56yvcbx/MBF+XC+V1.litematic/file",
+    "/api/local-schematic/533.litematic"
+  ],
+  "communityNotes": []
+}
