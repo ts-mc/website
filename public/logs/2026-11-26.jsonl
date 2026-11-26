@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-26",
+  "type": "release",
+  "title": "Run redstone in the schematic preview",
+  "summary": "Start redstone with one click, step through a circuit, and find six viewer tips across three farm pages. The homepage also shows the full hero image on portrait phones.",
+  "body": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Inspect a circuit"
+    },
+    {
+      "type": "paragraph",
+      "text": "Choose Run redstone in a schematic preview to start the supported simulation directly in your browser. Tap or click a lever to toggle it. Choose Pause, then +1 tick to inspect the next circuit state, or Resume to continue playback."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Tips from the tutorial comments"
+    },
+    {
+      "type": "paragraph",
+      "text": "The shulker farm notes cover keeping a spare shulker and packing flint and steel for the End. The wood farm notes show how to check boat alignment and troubleshoot the bone meal feed. The bone meal farm notes explain how to check the droppers, dispenser, and observers. Each tip links to the original comment."
+    }
+  ],
+  "links": [
+    { "label": "Shulker farm tips", "href": "/dn/491#community-fixes-title" },
+    { "label": "Wood farm tips", "href": "/dn/502#community-fixes-title" },
+    { "label": "Bone meal farm tips", "href": "/dn/517#community-fixes-title" }
+  ]
+}
