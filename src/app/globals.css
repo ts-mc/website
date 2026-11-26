@@ -87,6 +87,26 @@
     .signal-enter span { width: 2.8rem; height: 2.8rem; }
     .signal-opening-bg::after { background: linear-gradient(90deg, rgba(2,2,2,.78), rgba(2,2,2,.12) 90%), linear-gradient(to top, var(--void), transparent 28%); }
   }
+  @media (max-width: 760px) and (orientation: portrait) {
+    .signal-opening {
+      min-height: auto;
+      gap: 0;
+      padding: clamp(4rem, 12svh, 8rem) 0 3rem;
+      background: var(--void);
+    }
+    .signal-wordmark, .signal-enter { margin-inline: 6vw; }
+    .signal-opening-bg {
+      position: relative;
+      order: 1;
+      width: 100%;
+      aspect-ratio: 1672 / 941;
+      margin-top: 1.5rem;
+      z-index: 0;
+      background-size: contain;
+    }
+    .signal-opening-bg::after { background: linear-gradient(to bottom, var(--void), transparent 15%, transparent 82%, var(--void)); }
+    .signal-enter { order: 2; margin-top: .75rem; }
+  }
   @media (min-width: 640px) and (max-width: 1024px) {
     .theysix-dock li > a:not(.theysix-dock-home), .theysix-dock li > button { min-width: clamp(3.5rem, 8vw, 5.5rem); }
   }

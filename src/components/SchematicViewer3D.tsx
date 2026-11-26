@@ -46,8 +46,6 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<SchematicRenderer | null>(null);
-  const schematicBytesRef = useRef<ArrayBuffer | null>(null);
-  const [activationPrompt, setActivationPrompt] = useState(false);
   const [hiddenBlocks, setHiddenBlocks] = useState<Set<string>>(new Set());
   const materialsCallbackRef = useRef(onMaterialsExtracted);
   materialsCallbackRef.current = onMaterialsExtracted;
@@ -60,7 +58,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   const [bounds, setBounds] = useState<SchematicBounds | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showBlockControls, setShowBlockControls] = useState(false);
-  const [activation, setActivation] = useState<"idle" | "activating" | "active" | "unsupported" | "error">("idle");
+  const [activation, setActivation] = useState<"idle" | "paused" | "activating" | "active" | "unsupported" | "error">("idle");
   const [resourcePackName, setResourcePackName] = useState("Loading Minecraft resource pack");
 
   const persistMaterials = useCallback(async (materials: FarmMaterialItem[]) => {
@@ -77,6 +75,8 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   }, [farm.dn]);
 
   useEffect(() => {
+    setStatus("loading");
+    setActivation("idle");
     let cancelled = false;
     const controller = new AbortController();
     const mobile = window.matchMedia("(pointer: coarse)").matches;
@@ -124,6 +124,8 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           enableAdaptiveFPS: true,
           // Texture frames advance independently of redstone simulation.
           enableAnimatedTextures: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+          interactionOptions: { enableBlockSelection: true },
+          simulationOptions: { enableSimulation: true, autoInitialize: false },
           targetFPS: mobile ? 30 : 60,
           idleFPS: 1,
           maxPixelRatio: mobile ? 1.25 : 2,
@@ -133,6 +135,13 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           cameraOptions: { defaultCameraPreset: "isometric", useTightBounds: true, enableZoomInOnLoad: false },
           showSlicerOverlay: false,
           callbacks: {
+            onSimulationTicked: (tick) => {
+              if (cancelled || !renderer) return;
+              // Refresh the mesh twice per second during playback and after every manual step.
+              if (tick % 10 === 0 || !renderer.getSimulationState()?.autoTickEnabled) {
+                renderer.simulationManager?.syncToSchematic();
+              }
+            },
             onLoadingProgress: (_file, value) => { if (!cancelled) setProgress(Math.round(value * 100)); },
             onResourcePackLoaded: (name) => { if (!cancelled) setResourcePackName(name); },
           },
@@ -152,7 +161,6 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         if (!response.ok) throw new Error(`Schematic download failed (${response.status})`);
         const bytes = await response.arrayBuffer();
         if (cancelled) return;
-        schematicBytesRef.current = bytes;
         await renderer.schematicManager?.loadSchematic(farm.dn, bytes, undefined, {
           onProgress: ({ progress: value }) => { if (!cancelled) setProgress(Math.round(value * 100)); },
         });
@@ -250,17 +258,27 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     const renderer = rendererRef.current;
     if (!renderer || activation === "activating") return;
     setActivation("activating");
-    setActivationPrompt(false);
     try {
       const initialized = await renderer.initializeSimulation();
+      if (rendererRef.current !== renderer) return;
       if (!initialized) {
         setActivation("unsupported");
         return;
       }
-      renderer.startAutoTick();
       setActivation("active");
     } catch {
-      setActivation("error");
+      if (rendererRef.current === renderer) setActivation("error");
+    }
+  };
+  const togglePlayback = () => {
+    if (activation === "active") {
+      rendererRef.current?.stopAutoTick();
+      rendererRef.current?.simulationManager?.syncToSchematic();
+      setActivation("paused");
+    } else if (activation === "paused") {
+      setActivation("active");
+    } else {
+      void activateFarm();
     }
   };
   const toggleBlock = (name: string) => {
@@ -274,19 +292,8 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     rendererRef.current?.invalidate();
     setHiddenBlocks(hidden);
   };
-  const downloadAndActivate = () => {
-    if (!schematicBytesRef.current) return;
-    const url = URL.createObjectURL(new Blob([schematicBytesRef.current]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${farm.dn}.litematic`;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-    void activateFarm();
-  };
   return (
     <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "fixed inset-0 z-[60] h-[100dvh] rounded-none" : "h-full min-h-0"}`}>
-      {activationPrompt && <div className="absolute inset-0 z-50 grid place-items-center bg-black/70 p-5"><section role="dialog" aria-modal="true" aria-labelledby="activate-title" className="max-w-md space-y-4 rounded-xl border border-white/15 bg-[#181818] p-6 text-white"><h3 id="activate-title" className="text-lg font-semibold">Run schematic in browser</h3><p className="text-sm text-white/70">Save a copy to your browser’s download location and start the supported redstone simulation. The preview uses the same file already loaded here. Mob spawning and full Minecraft world physics are not simulated.</p><div className="flex flex-wrap gap-3"><button autoFocus onClick={downloadAndActivate} className="rounded bg-emerald-600 px-4 py-2">Download & run</button><button onClick={() => void activateFarm()} className="rounded border border-white/20 px-4 py-2">Run without saving</button><button onClick={() => setActivationPrompt(false)} className="px-4 py-2">Cancel</button></div></section></div>}
       <p id="schematic-gestures" className="hidden [@media(any-pointer:coarse)]:block shrink-0 border-b border-white/10 px-3 py-2 text-center text-xs leading-snug text-white/80">
         Drag with one finger to rotate. Drag with two to pan, or pinch to zoom.
       </p>
@@ -303,14 +310,15 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
             <span className="max-w-36 truncate text-xs font-semibold sm:max-w-64 sm:text-sm">{farm.title}</span>
             {bounds && <span className="hidden font-mono text-[9px] text-white/45 md:inline">{bounds.maxX - bounds.minX + 1}×{bounds.maxY - bounds.minY + 1}×{bounds.maxZ - bounds.minZ + 1}</span>}
             <span className="rounded-full bg-emerald-500/15 px-2 py-1 font-mono text-[9px] font-bold text-emerald-400">MC {farm.version || "1.21+"}</span>
-            {activation === "active" && <span className="rounded-full bg-[#4CADD0]/15 px-2 py-1 font-mono text-[9px] font-bold text-[#9FEBF6]">Farm active</span>}
+            {activation === "active" && <span className="rounded-full bg-[#4CADD0]/15 px-2 py-1 font-mono text-[9px] font-bold text-[#9FEBF6]">Redstone running</span>}
             <button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="pointer-events-auto ml-1 text-white/50 transition hover:text-white"><Download className="size-4" /></button>
           </div>
 
 
           <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">Drag to rotate · Scroll to zoom · Right drag to pan</span></p>
-          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border border-white/10 bg-[#17181b]/90 p-1.5 text-white shadow-lg backdrop-blur sm:bottom-4 sm:gap-2 sm:px-2">
-            <button onClick={() => { if (activation === "active") { rendererRef.current?.stopAutoTick(); setActivation("idle"); } else setActivationPrompt(true); }} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : "Activate farm"}</span></button>
+          <div className="absolute bottom-3 left-1/2 z-20 flex w-max max-w-full -translate-x-1/2 flex-wrap justify-center items-center gap-1 rounded-full border border-white/10 bg-[#17181b]/90 p-1.5 text-white shadow-lg backdrop-blur sm:bottom-4 sm:gap-2 sm:px-2">
+            <button onClick={togglePlayback} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : activation === "paused" ? "Resume" : "Run redstone"}</span></button>
+            {activation === "paused" && <button onClick={() => rendererRef.current?.tickSimulation()} className="min-h-11 whitespace-nowrap rounded-full px-2 text-xs hover:bg-white/5">+1 tick</button>}
             {<button onClick={toggleBlockControls} aria-label={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} title={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} className={`grid size-11 place-items-center rounded-full transition sm:size-11 ${showBlockControls ? "bg-emerald-500/15 text-emerald-400" : "text-white/50 hover:bg-white/5 hover:text-white"}`}><Layers3 className="size-4" /></button>}
             <button onClick={resetCamera} aria-label="Reset camera" title="Reset camera" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><RotateCcw className="size-4" /></button>
             <button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><Download className="size-4" /></button>

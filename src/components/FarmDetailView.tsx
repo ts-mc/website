@@ -227,7 +227,7 @@ export function FarmDetailView({ farm, relatedFarms, communityNotes = [] }: Farm
                   <li key={note.commentId} className="rounded-2xl border border-hairline bg-[#070A12]/60 p-4">
                     <p className="whitespace-pre-line text-sm leading-relaxed text-ink">{note.text}</p>
                     <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-muted">
-                      <span>{note.author}</span>
+                      <a className="underline underline-offset-2 hover:text-ink" href={`https://www.youtube.com/watch?v=${note.videoId}&lc=${note.commentId}`}>Original comment</a>
                       {note.likeCount !== undefined && <span className="inline-flex items-center gap-1"><ThumbsUp className="size-3" aria-hidden="true" /> {note.likeCount}</span>}
                     </p>
                   </li>

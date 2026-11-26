@@ -27,5 +27,20 @@
   "schematicUrls": [
     "https://www.mediafire.com/file/2pfqoxf9imsly9a/TheySix+-+CMC+Bonemeal+Farm+V2.litematic/file"
   ],
-  "communityNotes": []
+  "communityNotes": [
+    {
+      "videoId": "HEUQiIJKMG8",
+      "commentId": "UgzNpAihLqyZoNfH5414AaABAg",
+      "author": "YouTube viewer",
+      "text": "If bone meal reaches the farm but the moss does not spread, inspect the three-block feed from the bottom up. Both lower blocks should be droppers pointing up. The top block should be an upward-facing dispenser.",
+      "approvedAt": "2026-11-26"
+    },
+    {
+      "videoId": "HEUQiIJKMG8",
+      "commentId": "UgyIW3xAsGUE376P4r94AaABAg",
+      "author": "YouTube viewer",
+      "text": "At 4:50 in the tutorial, pause and compare each observer’s face and red output dot with your build. A viewer found that they had installed the observers facing the opposite way.",
+      "approvedAt": "2026-11-26"
+    }
+  ]
 }

@@ -153,5 +153,20 @@
   "schematicUrls": [
     "https://www.mediafire.com/file/jb4wm82839agn67/TheySix_-_TLM_TF_V1.litematic/file"
   ],
-  "communityNotes": []
+  "communityNotes": [
+    {
+      "videoId": "M9VICb_EKn8",
+      "commentId": "Ugw_O9M-1EvOJRz8m7t4AaABAg",
+      "author": "YouTube viewer",
+      "text": "If TNT damages the wood farm, check the boat alignment before running it again. Aim along the piston’s center line and nudge the boat until the gaps on either side look equal. Then compare the water source and flow direction with the tutorial.",
+      "approvedAt": "2026-11-26"
+    },
+    {
+      "videoId": "M9VICb_EKn8",
+      "commentId": "UgzUZILNt6HOqKjFN2F4AaABAg",
+      "author": "YouTube viewer",
+      "text": "If the bone meal feed stalls, check the block that transfers bone meal. A viewer traced their problem to placing a dispenser where the tutorial uses a dropper.",
+      "approvedAt": "2026-11-26"
+    }
+  ]
 }
