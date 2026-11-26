@@ -2,7 +2,7 @@
   "date": "2026-11-26",
   "type": "release",
   "title": "Run redstone in the schematic preview",
-  "summary": "Start redstone with one click, step through a circuit, and find six viewer tips across three farm pages. The homepage also shows the full hero image on portrait phones.",
+  "summary": "Start redstone with one click, move through blocks, step through a circuit, and find six viewer tips across three farm pages. The homepage also shows the full hero image on portrait phones.",
   "body": [
     {
       "type": "heading",
@@ -12,6 +12,15 @@
     {
       "type": "paragraph",
       "text": "Choose Run redstone in a schematic preview to start the supported simulation directly in your browser. Tap or click a lever to toggle it. Choose Pause, then +1 tick to inspect the next circuit state, or Resume to continue playback."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Look inside a schematic"
+    },
+    {
+      "type": "paragraph",
+      "text": "Choose Inside view to start near the middle of the build. Drag to look around, then use Forward or Back to move through blocks one block at a time. With the preview focused, W and S or the up and down arrows also move the camera. Choose Outside view to return to the overview."
     },
     {
       "type": "heading",

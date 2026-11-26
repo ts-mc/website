@@ -56,6 +56,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(0);
   const [bounds, setBounds] = useState<SchematicBounds | null>(null);
+  const [insideView, setInsideView] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showBlockControls, setShowBlockControls] = useState(false);
   const [activation, setActivation] = useState<"idle" | "paused" | "activating" | "active" | "unsupported" | "error">("idle");
@@ -75,6 +76,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   }, [farm.dn]);
 
   useEffect(() => {
+    setInsideView(false);
     setStatus("loading");
     setActivation("idle");
     let cancelled = false;
@@ -223,10 +225,45 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   }, [status, activation]);
 
   const resetCamera = () => {
-    if (!rendererRef.current || !bounds) return;
-    const camera = topCornerCamera(bounds);
+    if (!rendererRef.current) return;
+    setInsideView(false);
     rendererRef.current.setCameraMode("isometric");
+    if (!bounds) return;
+    const camera = topCornerCamera(bounds);
     rendererRef.current.cameraManager.activeCamera.setPositionLookAt(camera.position, camera.target);
+  };
+  const toggleInsideView = () => {
+    const renderer = rendererRef.current;
+    if (!renderer) return;
+    if (insideView) {
+      resetCamera();
+      return;
+    }
+    renderer.setCameraMode("perspective");
+    const manager = renderer.cameraManager;
+    const controls = manager.controls.get(manager.activeControlKey);
+    // The perspective preset frames the loaded schematic in world coordinates.
+    const camera = manager.activeCamera.camera;
+    camera.position.copy(controls.target);
+    camera.position.z += 0.25;
+    controls.minDistance = 0.25;
+    controls.maxDistance = 0.25;
+    controls.update();
+    renderer.invalidate();
+    setInsideView(true);
+    canvasRef.current?.focus({ preventScroll: true });
+  };
+  const moveInside = (steps: number) => {
+    const renderer = rendererRef.current;
+    if (!renderer || !insideView) return;
+    const manager = renderer.cameraManager;
+    const camera = manager.activeCamera.camera;
+    const controls = manager.controls.get(manager.activeControlKey);
+    const offset = camera.getWorldDirection(camera.position.clone()).multiplyScalar(steps);
+    camera.position.add(offset);
+    controls.target.add(offset);
+    controls.update();
+    renderer.invalidate();
   };
   const takeScreenshot = async () => {
     const blob = await rendererRef.current?.takeScreenshot({ format: "image/png" });
@@ -295,11 +332,18 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   return (
     <div ref={containerRef} className={`relative flex w-full flex-col overflow-hidden border border-[var(--rule)] bg-[#080b0e] ${isFullscreen ? "fixed inset-0 z-[60] h-[100dvh] rounded-none" : "h-full min-h-0"}`}>
       <p id="schematic-gestures" className="hidden [@media(any-pointer:coarse)]:block shrink-0 border-b border-white/10 px-3 py-2 text-center text-xs leading-snug text-white/80">
-        Drag with one finger to rotate. Drag with two to pan, or pinch to zoom.
+        {insideView ? "Drag to look around. Use Forward and Back to move through blocks." : "Drag with one finger to rotate. Drag with two to pan, or pinch to zoom."}
       </p>
       <div className="flex min-h-0 flex-1">
       <div className="relative min-w-0 flex-1">
-        <canvas ref={canvasRef} className="block h-full w-full touch-none" aria-describedby="schematic-gestures" aria-label={`Interactive 3D schematic for ${farm.title}`} />
+        <canvas ref={canvasRef} tabIndex={insideView ? 0 : -1} onKeyDown={event => {
+          if (!insideView || event.altKey || event.ctrlKey || event.metaKey) return;
+          const step = { ArrowUp: 1, ArrowDown: -1, w: 1, s: -1 }[event.key];
+          if (step) {
+            event.preventDefault();
+            moveInside(step);
+          }
+        }} className="block h-full w-full touch-none" aria-describedby="schematic-gestures" aria-label={`Interactive 3D schematic for ${farm.title}`} />
         {status === "loading" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-xs space-y-3"><LoaderCircle className="mx-auto h-8 w-8 animate-spin text-[#4CADD0]" /><p className="text-sm font-semibold text-ink">Preparing farm preview</p><div className="h-1.5 overflow-hidden rounded-full bg-bg-elev"><div className="h-full bg-[#4CADD0] transition-all" style={{ width: `${progress}%` }} /></div><p className="font-mono text-[11px] text-ink-dim">{progress ? `${progress}%` : "Loading Minecraft textures"}</p></div></div>}
         {status === "error" && <div className="absolute inset-0 flex items-center justify-center bg-[#071019]/95 p-6 text-center"><div className="max-w-md space-y-3"><TriangleAlert className="mx-auto h-8 w-8 text-[#FBBF24]" /><p className="text-sm font-semibold text-ink">Schematic preview unavailable</p><p className="text-xs leading-relaxed text-ink-muted">{error}</p></div></div>}
         {status === "ready" && <>
@@ -315,11 +359,16 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           </div>
 
 
-          <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">Drag to rotate · Scroll to zoom · Right drag to pan</span></p>
+          <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">{insideView ? "Drag to look · W/S or ↑/↓ to move through blocks" : "Drag to rotate · Scroll to zoom · Right drag to pan"}</span></p>
           <div className="absolute bottom-3 left-1/2 z-20 flex w-max max-w-full -translate-x-1/2 flex-wrap justify-center items-center gap-1 rounded-full border border-white/10 bg-[#17181b]/90 p-1.5 text-white shadow-lg backdrop-blur sm:bottom-4 sm:gap-2 sm:px-2">
             <button onClick={togglePlayback} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : activation === "paused" ? "Resume" : "Run redstone"}</span></button>
             {activation === "paused" && <button onClick={() => rendererRef.current?.tickSimulation()} className="min-h-11 whitespace-nowrap rounded-full px-2 text-xs hover:bg-white/5">+1 tick</button>}
             {<button onClick={toggleBlockControls} aria-label={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} title={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} className={`grid size-11 place-items-center rounded-full transition sm:size-11 ${showBlockControls ? "bg-emerald-500/15 text-emerald-400" : "text-white/50 hover:bg-white/5 hover:text-white"}`}><Layers3 className="size-4" /></button>}
+            <button onClick={toggleInsideView} aria-pressed={insideView} className="min-h-11 rounded-full px-2 text-xs hover:bg-white/5">{insideView ? "Outside view" : "Inside view"}</button>
+            {insideView && <>
+              <button onClick={() => moveInside(1)} className="min-h-11 rounded-full px-2 text-xs hover:bg-white/5">Forward</button>
+              <button onClick={() => moveInside(-1)} className="min-h-11 rounded-full px-2 text-xs hover:bg-white/5">Back</button>
+            </>}
             <button onClick={resetCamera} aria-label="Reset camera" title="Reset camera" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><RotateCcw className="size-4" /></button>
             <button onClick={takeScreenshot} aria-label="Download screenshot" title="Download screenshot" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11"><Download className="size-4" /></button>
             <button onClick={toggleFullscreen} aria-label="Toggle fullscreen" title="Toggle fullscreen" className="grid size-11 place-items-center rounded-full text-white/50 transition hover:bg-white/5 hover:text-white sm:size-11">{isFullscreen ? <Shrink className="size-4" /> : <Expand className="size-4" />}</button>
