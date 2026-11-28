@@ -19,6 +19,8 @@ import {
   type SchematicBounds,
 } from "@/lib/schematic-viewer";
 
+import { applyMaterialVisibility, configureBlockInstances, createRedstonePlayback, pickBlock } from "@/lib/schematic-redstone";
+
 export interface SchematicViewer3DProps {
   farm: FarmWithMetadata;
   selectedFormat?: string;
@@ -47,6 +49,11 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<SchematicRenderer | null>(null);
   const [hiddenBlocks, setHiddenBlocks] = useState<Set<string>>(new Set());
+  const playbackRef = useRef<ReturnType<typeof createRedstonePlayback> | null>(null);
+  const blocksRef = useRef<ReturnType<typeof normalizeSchematic>["blocks"]>([]);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const hiddenRef = useRef(hiddenBlocks);
+  hiddenRef.current = hiddenBlocks;
   const materialsCallbackRef = useRef(onMaterialsExtracted);
   materialsCallbackRef.current = onMaterialsExtracted;
   const [materials, setMaterials] = useState(farm.materials);
@@ -59,7 +66,10 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   const [insideView, setInsideView] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showBlockControls, setShowBlockControls] = useState(false);
-  const [activation, setActivation] = useState<"idle" | "paused" | "activating" | "active" | "unsupported" | "error">("idle");
+  const [activation, setActivation] = useState<"idle" | "paused" | "active" | "error">("idle");
+  const [ticks, setTicks] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const [resetting, setResetting] = useState(false);
   const [resourcePackName, setResourcePackName] = useState("Loading Minecraft resource pack");
 
   const persistMaterials = useCallback(async (materials: FarmMaterialItem[]) => {
@@ -79,6 +89,9 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     setInsideView(false);
     setStatus("loading");
     setActivation("idle");
+    setTicks(0);
+    setSpeed(1);
+    setResetting(false);
     let cancelled = false;
     const controller = new AbortController();
     const mobile = window.matchMedia("(pointer: coarse)").matches;
@@ -114,6 +127,9 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         }, { sharedRenderer: false }));
         releaseContext = () => SchematicRendererContext.release(CONTEXT_KEY);
         if (cancelled) { releaseContext(); releaseContext = undefined; return; }
+        if (!context.cubane.getPackCount()) throw new Error("The Minecraft texture pack could not be decoded. Reopen the preview to retry.");
+        let markReady!: () => void;
+        const ready = new Promise<void>(resolve => { markReady = resolve; });
         renderer = new SchematicRenderer(canvas, {}, {}, {
           context,
           backgroundColor: 0x090a12,
@@ -122,12 +138,11 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           showRenderingBoundsHelper: false,
           enableDragAndDrop: false,
           enableGizmos: false,
-          enableProgressBar: true,
+          enableProgressBar: false,
           enableAdaptiveFPS: true,
           // Texture frames advance independently of redstone simulation.
           enableAnimatedTextures: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-          interactionOptions: { enableBlockSelection: true },
-          simulationOptions: { enableSimulation: true, autoInitialize: false },
+          sidebarOptions: { enabled: false },
           targetFPS: mobile ? 30 : 60,
           idleFPS: 1,
           maxPixelRatio: mobile ? 1.25 : 2,
@@ -137,12 +152,10 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           cameraOptions: { defaultCameraPreset: "isometric", useTightBounds: true, enableZoomInOnLoad: false },
           showSlicerOverlay: false,
           callbacks: {
-            onSimulationTicked: (tick) => {
-              if (cancelled || !renderer) return;
-              // Refresh the mesh twice per second during playback and after every manual step.
-              if (tick % 10 === 0 || !renderer.getSimulationState()?.autoTickEnabled) {
-                renderer.simulationManager?.syncToSchematic();
-              }
+            onRendererInitialized: markReady,
+            onSchematicRendered: () => {
+              const schematic = renderer?.schematicManager?.getSchematic(farm.dn);
+              if (schematic) applyMaterialVisibility(schematic, hiddenRef.current);
             },
             onLoadingProgress: (_file, value) => { if (!cancelled) setProgress(Math.round(value * 100)); },
             onResourcePackLoaded: (name) => { if (!cancelled) setResourcePackName(name); },
@@ -163,12 +176,21 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         if (!response.ok) throw new Error(`Schematic download failed (${response.status})`);
         const bytes = await response.arrayBuffer();
         if (cancelled) return;
-        await renderer.schematicManager?.loadSchematic(farm.dn, bytes, undefined, {
+        const timeout = AbortSignal.any([controller.signal, AbortSignal.timeout(60000)]);
+        await Promise.race([ready, new Promise<never>((_, reject) => {
+          timeout.addEventListener("abort", () => reject(timeout.reason), { once: true });
+        })]);
+        if (cancelled) return;
+        const builder = renderer.worldMeshBuilder;
+        if (!builder || !renderer.schematicManager) throw new Error("The schematic renderer did not initialize.");
+        configureBlockInstances(builder);
+        await renderer.schematicManager.loadSchematic(farm.dn, bytes, undefined, {
           onProgress: ({ progress: value }) => { if (!cancelled) setProgress(Math.round(value * 100)); },
         });
         if (cancelled) return;
         const loaded = renderer.schematicManager?.getSchematic(farm.dn)?.schematicWrapper;
         const normalized = normalizeSchematic(loaded);
+        blocksRef.current = normalized.blocks;
         const extracted = extractMaterials(normalized.blocks);
         setMaterials(extracted);
         if (shouldExtractMaterialsRef.current) {
@@ -194,7 +216,8 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     return () => {
       cancelled = true;
       controller.abort();
-      renderer?.stopAutoTick();
+      playbackRef.current?.dispose();
+      playbackRef.current = null;
       renderer?.suspend();
       renderer?.dispose();
       rendererRef.current = null;
@@ -203,7 +226,7 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
   }, [farm.dn, farm.schematicUrl, persistMaterials]);
 
   useEffect(() => {
-    const onFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    const onFullscreen = () => setIsFullscreen(document.fullscreenElement === containerRef.current);
     document.addEventListener("fullscreenchange", onFullscreen);
     return () => document.removeEventListener("fullscreenchange", onFullscreen);
   }, []);
@@ -212,11 +235,11 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     const updateVisibility = () => {
       const renderer = rendererRef.current;
       if (document.hidden) {
-        renderer?.stopAutoTick();
+        playbackRef.current?.pause();
         renderer?.suspend();
       } else if (status === "ready") {
         renderer?.resume();
-        if (activation === "active") renderer?.startAutoTick();
+        if (activation === "active") playbackRef.current?.play();
       }
     };
     document.addEventListener("visibilitychange", updateVisibility);
@@ -291,41 +314,54 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
     else renderer.showSlicerOverlay({ corner: "bottom-left" });
     setShowBlockControls(!showBlockControls);
   };
-  const activateFarm = async () => {
+  const getPlayback = () => {
+    if (playbackRef.current) return playbackRef.current;
     const renderer = rendererRef.current;
-    if (!renderer || activation === "activating") return;
-    setActivation("activating");
+    const schematic = renderer?.schematicManager?.getSchematic(farm.dn);
+    if (!renderer || !schematic) return null;
     try {
-      const initialized = await renderer.initializeSimulation();
-      if (rendererRef.current !== renderer) return;
-      if (!initialized) {
-        setActivation("unsupported");
-        return;
-      }
-      setActivation("active");
+      playbackRef.current = createRedstonePlayback(renderer, schematic, blocksRef.current, () => {
+        applyMaterialVisibility(schematic, hiddenRef.current);
+        renderer.invalidate();
+      }, () => setActivation("error"), setTicks);
+      return playbackRef.current;
     } catch {
-      if (rendererRef.current === renderer) setActivation("error");
+      setActivation("error");
+      return null;
     }
   };
   const togglePlayback = () => {
     if (activation === "active") {
-      rendererRef.current?.stopAutoTick();
-      rendererRef.current?.simulationManager?.syncToSchematic();
+      playbackRef.current?.pause();
       setActivation("paused");
-    } else if (activation === "paused") {
+    } else if (getPlayback()) {
       setActivation("active");
-    } else {
-      void activateFarm();
+    }
+  };
+  const interactWithBlock = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const start = pointerStart.current;
+    pointerStart.current = null;
+    if (!start || Math.hypot(start.x - event.clientX, start.y - event.clientY) > 5) return;
+    const renderer = rendererRef.current;
+    const schematic = renderer?.schematicManager?.getSchematic(farm.dn);
+    if (!renderer || !schematic) return;
+    const pos = pickBlock(event.currentTarget, renderer.cameraManager.activeCamera.camera, schematic.group, event.clientX, event.clientY);
+    if (!pos || resetting) return;
+    const state = schematic.schematicWrapper.get_block_string(pos[0], pos[1], pos[2]) ?? "";
+    if (!/^minecraft:(lever|[a-z_]+_button)\[/.test(state)) return;
+    const playback = getPlayback();
+    if (playback) {
+      if (activation !== "active") setActivation("paused");
+      playback.toggle(pos[0], pos[1], pos[2]);
     }
   };
   const toggleBlock = (name: string) => {
     const id = name.replace(/ /g, "_");
-    const hidden = new Set(hiddenBlocks);
+    const hidden = new Set(hiddenRef.current);
     if (hidden.has(id)) hidden.delete(id); else hidden.add(id);
-    rendererRef.current?.schematicManager?.getSchematic(farm.dn)?.group.traverse((object: { userData: Record<string, unknown>; visible: boolean }) => {
-      const key = object.userData.blockTypeKey;
-      if (typeof key === "string" && key.replace(/^minecraft:/, "").split("[")[0] === id) object.visible = !hidden.has(id);
-    });
+    hiddenRef.current = hidden;
+    const schematic = rendererRef.current?.schematicManager?.getSchematic(farm.dn);
+    if (schematic) applyMaterialVisibility(schematic, hidden);
     rendererRef.current?.invalidate();
     setHiddenBlocks(hidden);
   };
@@ -336,7 +372,10 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
       </p>
       <div className="flex min-h-0 flex-1">
       <div className="relative min-w-0 flex-1">
-        <canvas ref={canvasRef} tabIndex={insideView ? 0 : -1} onKeyDown={event => {
+        <canvas ref={canvasRef}
+          onPointerDown={event => { pointerStart.current = event.isPrimary && event.button === 0 ? { x: event.clientX, y: event.clientY } : null; }}
+          onPointerCancel={() => { pointerStart.current = null; }}
+          onClick={interactWithBlock} tabIndex={insideView ? 0 : -1} onKeyDown={event => {
           if (!insideView || event.altKey || event.ctrlKey || event.metaKey) return;
           const step = { ArrowUp: 1, ArrowDown: -1, w: 1, s: -1 }[event.key];
           if (step) {
@@ -359,10 +398,27 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
           </div>
 
 
-          <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">{insideView ? "Drag to look · W/S or ↑/↓ to move through blocks" : "Drag to rotate · Scroll to zoom · Right drag to pan"}</span></p>
+          <p className="pointer-events-none absolute left-3 top-16 text-[10px] text-white/60"><span className="hidden [@media(pointer:fine)]:inline">{insideView ? "Drag to look · W/S or ↑/↓ to move through blocks" : "Drag to rotate · Scroll to zoom · Click a lever or button to use it"}</span></p>
           <div className="absolute bottom-3 left-1/2 z-20 flex w-max max-w-full -translate-x-1/2 flex-wrap justify-center items-center gap-1 rounded-full border border-white/10 bg-[#17181b]/90 p-1.5 text-white shadow-lg backdrop-blur sm:bottom-4 sm:gap-2 sm:px-2">
-            <button onClick={togglePlayback} disabled={activation === "activating"} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "activating" ? "Starting" : activation === "paused" ? "Resume" : "Run redstone"}</span></button>
-            {activation === "paused" && <button onClick={() => rendererRef.current?.tickSimulation()} className="min-h-11 whitespace-nowrap rounded-full px-2 text-xs hover:bg-white/5">+1 tick</button>}
+            <button type="button" disabled={resetting} onClick={togglePlayback} aria-label={activation === "active" ? "Pause simulation" : "Activate farm simulation"} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs text-emerald-400 hover:bg-white/5"><Power className="size-4" /><span>{activation === "active" ? "Pause" : activation === "paused" ? "Resume" : "Run redstone"}</span></button>
+            {activation === "paused" && <button disabled={resetting} onClick={() => playbackRef.current?.step()} className="min-h-11 whitespace-nowrap rounded-full px-2 text-xs hover:bg-white/5">+1 tick</button>}
+            {(activation === "paused" || activation === "active") && <>
+              <span className="font-mono text-[10px] text-white/65">Tick {ticks}</span>
+              <select aria-label="Simulation speed" value={speed} disabled={resetting} className="rounded bg-[#242529] px-1 py-2 text-xs" onChange={event => {
+                const value = Number(event.target.value);
+                playbackRef.current?.setSpeed(value);
+                setSpeed(value);
+              }}>{[0.25, 0.5, 1, 2].map(value => <option key={value} value={value}>{value}×</option>)}</select>
+              <button disabled={resetting} className="min-h-11 rounded-full px-2 text-xs hover:bg-white/5" onClick={async () => {
+                const playback = playbackRef.current;
+                if (!playback) return;
+                setResetting(true);
+                setActivation("paused");
+                try { await playback.reset(); }
+                catch { if (playbackRef.current === playback) setActivation("error"); }
+                finally { if (playbackRef.current === playback) setResetting(false); }
+              }}>Reset circuit</button>
+            </>}
             {<button onClick={toggleBlockControls} aria-label={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} title={showBlockControls ? "Hide block visibility controls" : "Show block visibility controls"} className={`grid size-11 place-items-center rounded-full transition sm:size-11 ${showBlockControls ? "bg-emerald-500/15 text-emerald-400" : "text-white/50 hover:bg-white/5 hover:text-white"}`}><Layers3 className="size-4" /></button>}
             <button onClick={toggleInsideView} aria-pressed={insideView} className="min-h-11 rounded-full px-2 text-xs hover:bg-white/5">{insideView ? "Outside view" : "Inside view"}</button>
             {insideView && <>
@@ -385,7 +441,6 @@ export function SchematicViewer3D({ farm, onMaterialsExtracted }: SchematicViewe
         <button onClick={() => void navigator.clipboard.writeText(materials.map(item => `${item.count} ${item.name}`).join("\n"))} className="m-4 rounded-full bg-white/5 p-3 font-mono text-xs hover:bg-white/10">Copy material list</button>
       </aside>}
       </div>
-      {activation === "unsupported" && <p className="border-t border-white/10 bg-[#111216] px-3 py-2 text-center text-[11px] text-ink-muted">This schematic has no supported browser simulation. You can still inspect every block in 3D.</p>}
       {activation === "error" && <p className="border-t border-white/10 bg-[#111216] px-3 py-2 text-center text-[11px] text-[#FBBF24]">The browser could not activate this farm simulation. The 3D build remains available.</p>}
       <span className="sr-only">Resource pack: {resourcePackName}</span>
     </div>
